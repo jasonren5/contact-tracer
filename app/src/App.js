@@ -34,18 +34,21 @@ class App extends React.Component {
   }
 
   render() {
-    if (this.state.user) {
+    //if user is authenti
+    if (this.state.user != null) {
       return (
         <div className="App">
-          <Home />
+          <Home user={this.state.user} />
         </div>
       );
+    } else {
+      return (
+        < div className="App" >
+          <SignIn />
+        </div >
+      );
     }
-    return (
-      <div className="App">
-        <SignIn />
-      </div>
-    );
+
   }
 }
 
