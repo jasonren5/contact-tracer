@@ -1,26 +1,52 @@
-import React from 'react';
+import React, { useState } from "react";
 import logo from './logo.svg';
 import './App.css';
+import SignIn from './components/SignIn.js';
+import firebaseConfig from './firebase/config.js'
+import firebase from 'firebase'
+import Home from './components/Home.js';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    //store user information in the state for now?
+    this.state = {
+      user: {}
+    }
+  }
+
+  componentDidMount() {
+    this.authListener();
+  }
+
+  authListener() {
+    firebase.auth().onAuthStateChanged((user) => {
+      console.log("Auth state changed.");
+      console.log(user);
+      if (user) {
+        this.setState({ user });
+      } else {
+        this.setState({ user: null });
+      }
+
+    });
+  }
+
+  render() {
+    if (this.state.user) {
+      return (
+        <div className="App">
+          <Home />
+        </div>
+      );
+    }
+    return (
+      <div className="App">
+        <SignIn />
+      </div>
+    );
+  }
 }
 
 export default App;
