@@ -8,7 +8,6 @@ class SignIn extends React.Component {
         this.state = {
             email: '',
             password: '',
-            submitType: 'login'
         };
 
         this.handleSubmit = this.handleSubmit.bind(this);
