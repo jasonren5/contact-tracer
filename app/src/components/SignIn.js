@@ -112,7 +112,7 @@ class SignIn extends React.Component {
         return (
             <div>
                 <h1>sign in</h1>
-                <p class="error">{this.state.loginError}</p>
+                <p className="error">{this.state.loginError}</p>
                 <form onSubmit={this.handleLogin}>
                     <label>email:
                             <input type="text" name="email" value={this.state.email} onChange={this.handleInputChange} />
@@ -124,7 +124,7 @@ class SignIn extends React.Component {
                 </form>
 
                 <h1>or create an account</h1>
-                <p class="error">{this.state.registerError}</p>
+                <p className="error">{this.state.registerError}</p>
                 <form onSubmit={this.handleRegister}>
                     <label>email:
                             <input type="text" name="email" value={this.state.email} onChange={this.handleInputChange} />
