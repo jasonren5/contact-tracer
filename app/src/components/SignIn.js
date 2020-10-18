@@ -20,7 +20,7 @@ class SignIn extends React.Component {
     }
 
     //login on form submit
-    async handleLogin(event) {
+    handleLogin(event) {
         console.log("login detected");
         event.preventDefault();
 
