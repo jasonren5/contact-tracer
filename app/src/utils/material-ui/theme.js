@@ -20,4 +20,6 @@ const theme = createMuiTheme({
     },
 });
 
+export const ThemeContext = React.createContext(theme);
+
 export default theme;
