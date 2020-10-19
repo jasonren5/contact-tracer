@@ -1,10 +1,11 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import React from 'react';
 
 const theme = createMuiTheme({
     palette: {
         primary: {
-            light: '#8eacbb',
             main: '#607d8b',
+            light: '#8eacbb',
             dark: '#34515e',
             contrastText: '#000',
         },
@@ -14,9 +15,15 @@ const theme = createMuiTheme({
             dark: '#623e10',
             contrastText: '#fff',
         },
-        success: '#54a264',
-        info: '#18191d',
-        error: '#f44336'
+        success: {
+            main: '#54a264',
+        },
+        info: {
+            main: '#18191d',
+        },
+        error: {
+            main: '#f44336',
+        },
     },
 });
 
