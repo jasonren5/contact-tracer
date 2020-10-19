@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import './App.css';
 import SignIn from './components/SignIn.js';
-import firebaseConfig from './firebase/config.js'
+import firebaseConfig from './utils/firebase/config.js'
 import firebase from 'firebase'
 import Home from './components/Home.js';
 
