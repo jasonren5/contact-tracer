@@ -1,9 +1,15 @@
 import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch
+} from 'react-router-dom';
 import './App.css';
 import SignIn from './components/SignIn.js';
-// import firebaseConfig from './utils/firebase/config.js'
+import firebaseConfig from './utils/firebase/config.js'
 import firebase from 'firebase'
 import Home from './components/Home.js';
+import PageNotFound from './components/PageNotFound.js'
 
 class App extends React.Component {
   constructor(props) {
@@ -33,21 +39,17 @@ class App extends React.Component {
   }
 
   render() {
-    //if user is authenti
-    if (this.state.user != null) {
-      return (
-        <div className="App">
-          <Home user={this.state.user} />
-        </div>
-      );
-    } else {
-      return (
-        < div className="App" >
-          <SignIn />
-        </div >
-      );
-    }
-
+    return (
+      <div className="App">
+        <Router>
+          <Switch>
+            <Route exact path={'/'} component={Home} />
+            <Route path={'/signin'} component={SignIn} />
+            <Route component={PageNotFound} />
+          </Switch>
+        </Router>
+      </div>
+    )
   }
 }
 
