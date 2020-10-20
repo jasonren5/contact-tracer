@@ -5,8 +5,6 @@ import firebaseConfig from './utils/firebase/config.js'
 import firebase from 'firebase'
 import Home from './components/pages/Home';
 
-import PasswordChange from './components/auth/PasswordChange';
-
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -46,7 +44,6 @@ class App extends React.Component {
       return (
         < div className="App" >
           <SignIn />
-
         </div >
       );
     }
