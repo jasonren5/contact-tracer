@@ -7,7 +7,7 @@ import {
     Button
 } from '@material-ui/core';
 
-import ErrorAlert from '../../Alerts/ErrorAlert'
+import ErrorAlert from '../../alerts/ErrorAlert'
 
 const INITIAL_STATE = {
     passwordOne: '',
@@ -52,8 +52,10 @@ function PasswordChangeForm() {
 
     const isInvalid = state.passwordOne === '' || state.passwordTwo === '';
 
+    // TODO: add to handle submit to form
+    // onSubmit={handleSubmit}
     return (
-        <form onSubmit={handleSubmit} className={classes.form}>
+        <form className={classes.form}>
 
             <TextField
                 variant="outlined"
@@ -73,7 +75,7 @@ function PasswordChangeForm() {
                 required
                 fullWidth
                 name="passwordTwo"
-                label="New Password"
+                label="Confirm Password"
                 type="password"
                 id="passwordTwo"
                 value={state.passwordTwo}
