@@ -15,3 +15,40 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     functions.logger.info("Hello logs!", { structuredData: true });
     response.send("Hello from Firebase!");
 });
+
+//Returns user data based on input UID that corresponds to a document ID (and auth ID)
+exports.getUserById = functions.https.onRequest((req, res) => {
+    // Grab the id parameter.
+    const id = req.query.id;
+    const db = admin.firestore();
+
+    functions.logger.info("Getting user with id: '" + id + "'", { structuredData: true });
+
+    //get document from users collection with id == id
+    db.collection("users").doc(id).get().then(doc => {
+        if (doc.exists) {
+            res.send(doc.data());
+        } else {
+            //not really sure how to handle errors here
+            res.send("no such user");
+        }
+    });
+});
+
+//Returns user data based on input username that corresponds to a username stored in a document in the users collection
+//  Note: this assumes that the 'users' collection exists, and that documents within that collection have a 'username' field.
+exports.getUserByUsername = functions.https.onRequest((req, res) => {
+    // Grab the username parameter.
+    const username = req.query.username;
+    const db = admin.firestore();
+
+    functions.logger.info("Getting user with name: '" + username + "'", { structuredData: true });
+
+    //get snapshot of users collection of all documents with field username == username
+    db.collection("users").where("username", "==", username).get().then(querySnapshot => {
+        //this is a little bad, but as long as usernames are unique this shouldn't be an issue... crosses fingers
+        querySnapshot.forEach(doc => {
+            res.send(doc.data());
+        });
+    });
+});
