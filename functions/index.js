@@ -28,10 +28,14 @@ exports.getUserById = functions.https.onRequest((req, res) => {
     db.collection("users").doc(id).get().then(doc => {
         if (doc.exists) {
             res.send(doc.data());
+            return;
         } else {
-            //not really sure how to handle errors here
-            res.send("no such user");
+            res.sendStatus(500);
+            return;
         }
+    }).catch(err => {
+        functions.logger.info(err, { structuredData: true });
+        res.sendStatus(500);
     });
 });
 
@@ -50,6 +54,10 @@ exports.getUserByUsername = functions.https.onRequest((req, res) => {
         querySnapshot.forEach(doc => {
             res.send(doc.data());
         });
+        return;
+    }).catch(err => {
+        functions.logger.info(err, { structuredData: true });
+        res.sendStatus(500);
     });
 });
 
