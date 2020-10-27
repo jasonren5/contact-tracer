@@ -73,3 +73,22 @@ exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
         number_of_contributions: 0
     });
 });
+
+// Get a full story by id
+exports.getFullAtricleByID = functions.https.onCall((data, context)=>{
+    const db = admin.firestore();
+    let article_id = "fyb2mTK6Lo2GjcqoFJfs";
+    
+    var promises = [];
+    promises.push(db.collection("articles").doc(article_id).get());
+    promises.push(db.collection("articles").doc(article_id).collection("sections").get());
+    return Promise.all(promises).then((values)=>{
+        let articleData = values[0];
+        let sectionData = values[1];
+        let data = {
+            article_data: articleData,
+            section_data: sectionData
+        }
+        return data
+    });
+})
