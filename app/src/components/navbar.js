@@ -20,14 +20,17 @@ class navbar extends React.Component {
       });
 
   }
+  // TODO: Need to import classes
+  // for icon button: className={classes.menuButton}
+  // For typography: className={classes.title}
   render() {
     return (
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton edge="start" color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6">
             News
     </Typography>
           <Button color="inherit" onPress={this.touchnavbar} href="/">logout;</Button>
