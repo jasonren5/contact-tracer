@@ -1,8 +1,6 @@
-import React, { useState, useContext } from 'react';
-
-// import { useHistory } from 'react-router-dom';
-// import * as ROUTES from '../../constants/routes';
-// import { FirebaseContext } from '../../utils/Firebase';
+import React, { useState } from 'react';
+import firebase from 'firebase';
+import { useHistory } from 'react-router-dom';
 
 import {
     Button,
@@ -36,20 +34,19 @@ function SignInForm() {
     });
 
     const classes = useAuthStyles();
-    // const firebase = useContext(FirebaseContext);
-    // const history = useHistory();
+    const history = useHistory();
 
     const handleSubmit = event => {
         event.preventDefault();
 
         const { email, password } = state;
-        // firebase.doSignInWithEmailAndPassword(email, password)
-        //     .then(() => {
-        //         history.push(ROUTES.HOME);
-        //     })
-        //     .catch(error => {
-        //         setState({ error });
-        //     });
+        firebase.auth().signInWithEmailAndPassword(email, password)
+            .then(() => {
+                history.push('/');
+            })
+            .catch(error => {
+                setState({ error });
+            });
 
         setState({ ...INITIAL_STATE });
     };
