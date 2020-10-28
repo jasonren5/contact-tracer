@@ -1,15 +1,13 @@
-import React, { useContext } from 'react';
-// import { FirebaseContext } from '../../../utils/Firebase';
+import React from 'react';
+import firebase from 'firebase';
 import { Button } from '@material-ui/core';
 
 export default function SignOutButton() {
-    // const firebase = useContext(FirebaseContext);
-
     return (
         <Button
             variant="contained"
             color="secondary"
-        // onClick={firebase.doSignOut}
+            onClick={firebase.auth().signOut()}
         >
             Sign Out
         </Button>
