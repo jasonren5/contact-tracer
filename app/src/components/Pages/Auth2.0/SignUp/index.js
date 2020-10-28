@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 
 import { useHistory } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
-import { FirebaseContext } from '../../utils/Firebase';
+// import { FirebaseContext } from '../../utils/Firebase';
 
 import {
     Button,
@@ -35,7 +35,7 @@ function SignUpForm() {
     });
 
     const classes = useAuthStyles();
-    const firebase = useContext(FirebaseContext);
+    // const firebase = useContext(FirebaseContext);
     const history = useHistory();
 
     const handleSubmit = event => {
@@ -43,18 +43,18 @@ function SignUpForm() {
 
         const { email, password } = state;
 
-        if (/^[A-Z0-9._%+-]+@wustl.edu$/i.test(email)) {
-            firebase.doCreateUserWithEmailAndPassword(email, password)
-                .then(authUser => {
-                    history.push(ROUTES.HOME);
-                })
-                .catch(error => {
-                    setState({ error });
-                });
-        }
-        else {
-            setState({ error: { message: "Only WashU Emails Allowed!" } });
-        }
+        // if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}.test(email)) {
+        //     firebase.doCreateUserWithEmailAndPassword(email, password)
+        //         .then(authUser => {
+        //             history.push(ROUTES.HOME);
+        //         })
+        //         .catch(error => {
+        //             setState({ error });
+        //         });
+        // }
+        // else {
+        //     setState({ error: { message: "Only WashU Emails Allowed!" } });
+        // }
         setState({ ...INITIAL_STATE });
     };
 
@@ -67,12 +67,13 @@ function SignUpForm() {
         }));
     };
 
+    // WUSTL email REGEX: (state.email && !/^[A-Z0-9._%+-]+@wustl.edu$/i.test(state.email));
     // Every school REGEX: (state.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.edu$/i.test(state.email))
     // Every email REGEX: (state.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(state.email))
     const isInvalid = state.firstName === ''
         || state.lastName === ''
         || state.password === ''
-        || (state.email && !/^[A-Z0-9._%+-]+@wustl.edu$/i.test(state.email));
+        || (state.email && !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(state.email));
 
     return (
         <form onSubmit={handleSubmit} className={classes.form}>
