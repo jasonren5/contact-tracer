@@ -4,7 +4,6 @@ import SignIn from './pages/SignIn.js';
 import firebaseConfig from './utils/firebase/config.js'
 import firebase from 'firebase';
 import Home from './pages/Home';
-import SignUpPage from './pages/Auth2.0/SignUp';
 
 class App extends React.Component {
   constructor(props) {
@@ -45,7 +44,6 @@ class App extends React.Component {
       return (
         < div className="App" >
           <SignIn />
-          <SignUpPage />
         </div >
       );
     }

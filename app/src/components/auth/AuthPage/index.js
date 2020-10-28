@@ -49,15 +49,7 @@ function AuthPage(props) {
                 <Typography component="h1" variant="h4">
                     {props.title}
                 </Typography>
-                <div className="">{props.test}</div>
                 {props.form}
-                {!props.noDisclaimer &&
-                    <Box mt="1rem">
-                        <Typography component="h2" variant="h5" align="center" color="textSecondary">
-                            Contact Tracing is only currently active for students and staff at Washington University in St. Louis
-                    </Typography>
-                    </Box>
-                }
             </div>
             <Box mt={5}>
                 <Copyright />
