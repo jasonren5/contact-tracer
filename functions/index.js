@@ -15,3 +15,99 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     functions.logger.info("Hello logs!", { structuredData: true });
     response.send("Hello from Firebase!");
 });
+
+//Returns user data based on input UID that corresponds to a document ID (and auth ID)
+exports.getUserById = functions.https.onRequest((req, res) => {
+    // Grab the id parameter.
+    const id = req.query.id;
+    const db = admin.firestore();
+
+    functions.logger.info("Getting user with id: '" + id + "'", { structuredData: true });
+
+    //get document from users collection with id == id
+    db.collection("users").doc(id).get().then(doc => {
+        if (doc.exists) {
+            res.send(doc.data());
+            return;
+        } else {
+            res.sendStatus(500);
+            return;
+        }
+    }).catch(err => {
+        functions.logger.info(err, { structuredData: true });
+        res.sendStatus(500);
+    });
+});
+
+//Returns user data based on input username that corresponds to a username stored in a document in the users collection
+//  Note: this assumes that the 'users' collection exists, and that documents within that collection have a 'username' field.
+exports.getUserByUsername = functions.https.onRequest((req, res) => {
+    // Grab the username parameter.
+    const username = req.query.username;
+    const db = admin.firestore();
+
+    functions.logger.info("Getting user with name: '" + username + "'", { structuredData: true });
+
+    //get snapshot of users collection of all documents with field username == username
+    db.collection("users").where("username", "==", username).get().then(querySnapshot => {
+        //this is a little bad, but as long as usernames are unique this shouldn't be an issue... crosses fingers
+        querySnapshot.forEach(doc => {
+            res.send(doc.data());
+        });
+        return;
+    }).catch(err => {
+        functions.logger.info(err, { structuredData: true });
+        res.sendStatus(500);
+    });
+});
+
+//On auth creation, adds a document to the users collection with the same ID as the auth ID.
+//  Defaults username to the auth email and sets number of contributions to 0.
+exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
+    const db = admin.firestore();
+    const uid = user.uid;
+    functions.logger.info("Adding user to firestore with uid: '" + uid + "'", { structuredData: true });
+
+    db.collection("users").doc(uid).set({
+        username: user.email,
+        number_of_contributions: 0
+    });
+});
+
+// Get a full article by id
+exports.getFullArticleByID = functions.https.onCall((data, context)=>{
+    const db = admin.firestore();
+    let article_id = data.article_id;
+    
+    var promises = [];
+    promises.push(db.collection("articles").doc(article_id).get());
+    promises.push(db.collection("articles").doc(article_id).collection("sections").get());
+    return Promise.all(promises).then(async (values)=>{
+        var articleData = values[0].data();
+        articleData["article_id"] = values[0].id;
+
+        let sectionData = values[1];
+
+        let sections = await Promise.all(sectionData.docs.map(async (doc) => {
+            const versions = await db.collection("articles").doc(article_id).collection("sections").doc(doc.id).collection("versions").orderBy('order', 'desc').get();
+            var section = doc.data();
+            let latestVersion = versions.docs[0];
+            let latestVersionData = versions.docs[0].data();
+
+            section["section_id"] = doc.id;
+            section["current_version"] = latestVersion.id;
+            section["body"] = latestVersionData.body;
+
+            return section;
+        }))
+
+        let data = {
+            article_data: articleData,
+            section_data: sections
+        }
+        
+        return data;
+    }).catch(err => {
+        return err;
+    });
+})

@@ -4,8 +4,9 @@
     username: string tied to users collection "username" field
 */
 class User {
-    constructor(id, username) {
+    constructor(id, username, numberOfContributions) {
         this.id = id;
         this.username = username;
+        this.numberOfContributions = numberOfContributions
     }
 }
