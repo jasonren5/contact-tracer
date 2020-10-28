@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
-// import { FirebaseContext } from '../../utils/Firebase';
+import firebase from 'firebase';
 import { SignUpLink } from '../SignUp';
 import { SignInLink } from '../SignIn';
 
@@ -28,16 +28,16 @@ function PasswordForgetForm() {
     });
 
     const classes = useAuthStyles();
-    // const firebase = useContext(FirebaseContext);
 
     const handleSubmit = event => {
         event.preventDefault();
 
         const { email } = state;
-        // firebase.doPasswordReset(email)
-        //     .catch(error => {
-        //         setState({ error });
-        //     })
+
+        firebase.auth().sendPasswordResetEmail(email)
+            .catch(error => {
+                setState({ error });
+            });
 
         setState({ ...INITIAL_STATE });
     };
