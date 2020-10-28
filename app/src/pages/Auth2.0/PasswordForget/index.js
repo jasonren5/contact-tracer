@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import AuthPage, { useAuthStyles } from '../../components/Auth/AuthPage';
+import AuthPage, { useAuthStyles } from '../../../components/auth/AuthPage';
 // import { FirebaseContext } from '../../utils/Firebase';
 import { SignUpLink } from '../SignUp';
 import { SignInLink } from '../SignIn';
@@ -11,7 +11,7 @@ import {
     Link
 } from '@material-ui/core';
 
-import ErrorAlert from '../../components/Alerts/ErrorAlert'
+import ErrorAlert from '../../../components/alerts/ErrorAlert';
 
 const INITIAL_STATE = {
     email: '',

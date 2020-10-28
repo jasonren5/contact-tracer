@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 
-import { useHistory } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
+// import { useHistory } from 'react-router-dom';
+// import * as ROUTES from '../../constants/routes';
 // import { FirebaseContext } from '../../utils/Firebase';
 
 import {
@@ -13,11 +13,11 @@ import {
 } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
 
-import ErrorAlert from '../../components/Alerts/ErrorAlert';
+import ErrorAlert from '../../../components/alerts/ErrorAlert';
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget'
 
-import AuthPage, { useAuthStyles } from '../../components/Auth/AuthPage';
+import AuthPage, { useAuthStyles } from '../../../components/auth/AuthPage';
 
 const INITIAL_STATE = {
     email: "",
@@ -37,7 +37,7 @@ function SignInForm() {
 
     const classes = useAuthStyles();
     // const firebase = useContext(FirebaseContext);
-    const history = useHistory();
+    // const history = useHistory();
 
     const handleSubmit = event => {
         event.preventDefault();
