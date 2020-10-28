@@ -1,18 +1,20 @@
 import React, { useState, useContext } from 'react';
 import { useAuthStyles } from '../AuthPage';
-// import { FirebaseContext } from '../../../utils/Firebase';
+import firebase from 'firebase';
 
 import {
     TextField,
     Button
 } from '@material-ui/core';
 
-import ErrorAlert from '../../alerts/ErrorAlert'
+import ErrorAlert from '../../Alerts/ErrorAlert'
+import SuccessAlert from '../../../components/Alerts/SuccessAlert';
 
 const INITIAL_STATE = {
     passwordOne: '',
     passwordTwo: '',
-    error: null
+    error: null,
+    success: null,
 };
 
 
@@ -22,24 +24,30 @@ function PasswordChangeForm() {
     });
 
     const classes = useAuthStyles();
-    // const firebase = useContext(FirebaseContext);
 
-    // const handleSubmit = event => {
-    //     event.preventDefault();
+    const handleSubmit = event => {
+        event.preventDefault();
 
-    //     const { passwordOne, passwordTwo } = state;
+        const { passwordOne, passwordTwo } = state;
 
-    //     if (passwordOne === passwordTwo) {
-    //         firebase.doPasswordReset(passwordOne)
-    //             .catch(error => {
-    //                 setState({ error });
-    //             })
-    //     }
-    //     else {
-    //         setState({ error: { message: "Password were not equal!" } });
-    //     }
-    //     setState({ ...INITIAL_STATE });
-    // };
+        if (passwordOne === passwordTwo) {
+            firebase.auth().currentUser.updatePassword(passwordOne)
+                .then(() => {
+                    setState({
+                        success: {
+                            action: "Changed Passsword"
+                        }
+                    });
+                })
+                .catch(error => {
+                    setState({ error });
+                })
+        }
+        else {
+            setState({ error: { message: "Password were not equal!" } });
+        }
+        setState({ ...INITIAL_STATE });
+    };
 
     const handleChange = event => {
         const { id, value } = event.target;
@@ -52,8 +60,6 @@ function PasswordChangeForm() {
 
     const isInvalid = state.passwordOne === '' || state.passwordTwo === '';
 
-    // TODO: add to handle submit to form
-    // onSubmit={handleSubmit}
     return (
         <form className={classes.form}>
 
@@ -88,11 +94,13 @@ function PasswordChangeForm() {
                 color="primary"
                 className={classes.submit}
                 disabled={isInvalid}
+                onSubmit={handleSubmit}
             >
                 Change My Password
             </Button>
 
             {state.error && <ErrorAlert errorTitle={"Processing Password Change"} error={state.error.message} />}
+            {state.success && <SuccessAlert action={state.success.action} />}
         </form>
     );
 
