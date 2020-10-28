@@ -17,7 +17,7 @@ import ErrorAlert from '../../../components/alerts/ErrorAlert';
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget'
 
-import AuthPage, { useAuthStyles } from '../../../components/auth/AuthPage';
+import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
 
 const INITIAL_STATE = {
     email: "",

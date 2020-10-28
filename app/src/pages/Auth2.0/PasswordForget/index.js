@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import AuthPage, { useAuthStyles } from '../../../components/auth/AuthPage';
+import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
 // import { FirebaseContext } from '../../utils/Firebase';
 import { SignUpLink } from '../SignUp';
 import { SignInLink } from '../SignIn';
