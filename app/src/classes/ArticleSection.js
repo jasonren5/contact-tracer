@@ -15,3 +15,5 @@ class ArticleSection {
         this.edits = edits;
     }
 }
+
+export default ArticleSection;

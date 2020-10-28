@@ -15,3 +15,5 @@ class Article {
         this.sections = sections;
     }
 }
+
+export default Article;
