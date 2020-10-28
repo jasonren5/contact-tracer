@@ -11,7 +11,7 @@ import {
     Link
 } from '@material-ui/core';
 
-import ErrorAlert from '../../../components/alerts/ErrorAlert';
+import ErrorAlert from '../../../components/Alerts/ErrorAlert';
 import { SignInLink } from '../SignIn';
 
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';

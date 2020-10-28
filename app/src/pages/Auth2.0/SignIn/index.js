@@ -13,7 +13,7 @@ import {
 } from '@material-ui/core';
 import Link from '@material-ui/core/Link';
 
-import ErrorAlert from '../../../components/alerts/ErrorAlert';
+import ErrorAlert from '../../../components/Alerts/ErrorAlert';
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget'
 
