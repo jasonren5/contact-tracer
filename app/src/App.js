@@ -7,6 +7,8 @@ import {
 import './App.css';
 // import SignIn from './pages/SignIn';
 import SignInPage from './pages/Auth2.0/SignIn';
+import SignUpPage from './pages/Auth2.0/SignUp';
+import PasswordForgetPage from './pages/Auth2.0/PasswordForget';
 import firebaseConfig from './utils/firebase/config.js';
 import firebase from 'firebase'
 import Home from './pages/Home';
@@ -47,6 +49,8 @@ class App extends React.Component {
           <Switch>
             <Route exact path={'/'} component={Home} />
             <Route path={'/signin'} component={SignInPage} />
+            <Route path={'/signup'} component={SignUpPage} />
+            <Route path={'/forgot-password'} component={PasswordForgetPage} />
             <Route path={'/article/:articleId'} component={ArticlePage} />
             <Route component={PageNotFound} />
           </Switch>

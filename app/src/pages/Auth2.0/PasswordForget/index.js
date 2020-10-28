@@ -91,7 +91,7 @@ function PasswordForgetForm() {
 
 const PasswordForgetLink = () => (
     <Grid item xs>
-        <Link href="password-forget" variant="body2">
+        <Link href="forgot-password" variant="body2">
             Forgot password?
         </Link>
     </Grid>
