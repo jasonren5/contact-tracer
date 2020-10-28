@@ -73,3 +73,39 @@ exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
         number_of_contributions: 0
     });
 });
+
+// Get a full article by id
+exports.getFullArticleByID = functions.https.onRequest((req, res)=>{
+    const db = admin.firestore();
+    let article_id = "fyb2mTK6Lo2GjcqoFJfs";
+    
+    var promises = [];
+    promises.push(db.collection("articles").doc(article_id).get());
+    promises.push(db.collection("articles").doc(article_id).collection("sections").get());
+    Promise.all(promises).then(async (values)=>{
+        var articleData = values[0].data();
+        articleData["article_id"] = values[0].id;
+
+        let sectionData = values[1];
+
+        let sections = await Promise.all(sectionData.docs.map(async (doc) => {
+            const versions = await db.collection("articles").doc(article_id).collection("sections").doc(doc.id).collection("versions").orderBy('order', 'desc').get();
+            var section = doc.data();
+            let latestVersion = versions.docs[0];
+            let latestVersionData = versions.docs[0].data();
+
+            section["section_id"] = doc.id;
+            section["current_version"] = latestVersion.id;
+            section["body"] = latestVersionData.body;
+
+            return section;
+        }))
+
+        let data = {
+            article_data: articleData,
+            section_data: sections
+        }
+        
+        res.send(data);
+    });
+})
