@@ -9,7 +9,7 @@ import {
   Button
 } from '@material-ui/core';
 
-class navbar extends React.Component {
+export default class navbar extends React.Component {
   touchnavbar() {
     firebase.auth().signOut()
       .then(function () {

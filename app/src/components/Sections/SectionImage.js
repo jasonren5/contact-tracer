@@ -8,7 +8,7 @@ class SectionImage extends React.Component {
     render() {
         return (
             <div>
-                <img src={this.props.section.body}/>
+                <img src={this.props.section.body} alt={this.props.section.alt_text} />
             </div>
         )
     }

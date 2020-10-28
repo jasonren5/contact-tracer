@@ -1,8 +1,6 @@
-import React, { useState, useContext } from 'react';
-
-// import { useHistory } from 'react-router-dom';
-// import * as ROUTES from '../../constants/routes';
-// import { FirebaseContext } from '../../utils/Firebase';
+import React, { useState } from 'react';
+import firebase from 'firebase';
+import { useHistory } from 'react-router-dom';
 
 import {
     Button,
@@ -11,7 +9,7 @@ import {
     Link
 } from '@material-ui/core';
 
-import ErrorAlert from '../../../components/alerts/ErrorAlert';
+import ErrorAlert from '../../../components/Alerts/ErrorAlert';
 import { SignInLink } from '../SignIn';
 
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
@@ -35,26 +33,25 @@ function SignUpForm() {
     });
 
     const classes = useAuthStyles();
-    // const firebase = useContext(FirebaseContext);
-    // const history = useHistory();
+    const history = useHistory();
 
     const handleSubmit = event => {
         event.preventDefault();
 
         const { email, password } = state;
 
-        // if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}.test(email)) {
-        //     firebase.doCreateUserWithEmailAndPassword(email, password)
-        //         .then(authUser => {
-        //             history.push(ROUTES.HOME);
-        //         })
-        //         .catch(error => {
-        //             setState({ error });
-        //         });
-        // }
-        // else {
-        //     setState({ error: { message: "Only WashU Emails Allowed!" } });
-        // }
+        if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then(authUser => {
+                    history.push('/');
+                })
+                .catch(error => {
+                    setState({ error });
+                });
+        }
+        else {
+            setState({ error: { message: "Please Submit an Actual Email" } });
+        }
         setState({ ...INITIAL_STATE });
     };
 

@@ -1,6 +1,6 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
-// import { FirebaseContext } from '../../utils/Firebase';
+import firebase from 'firebase';
 import { SignUpLink } from '../SignUp';
 import { SignInLink } from '../SignIn';
 
@@ -11,11 +11,13 @@ import {
     Link
 } from '@material-ui/core';
 
-import ErrorAlert from '../../../components/alerts/ErrorAlert';
+import ErrorAlert from '../../../components/Alerts/ErrorAlert';
+import SuccessAlert from '../../../components/Alerts/SuccessAlert';
 
 const INITIAL_STATE = {
     email: '',
-    error: null
+    error: null,
+    success: null,
 };
 
 const PasswordForgetPage = () => (
@@ -28,16 +30,23 @@ function PasswordForgetForm() {
     });
 
     const classes = useAuthStyles();
-    // const firebase = useContext(FirebaseContext);
 
     const handleSubmit = event => {
         event.preventDefault();
 
         const { email } = state;
-        // firebase.doPasswordReset(email)
-        //     .catch(error => {
-        //         setState({ error });
-        //     })
+
+        firebase.auth().sendPasswordResetEmail(email)
+            .then(() => {
+                setState({
+                    success: {
+                        action: "Password Reset"
+                    }
+                });
+            })
+            .catch(error => {
+                setState({ error });
+            });
 
         setState({ ...INITIAL_STATE });
     };
@@ -84,6 +93,7 @@ function PasswordForgetForm() {
             </Grid>
 
             {state.error && <ErrorAlert errorTitle={"Processing Password Reset"} error={state.error.message} />}
+            {state.success && <SuccessAlert action={state.success.action} />}
         </form>
     );
 
@@ -91,7 +101,7 @@ function PasswordForgetForm() {
 
 const PasswordForgetLink = () => (
     <Grid item xs>
-        <Link href="password-forget" variant="body2">
+        <Link href="forgot-password" variant="body2">
             Forgot password?
         </Link>
     </Grid>

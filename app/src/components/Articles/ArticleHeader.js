@@ -6,10 +6,10 @@ class ArticleHeader extends React.Component {
     }
 
     render() {
-        return(
+        return (
             <div>
                 <h1>{this.props.article.title}</h1>
-                <img src={this.props.article.image_url}/>
+                <img src={this.props.article.image_url} alt={this.props.article.alt_text} />
             </div>
         );
     }

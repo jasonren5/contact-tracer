@@ -10,7 +10,7 @@ import {
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import { makeStyles } from '@material-ui/core/styles';
 
-import Copyright from '../../copyright';
+import Copyright from '../../Copyright';
 
 import { useMediaQuery } from 'react-responsive'
 

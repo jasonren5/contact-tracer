@@ -12,8 +12,9 @@ class Home extends React.Component {
     }
 
     render() {
+        // TODO: fix the None logged in
         var loggedInUser = "None";
-        if(this.props.user) {
+        if (this.props.user) {
             loggedInUser = this.props.user.email;
         }
         return (
