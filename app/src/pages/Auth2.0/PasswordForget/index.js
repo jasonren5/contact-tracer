@@ -12,10 +12,12 @@ import {
 } from '@material-ui/core';
 
 import ErrorAlert from '../../../components/Alerts/ErrorAlert';
+import SuccessAlert from '../../../components/Alerts/SuccessAlert';
 
 const INITIAL_STATE = {
     email: '',
-    error: null
+    error: null,
+    success: null,
 };
 
 const PasswordForgetPage = () => (
@@ -35,6 +37,13 @@ function PasswordForgetForm() {
         const { email } = state;
 
         firebase.auth().sendPasswordResetEmail(email)
+            .then(() => {
+                setState({
+                    success: {
+                        action: "Password Reset"
+                    }
+                });
+            })
             .catch(error => {
                 setState({ error });
             });
@@ -84,6 +93,7 @@ function PasswordForgetForm() {
             </Grid>
 
             {state.error && <ErrorAlert errorTitle={"Processing Password Reset"} error={state.error.message} />}
+            {state.success && <SuccessAlert action={state.success.action} />}
         </form>
     );
 
