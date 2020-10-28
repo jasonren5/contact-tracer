@@ -14,7 +14,7 @@ import {
 import ErrorAlert from '../../../components/alerts/ErrorAlert';
 import { SignInLink } from '../SignIn';
 
-import AuthPage, { useAuthStyles } from '../../../components/auth/AuthPage';
+import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
 
 const INITIAL_STATE = {
     firstName: "",

@@ -5,12 +5,12 @@ import {
   Switch
 } from 'react-router-dom';
 import './App.css';
-import SignIn from './components/SignIn.js';
-import firebaseConfig from './utils/firebase/config.js'
+import SignIn from './pages/SignIn';
+import firebaseConfig from './utils/firebase/config.js';
 import firebase from 'firebase'
-import Home from './components/Home.js';
-import PageNotFound from './components/PageNotFound.js';
-import ArticlePage from './components/ArticlePage';
+import Home from './pages/Home';
+import PageNotFound from './pages/PageNotFound.js';
+import ArticlePage from './pages/ArticlePage';
 
 class App extends React.Component {
   constructor(props) {
