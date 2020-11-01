@@ -24,6 +24,7 @@ class NavBar extends React.Component {
   // For typography: className={classes.title}
   render() {
     return (
+
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu">
@@ -32,8 +33,9 @@ class NavBar extends React.Component {
           <Typography variant="h6">
             News
           </Typography>
-          <Button color="inherit" onPress={this.touchnavbar} href="/">logout;</Button>
           <Button color="inherit" href="/">home</Button>
+          <Button color="inherit" onPress={this.touchnavbar} href="/">logout</Button>
+          <Button color="inherit" onPress={this.touchnavbar} href="/signin">sign in</Button>
         </Toolbar>
       </AppBar>
     )
