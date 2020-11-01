@@ -17,6 +17,7 @@ class NavBar extends React.Component {
       })
       .catch(function (error) {
         // An error happened
+        console.log(error);
       });
   }
   // TODO: Need to import classes
