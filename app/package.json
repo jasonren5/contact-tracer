@@ -11,6 +11,7 @@
     "@testing-library/user-event": "^7.1.2",
     "firebase": "^7.23.0",
     "fontsource-roboto": "^3.0.3",
+    "material-ui": "^0.20.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-responsive": "^8.1.0",
