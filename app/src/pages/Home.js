@@ -12,6 +12,7 @@ class Home extends React.Component {
         return (
             <div id="home-page">
                 <NavBar />
+                <p>this is the home page</p>
             </div>
         )
     }
