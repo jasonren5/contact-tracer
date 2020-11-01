@@ -9,7 +9,7 @@ import {
   Button
 } from '@material-ui/core';
 
-export default class navbar extends React.Component {
+class NavBar extends React.Component {
   touchnavbar() {
     firebase.auth().signOut()
       .then(function () {
@@ -18,7 +18,6 @@ export default class navbar extends React.Component {
       .catch(function (error) {
         // An error happened
       });
-
   }
   // TODO: Need to import classes
   // for icon button: className={classes.menuButton}
@@ -32,7 +31,7 @@ export default class navbar extends React.Component {
           </IconButton>
           <Typography variant="h6">
             News
-    </Typography>
+          </Typography>
           <Button color="inherit" onPress={this.touchnavbar} href="/">logout;</Button>
           <Button color="inherit" href="/">home</Button>
         </Toolbar>
@@ -41,3 +40,5 @@ export default class navbar extends React.Component {
 
   }
 }
+
+export default NavBar;
