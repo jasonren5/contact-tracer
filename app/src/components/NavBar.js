@@ -4,10 +4,10 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  MenuIcon,
   Typography,
   Button
 } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
 class NavBar extends React.Component {
   touchnavbar() {
