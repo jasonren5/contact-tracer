@@ -4,12 +4,12 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  MenuIcon,
   Typography,
   Button
 } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
 
-export default class navbar extends React.Component {
+class NavBar extends React.Component {
   touchnavbar() {
     firebase.auth().signOut()
       .then(function () {
@@ -18,13 +18,13 @@ export default class navbar extends React.Component {
       .catch(function (error) {
         // An error happened
       });
-
   }
   // TODO: Need to import classes
   // for icon button: className={classes.menuButton}
   // For typography: className={classes.title}
   render() {
     return (
+
       <AppBar position="static">
         <Toolbar>
           <IconButton edge="start" color="inherit" aria-label="menu">
@@ -32,12 +32,15 @@ export default class navbar extends React.Component {
           </IconButton>
           <Typography variant="h6">
             News
-    </Typography>
-          <Button color="inherit" onPress={this.touchnavbar} href="/">logout;</Button>
+          </Typography>
           <Button color="inherit" href="/">home</Button>
+          <Button color="inherit" onPress={this.touchnavbar} href="/">logout</Button>
+          <Button color="inherit" onPress={this.touchnavbar} href="/signin">sign in</Button>
         </Toolbar>
       </AppBar>
     )
 
   }
 }
+
+export default NavBar;
