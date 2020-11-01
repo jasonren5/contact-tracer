@@ -75,14 +75,14 @@ exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
 });
 
 // Get a full article by id
-exports.getFullArticleByID = functions.https.onCall((data, context)=>{
+exports.getFullArticleByID = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     let article_id = data.article_id;
-    
+
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
     promises.push(db.collection("articles").doc(article_id).collection("sections").get());
-    return Promise.all(promises).then(async (values)=>{
+    return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
 
@@ -105,9 +105,28 @@ exports.getFullArticleByID = functions.https.onCall((data, context)=>{
             article_data: articleData,
             section_data: sections
         }
-        
+
         return data;
     }).catch(err => {
         return err;
     });
-})
+});
+
+exports.getArticleList = functions.https.onRequest((req, res) => {
+    const db = admin.firestore();
+
+    const citiesRef = db.collection('articles');
+    const snapshot = await citiesRef.get();
+    res.send(snapshot);
+
+    var promises = [];
+    promises.push(db.collection("articles").get());
+
+    return Promise.all(promises).then(async (values) => {
+        var articlesData = values[0].data();
+
+        return articlesData;
+    }).catch(err => {
+        return err;
+    });
+});
