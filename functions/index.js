@@ -75,14 +75,14 @@ exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
 });
 
 // Get a full article by id
-exports.getFullArticleByID = functions.https.onCall((data, context)=>{
+exports.getFullArticleByID = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     let article_id = data.article_id;
-    
+
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
     promises.push(db.collection("articles").doc(article_id).collection("sections").get());
-    return Promise.all(promises).then(async (values)=>{
+    return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
 
@@ -105,9 +105,52 @@ exports.getFullArticleByID = functions.https.onCall((data, context)=>{
             article_data: articleData,
             section_data: sections
         }
-        
+
         return data;
     }).catch(err => {
         return err;
     });
-})
+});
+
+exports.getAllArticles = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const articlesPromise = db.collection("articles").get();
+
+    return articlesPromise.then(snapshot => {
+        let resData = { "article_list": [] };
+        snapshot.forEach(doc => {
+            resData["article_list"].push({
+                "id": doc.id,
+                "title": doc.data().title,
+                "image_url": doc.data().image_url
+            });
+        });
+
+        return resData;
+    }).catch(error => {
+        console.log(error);
+        return error;
+    });
+
+});
+
+// exports.getArticleListGetRequest = functions.https.onRequest(async (req, res) => {
+//     const db = admin.firestore();
+//     const articlesPromise = db.collection("articles").get();
+
+//     articlesPromise.then(snapshot => {
+//         let resData = { "article_list": {} };
+//         snapshot.forEach(doc => {
+//             resData["article_list"][doc.id] = {
+//                 "title": doc.data().title,
+//                 "image_url": doc.data().image_url
+//             };
+//         });
+
+//         res.send(resData);
+//     }).catch(error => {
+//         console.log(error);
+//         res.send(error);
+//     });
+
+// });
