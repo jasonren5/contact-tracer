@@ -30,10 +30,10 @@ async function getAllArticles() {
 
     var articlesPromise = getAllArticles().then((response) => {
         let data = response.data;
-        return data;
+        return { "data": data };
     });
 
-    return { "data": articlesPromise };
+    return articlesPromise;
 };
 
 export { getFullArticle, getAllArticles };

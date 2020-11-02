@@ -116,7 +116,7 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
 
-    articlesPromise.then(snapshot => {
+    return articlesPromise.then(snapshot => {
         let resData = { "article_list": {} };
         snapshot.forEach(doc => {
             resData["article_list"][doc.id] = {
@@ -130,7 +130,6 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
         console.log(error);
         return error;
     });
-
 
 });
 
