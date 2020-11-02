@@ -9,13 +9,10 @@ class HomePage extends React.Component {
 
     componentDidMount() {
         getAllArticles().then((articles) => {
-            console.log("test");
-            console.log(articles);
             this.setState({
                 articles: articles
             });
         }).catch((err) => {
-            // window.location.href = ('/article-not-found');
             console.log(err);
         })
     }
