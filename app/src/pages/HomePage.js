@@ -1,30 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import NavBar from '../components/NavBar';
 import { getAllArticles } from '../utils/functions/articles';
 
-class HomePage extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+const INITIAL_STATE = {
+    articles: {}
+};
 
-    componentDidMount() {
+export default function HomePage() {
+    const [state, setState] = useState({
+        ...INITIAL_STATE
+    });
+
+    useEffect(() => {
         getAllArticles().then((articles) => {
-            this.setState({
-                articles: articles
-            });
+            setState({ articles: articles.article_list });
         }).catch((err) => {
             console.log(err);
         })
-    }
+    });
 
-    render() {
-        return (
-            <div id="home-page">
-                <NavBar />
-                <p>this is the home page</p>
-            </div>
-        )
-    }
+    return (
+        <div id="home-page">
+            <NavBar />
+            <p>this is the new home page</p>
+        </div>
+    );
 }
-
-export default HomePage;
