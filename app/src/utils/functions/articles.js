@@ -33,7 +33,7 @@ async function getAllArticles() {
         return data;
     });
 
-    return articlesPromise;
+    return { "data": articlesPromise };
 };
 
 export { getFullArticle, getAllArticles };
