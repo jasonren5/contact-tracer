@@ -112,6 +112,7 @@ exports.getFullArticleByID = functions.https.onCall((data, context) => {
     });
 });
 
+
 /*
 *   Gets information for an article section from the client, and adds that information to the sections collection.
 *   Params: article_id = id of article section is attached to, type = 0 for text, 1 for image,
@@ -151,3 +152,46 @@ exports.createSection = functions.https.onRequest((req, res) => {
         });
 
 });
+
+exports.getAllArticles = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const articlesPromise = db.collection("articles").get();
+
+    return articlesPromise.then(snapshot => {
+        let resData = { "article_list": [] };
+        snapshot.forEach(doc => {
+            resData["article_list"].push({
+                "id": doc.id,
+                "title": doc.data().title,
+                "image_url": doc.data().image_url
+            });
+        });
+
+        return resData;
+    }).catch(error => {
+        console.log(error);
+        return error;
+    });
+
+});
+
+// exports.getArticleListGetRequest = functions.https.onRequest(async (req, res) => {
+//     const db = admin.firestore();
+//     const articlesPromise = db.collection("articles").get();
+
+//     articlesPromise.then(snapshot => {
+//         let resData = { "article_list": {} };
+//         snapshot.forEach(doc => {
+//             resData["article_list"][doc.id] = {
+//                 "title": doc.data().title,
+//                 "image_url": doc.data().image_url
+//             };
+//         });
+
+//         res.send(resData);
+//     }).catch(error => {
+//         console.log(error);
+//         res.send(error);
+//     });
+
+// });

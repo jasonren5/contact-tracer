@@ -11,7 +11,7 @@ import SignUpPage from './pages/Auth2.0/SignUp';
 import PasswordForgetPage from './pages/Auth2.0/PasswordForget';
 import firebaseConfig from './utils/firebase/config.js';
 import firebase from 'firebase'
-import Home from './pages/Home';
+import HomePage from './pages/HomePage';
 import PageNotFound from './pages/PageNotFound.js';
 import ArticlePage from './pages/ArticlePage';
 
@@ -47,7 +47,7 @@ class App extends React.Component {
       <div className="App">
         <Router>
           <Switch>
-            <Route exact path={'/'} component={Home} />
+            <Route exact path={'/'} component={HomePage} />
             <Route path={'/signin'} component={SignInPage} />
             <Route path={'/signup'} component={SignUpPage} />
             <Route path={'/forgot-password'} component={PasswordForgetPage} />
