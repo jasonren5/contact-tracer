@@ -117,12 +117,13 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
     const articlesPromise = db.collection("articles").get();
 
     return articlesPromise.then(snapshot => {
-        let resData = { "article_list": {} };
+        let resData = { "article_list": [] };
         snapshot.forEach(doc => {
-            resData["article_list"][doc.id] = {
+            resData["article_list"].push({
+                "id": doc.id,
                 "title": doc.data().title,
                 "image_url": doc.data().image_url
-            };
+            });
         });
 
         return resData;
