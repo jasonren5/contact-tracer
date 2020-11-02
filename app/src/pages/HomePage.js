@@ -4,7 +4,7 @@ import ArticleList from '../components/Homepage/ArticleList';
 
 export default function HomePage() {
     return (
-        <div id="home-page">
+        <div className="home-page">
             <NavBar />
             <p>This is the new home page</p>
             <ArticleList />

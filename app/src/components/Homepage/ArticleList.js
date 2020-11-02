@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getAllArticles } from '../../utils/functions/articles';
+import ArticleContainer from './ArticleContainer';
 
-export default function ArticleList(props) {
+export default function ArticleList() {
     const INITIAL_STATE = {
         articles: []
     };
@@ -18,9 +19,9 @@ export default function ArticleList(props) {
     }, []);
 
     return (
-        <div>
+        <div className="Articles List">
             {state.articles.length > 0 && state.articles.map(article => {
-                return <p>{article.title}</p>;
+                return <ArticleContainer key={article.id} article={article} />;
             })
             }
         </div>
