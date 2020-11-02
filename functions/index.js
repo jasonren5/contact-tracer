@@ -114,21 +114,43 @@ exports.getFullArticleByID = functions.https.onCall((data, context) => {
 
 exports.getArticleList = functions.https.onCall((data, context) => {
     const db = admin.firestore();
-    console.log("get articles");
-    var promises = [];
-    promises.push(db.collection("articles").get());
+    const articlesPromise = db.collection("articles").get();
 
-    return Promise.all(promises).then(async (values) => {
-        var articlesData = values[0].data();
+    articlesPromise.then(snapshot => {
+        let resData = { "article_list": {} };
+        snapshot.forEach(doc => {
+            resData["article_list"][doc.id] = {
+                "title": doc.data().title,
+                "image_url": doc.data().image_url
+            };
+        });
 
-        let data = {
-            articles_data: articlesData
-        };
-
-        return data;
-    }).catch(err => {
-        return err;
+        return resData;
+    }).catch(error => {
+        console.log(error);
+        return error;
     });
 
 
 });
+
+// exports.getArticleListGetRequest = functions.https.onRequest(async (req, res) => {
+//     const db = admin.firestore();
+//     const articlesPromise = db.collection("articles").get();
+
+//     articlesPromise.then(snapshot => {
+//         let resData = { "article_list": {} };
+//         snapshot.forEach(doc => {
+//             resData["article_list"][doc.id] = {
+//                 "title": doc.data().title,
+//                 "image_url": doc.data().image_url
+//             };
+//         });
+
+//         res.send(resData);
+//     }).catch(error => {
+//         console.log(error);
+//         res.send(error);
+//     });
+
+// });
