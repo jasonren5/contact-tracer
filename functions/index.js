@@ -110,4 +110,44 @@ exports.getFullArticleByID = functions.https.onCall((data, context) => {
     }).catch(err => {
         return err;
     });
-})
+});
+
+/*
+*   Gets information for an article section from the client, and adds that information to the sections collection.
+*   Params: article_id = id of article section is attached to, type = 0 for text, 1 for image,
+*       body = either text (if type == 0) or image URL (if type == 1)
+*/
+exports.createSection = functions.https.onRequest((req, res) => {
+    const db = admin.firestore();
+
+    const article_id = req.article_id;
+    const type = parseInt(req.type);
+    const body = req.body;
+
+    if (isNaN(type)) {
+        //send bad request
+        res.sendStatus(400);
+        return;
+    }
+
+    //lack of edits implementation is fine for MVP
+    const sectionToAdd = {
+        article_id: article_id,
+        type: type,
+        body: body,
+        edits: null
+    };
+
+    db.collection("sections").add(sectionToAdd)
+        .then(docRef => {
+            functions.logger.info("Seciton document written with ID: " + docRef.id, { structuredData: true });
+            res.send(200);
+            return;
+        })
+        .catch(error => {
+            functions.logger.info("Error adding section with ID: " + docRef.id, { structuredData: true });
+            res.send(200);
+            return;
+        });
+
+});
