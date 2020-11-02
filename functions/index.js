@@ -112,7 +112,7 @@ exports.getFullArticleByID = functions.https.onCall((data, context) => {
     });
 });
 
-exports.getArticleList = functions.https.onCall((data, context) => {
+exports.getAllArticles = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
 
