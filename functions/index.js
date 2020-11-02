@@ -112,21 +112,23 @@ exports.getFullArticleByID = functions.https.onCall((data, context) => {
     });
 });
 
-exports.getArticleList = functions.https.onRequest((req, res) => {
+exports.getArticleList = functions.https.onCall((data, context) => {
     const db = admin.firestore();
-
-    const citiesRef = db.collection('articles');
-    const snapshot = await citiesRef.get();
-    res.send(snapshot);
-
+    console.log("get articles");
     var promises = [];
     promises.push(db.collection("articles").get());
 
     return Promise.all(promises).then(async (values) => {
         var articlesData = values[0].data();
 
-        return articlesData;
+        let data = {
+            articles_data: articlesData
+        };
+
+        return data;
     }).catch(err => {
         return err;
     });
+
+
 });
