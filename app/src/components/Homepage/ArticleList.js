@@ -5,18 +5,19 @@ import ArticleContainer from './ArticleContainer';
 import { Grid, CssBaseline } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     }
 }));
 
-export default function ArticleList() {
+const INITIAL_STATE = {
+    articles: []
+};
+
+export default function ArticleList(props) {
     const classes = useStyles();
-    const INITIAL_STATE = {
-        articles: []
-    };
+
     const [state, setState] = useState({
         ...INITIAL_STATE
     });
@@ -34,13 +35,13 @@ export default function ArticleList() {
             <CssBaseline />
             <Grid
                 container
-                direction="row"
+                direction={props.mediaQuery ? "column" : "row"}
                 justify="center"
                 alignItems="center"
                 spacing={4}
             >
                 {state.articles.length > 0 && state.articles.map(article => {
-                    return <ArticleContainer key={article.id} article={article} />;
+                    return <ArticleContainer key={article.id} article={article} mediaQuery={props.mediaQuery} />;
                 })
                 }
             </Grid>

@@ -19,8 +19,12 @@ export default function HomePage() {
     return (
         <div className="home-page">
             <NavBar />
-            <Container component="main" className={classes.body} maxWidth={isTabletOrMobile ? 'xs' : "lg"}>
-                <ArticleList />
+            <Container
+                component="main"
+                className={classes.body}
+                maxWidth={isTabletOrMobile ? 'xs' : "xl"}
+            >
+                <ArticleList mediaQuery={isTabletOrMobile} />
             </Container>
         </div >
     );
