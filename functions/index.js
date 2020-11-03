@@ -195,3 +195,55 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
 //     });
 
 // });
+
+exports.createBlankArticle = functions.https.onRequest((req, res) => {
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    let articleData = {
+        title: "placeholder title",
+        image_url: "http://clipart-library.com/data_images/69339.gif"
+    };
+
+    let versionData = {
+        body: "first version of section",
+        order: "0",
+        previous_version_id: ""
+    }
+
+    let sectionData1 = {
+        order: 0,
+        type: "text"
+    };
+
+    let sectionData2 = {
+        order: 1,
+        type: "text"
+    };
+
+    //Even with batch writes, this still counts as five write operations... lol
+    let newArticleRef = db.collection("articles").doc();
+    batch.set(newArticleRef, articleData);
+
+    let newSectionRef1 = newArticleRef.collection("sections").doc();
+    batch.set(newSectionRef1, sectionData1);
+
+    let newSectionRef2 = newArticleRef.collection("sections").doc();
+    batch.set(newSectionRef2, sectionData2);
+
+    let versionRef1 = newSectionRef1.collection("versions").doc();
+    batch.set(versionRef1, versionData);
+
+    let versionRef2 = newSectionRef2.collection("versions").doc();
+    batch.set(versionRef2, versionData);
+
+    batch.commit()
+        .then(data => {
+            res.sendStatus(200);
+            return;
+        })
+        .catch(error => {
+            res.sendStatus(500);
+            return;
+        })
+});
