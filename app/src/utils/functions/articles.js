@@ -5,6 +5,8 @@ const firebase = require("firebase");
 require("firebase/functions");
 
 var functions = firebase.functions();
+// Local functions line  
+// var localFunctions = firebase.functions().useFunctionsEmulator("http://localhost:5001");
 
 async function getFullArticle(article_id) {
 
