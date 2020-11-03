@@ -5,18 +5,7 @@ const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 admin.initializeApp();
 
-/*
-*   This test function is visible through the firebase emulator: https://firebase.google.com/docs/functions/get-started#emulate-execution-of-your-functions
-*   To what extend should we be using the emulator and setting up a dev environment? We should definitely be using it at the very least to test functions.
-*   In order to deploy firebase functions, you are required to use the pay as you go plan -- the free tier limits still exist, but if you go over, you pay.
-*   As a result, any errors like an infinite loop could potentially be very costly in production -- so to some extent we should definitely be using the emulator.
-*/
-exports.helloWorld = functions.https.onRequest((request, response) => {
-    functions.logger.info("Hello logs!", { structuredData: true });
-    response.send("Hello from Firebase!");
-});
-
-//Returns user data based on input UID that corresponds to a document ID (and auth ID)
+// Returns user data based on input UID that corresponds to a document ID (and auth ID)
 exports.getUserById = functions.https.onRequest((req, res) => {
     // Grab the id parameter.
     const id = req.query.id;
@@ -24,7 +13,7 @@ exports.getUserById = functions.https.onRequest((req, res) => {
 
     functions.logger.info("Getting user with id: '" + id + "'", { structuredData: true });
 
-    //get document from users collection with id == id
+    // Get document from users collection with id == id
     db.collection("users").doc(id).get().then(doc => {
         if (doc.exists) {
             res.send(doc.data());
@@ -39,7 +28,7 @@ exports.getUserById = functions.https.onRequest((req, res) => {
     });
 });
 
-//Returns user data based on input username that corresponds to a username stored in a document in the users collection
+// Returns user data based on input username that corresponds to a username stored in a document in the users collection
 //  Note: this assumes that the 'users' collection exists, and that documents within that collection have a 'username' field.
 exports.getUserByUsername = functions.https.onRequest((req, res) => {
     // Grab the username parameter.
@@ -61,8 +50,8 @@ exports.getUserByUsername = functions.https.onRequest((req, res) => {
     });
 });
 
-//On auth creation, adds a document to the users collection with the same ID as the auth ID.
-//  Defaults username to the auth email and sets number of contributions to 0.
+// On auth creation, adds a document to the users collection with the same ID as the auth ID.
+// Defaults username to the auth email and sets number of contributions to 0.
 exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
     const db = admin.firestore();
     const uid = user.uid;
@@ -153,6 +142,10 @@ exports.createSection = functions.https.onRequest((req, res) => {
 
 });
 
+
+/*
+* Get the all of the articles in the collection. Just get the ID, title, and image URL
+*/
 exports.getAllArticles = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
@@ -174,19 +167,19 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
     });
 });
 
+/*
+* Get all the articles, as well as a short summary. Summary is pulled from the first section, and the latest version. This is pacckaged with id, title, and imageURL
+*/
 exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
 
-    // Articles promise
     return articlesPromise.then(async (snapshot) => {
-        // For each article
-        return await Promise.all(snapshot.docs.map(async (article) => {
-            // Preset return array
-            let resData = { "article_list": [] };
+        let resData = { "article_list": [] };
+        await Promise.all(snapshot.docs.map(async (article) => {
 
             // Default the snippet to having no summary data
-            var snippet = "There is nothing written yet for this article. Be the first to contribute!";
+            var snippet = "There is nothing written for this article yet. Be the first to contribute by editing!";
 
             // See if there is section data 
             const sectionQuery = await db.collection("articles").doc(article.id).collection("sections").where("type", "==", "text").orderBy("order", "asc").limit(1).get();
@@ -199,9 +192,9 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
                 var latestVersion = versionQuery.docs[0];
                 snippet = latestVersion.data().body;
 
-                // If the snippet is over 30 characters, trunacte it
-                if (snippet.length > 30) {
-                    snippet = snippet.substring(0, 29) + "...";
+                // If the snippet is over 30 characters, truncate it
+                if (snippet.length > 250) {
+                    snippet = snippet.substring(0, 249) + "...";
                 }
             }
             // Push the article information to the array
@@ -211,16 +204,18 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
                 "image_url": article.data().image_url,
                 "summary": snippet
             });
-
-            // send the array of articles
-            return resData;
         }));
-
+        // Send the array of articles
+        return resData;
     }).catch(error => {
         console.log(error);
         return error;
     });
 });
+
+/*
+* Test GET request for the getAllArticles
+*/
 
 // exports.getArticleListGetRequest = functions.https.onRequest(async (req, res) => {
 //     // Get db and articles
