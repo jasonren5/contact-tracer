@@ -196,6 +196,10 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
 
 // });
 
+/*
+*   Creates a blank article with two sections that have one version each
+*         using firestore batch commits
+*/
 exports.createBlankArticle = functions.https.onRequest((req, res) => {
     const db = admin.firestore();
     const batch = db.batch();
