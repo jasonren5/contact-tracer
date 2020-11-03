@@ -1,8 +1,5 @@
 import React from 'react';
-import {TextField, IconButton} from 'material-ui';
-import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
-import CardContent from '@material-ui/core/CardContent';
+import { TextField, IconButton, Card, CardActions, CardContent } from 'material-ui';
 import Edit from '@material-ui/icons/Edit';
 import Publish from '@material-ui/icons/Publish';
 import Undo from '@material-ui/icons/Undo';
@@ -33,8 +30,8 @@ class EditSectionText extends React.Component {
         });
     }
 
-    publishChanges(){
-        publishContribution(this.state.section, this.editValue).then((response)=>{
+    publishChanges() {
+        publishContribution(this.state.section, this.editValue).then((response) => {
             if (response.conflict) {
                 this.setState({
                     mergeSection: response.section
@@ -73,7 +70,7 @@ class EditSectionText extends React.Component {
         )
     }
 
-    renderNotEditing(){
+    renderNotEditing() {
         return (
             <Card>
                 <CardContent>
@@ -91,7 +88,7 @@ class EditSectionText extends React.Component {
     render() {
         return (
             <div>
-                {this.state.editing 
+                {this.state.editing
                     ? this.renderEditing()
                     : this.renderNotEditing()
                 }
