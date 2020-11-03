@@ -52,6 +52,8 @@ export default function ArticleContainer(props) {
     const history = useHistory();
     const classes = useStyles();
 
+    // console.log(props.article.summary);
+
     const handleReadMoreClick = () => {
         history.push(articleURL);
     };

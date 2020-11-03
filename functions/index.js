@@ -154,24 +154,26 @@ exports.createSection = functions.https.onRequest((req, res) => {
 });
 
 exports.getAllArticles = functions.https.onCall((data, context) => {
+    return articlesPromise.then(snapshot => {
+        let resData = { "article_list": [] };
+        snapshot.forEach(doc => {
+            resData["article_list"].push({
+                "id": doc.id,
+                "title": doc.data().title,
+                "image_url": doc.data().image_url
+            });
+        });
+
+        return resData;
+    }).catch(error => {
+        console.log(error);
+        return error;
+    });
+});
+
+exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
-
-    // return articlesPromise.then(snapshot => {
-    //     let resData = { "article_list": [] };
-    //     snapshot.forEach(doc => {
-    //         resData["article_list"].push({
-    //             "id": doc.id,
-    //             "title": doc.data().title,
-    //             "image_url": doc.data().image_url
-    //         });
-    //     });
-
-    //     return resData;
-    // }).catch(error => {
-    //     console.log(error);
-    //     return error;
-    // });
 
     // Articles promise
     return articlesPromise.then(async (snapshot) => {
@@ -212,52 +214,50 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
         console.log(error);
         return error;
     });
-
-
 });
 
-exports.getArticleListGetRequest = functions.https.onRequest(async (req, res) => {
-    // Get db and articles
-    const db = admin.firestore();
-    const articlesPromise = db.collection("articles").get();
+// exports.getArticleListGetRequest = functions.https.onRequest(async (req, res) => {
+//     // Get db and articles
+//     const db = admin.firestore();
+//     const articlesPromise = db.collection("articles").get();
 
-    // Articles promise
-    articlesPromise.then(async (snapshot) => {
-        // Preset return array
-        let resData = { "article_list": [] };
-        // For each article
-        await Promise.all(snapshot.docs.map(async (article) => {
-            // Default the snippet to having no summary data
-            var snippet = "There is nothing written yet for this article. Be the first to contribute!";
+//     // Articles promise
+//     articlesPromise.then(async (snapshot) => {
+//         // Preset return array
+//         let resData = { "article_list": [] };
+//         // For each article
+//         await Promise.all(snapshot.docs.map(async (article) => {
+//             // Default the snippet to having no summary data
+//             var snippet = "There is nothing written yet for this article. Be the first to contribute!";
 
-            // See if there is section data 
-            const sectionQuery = await db.collection("articles").doc(article.id).collection("sections").where("type", "==", "text").orderBy("order", "asc").limit(1).get();
-            var section = sectionQuery.docs[0];
+//             // See if there is section data 
+//             const sectionQuery = await db.collection("articles").doc(article.id).collection("sections").where("type", "==", "text").orderBy("order", "asc").limit(1).get();
+//             var section = sectionQuery.docs[0];
 
-            // If there is section data 
-            if (section !== undefined) {
-                // Get the most recent version, and retrieve body and save to snippet
-                const versionQuery = await db.collection("articles").doc(article.id).collection("sections").doc(section.id).collection("versions").orderBy("order", "desc").limit(1).get();
-                var latestVersion = versionQuery.docs[0];
-                snippet = latestVersion.data().body;
+//             // If there is section data 
+//             if (section !== undefined) {
+//                 // Get the most recent version, and retrieve body and save to snippet
+//                 const versionQuery = await db.collection("articles").doc(article.id).collection("sections").doc(section.id).collection("versions").orderBy("order", "desc").limit(1).get();
+//                 var latestVersion = versionQuery.docs[0];
+//                 snippet = latestVersion.data().body;
 
-                // If the snippet is over 30 characters, trunacte it
-                if (snippet.length > 30) {
-                    snippet = snippet.substring(0, 29) + "...";
-                }
-            }
-            // Push the article information to the array
-            resData["article_list"].push({
-                "id": article.id,
-                "title": article.data().title,
-                "image_url": article.data().image_url,
-                "summary": snippet
-            });
-        }));
-        // send the array of articles
-        res.send(resData);
-    }).catch(error => {
-        console.log(error);
-        res.send(error);
-    });
-});
+//                 // If the snippet is over 30 characters, trunacte it
+//                 if (snippet.length > 30) {
+//                     snippet = snippet.substring(0, 29) + "...";
+//                 }
+//             }
+//             // Push the article information to the array
+//             resData["article_list"].push({
+//                 "id": article.id,
+//                 "title": article.data().title,
+//                 "image_url": article.data().image_url,
+//                 "summary": snippet
+//             });
+//         }));
+//         // send the array of articles
+//         res.send(resData);
+//     }).catch(error => {
+//         console.log(error);
+//         res.send(error);
+//     });
+// });
