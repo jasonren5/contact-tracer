@@ -1,17 +1,17 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 
 import {
     Card,
     Grid,
     CardMedia,
     CardContent,
+    CardActions,
     Typography,
     Link,
     Button
 } from '@material-ui/core';
-
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
-
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -24,9 +24,7 @@ const useStyles = makeStyles((theme) => ({
         alignItems: 'center',
     },
     root: {
-        display: 'flex',
-        textAlign: 'center',
-        // height: 250
+        // display: 'flex',
     },
     details: {
         display: 'flex',
@@ -37,31 +35,56 @@ const useStyles = makeStyles((theme) => ({
         // width: 400,
     },
     image: {
-        width: 300,
-        height: 200
-    },
-    button: {
-        margin: theme.spacing(1),
-        width: 150
+        // width: 400,
+        height: 150
     },
     buttonHolder: {
-        textAlign: 'right'
+        textAlign: 'left'
     },
     contentSnipet: {
-        textAlign: 'left'
-    }
+        textAlign: 'left',
+        marginBottom: 0
+    },
 }));
 
 export default function ArticleContainer(props) {
     const articleURL = "/article/" + props.article.id;
-
+    const history = useHistory();
     const classes = useStyles();
+
+    const handleReadMoreClick = () => {
+        history.push(articleURL);
+    };
 
     return (
         // <Box className="Article Container">
-        <Grid item xs={"auto"}>
+        <Grid item xs={6}>
             <Card className={classes.root}>
                 <CardMedia
+                    className={classes.image}
+                    image={props.article.image_url}
+                    title={props.article.title}
+                />
+                <CardContent>
+                    <Link href={articleURL} color={"primary"}>
+                        <Typography component="h5" variant="h5" gutterBottom>{props.article.title}</Typography>
+                    </Link>
+                    <Typography className={classes.contentSnipet} variant="body2" color="textSecondary">
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem sunt perspiciatis quaerat ab tempora aut est delectus cupiditate odio unde, ullam dolore iste laborum sed officiis praesentium. Recusandae, officia distinctio!
+                    </Typography>
+                </CardContent>
+                <CardActions>
+                    <Button
+                        // variant="contained"
+                        color="secondary"
+                        className={classes.button}
+                        endIcon={<NavigateNextIcon />}
+                        onClick={handleReadMoreClick}
+                    >
+                        Read More
+                    </Button>
+                </CardActions>
+                {/* <CardMedia
                     className={classes.image}
                     image={props.article.image_url}
                     title={props.article.title}
@@ -85,7 +108,7 @@ export default function ArticleContainer(props) {
                             Read More
                     </Button>
                     </div>
-                </div>
+                </div> */}
             </Card>
         </Grid>
         // </Box>
