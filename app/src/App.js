@@ -15,6 +15,7 @@ import HomePage from './pages/HomePage';
 import PageNotFound from './pages/PageNotFound.js';
 import ArticlePage from './pages/ArticlePage';
 import EditArticlePage from './pages/EditArticlePage';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends React.Component {
   constructor(props) {
@@ -46,17 +47,19 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <Router>
-          <Switch>
-            <Route exact path={'/'} component={HomePage} />
-            <Route path={'/signin'} component={SignInPage} />
-            <Route path={'/signup'} component={SignUpPage} />
-            <Route path={'/forgot-password'} component={PasswordForgetPage} />
-            <Route path={'/article/:articleId'} component={ArticlePage} />
-            <Route path={'/contribute/:articleId'} component={EditArticlePage} />
-            <Route component={PageNotFound} />
-          </Switch>
-        </Router>
+        <MuiThemeProvider>
+          <Router>
+            <Switch>
+              <Route exact path={'/'} component={HomePage} />
+              <Route path={'/signin'} component={SignInPage} />
+              <Route path={'/signup'} component={SignUpPage} />
+              <Route path={'/forgot-password'} component={PasswordForgetPage} />
+              <Route path={'/article/:articleId'} component={ArticlePage} />
+              <Route path={'/contribute/:articleId'} component={EditArticlePage} />
+              <Route component={PageNotFound} />
+            </Switch>
+          </Router>
+        </MuiThemeProvider>
       </div>
     )
   }

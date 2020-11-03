@@ -125,7 +125,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
         let latestVersionData = versions.docs[0].data();
 
         if(latestVersion.id !== previous_version_id && previous_version_id) {
-            // executes if the previous_verson_id is not null and is the same as the most recent version in the database
+            // executes if the previous_verson_id is not null and also different then the most recent version in the database
             let resData = {
                 conflict: true,
                 current_version: latestVersionData
@@ -135,11 +135,12 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
 
         // assigns the order param of the new version, 0 if this is the first version of a new section
         const newVersionOrder = (previous_version_id ? latestVersionData.order : -1) + 1;
+        const user_id = (context.auth ? context.auth.uid: null);
 
         var newVersionData = {
             body: data.body,
             previous_version_id: previous_version_id,
-            user_id: context.auth.uid,
+            user_id: user_id,
             order: newVersionOrder
         }
 

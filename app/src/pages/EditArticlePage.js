@@ -2,6 +2,7 @@ import React from 'react';
 import EditArticleSection from "../components/Articles/EditArticleSection";
 import ArticleHeader from "../components/Articles/ArticleHeader";
 import { getFullArticle } from '../utils/functions/articles';
+import { Container } from '@material-ui/core';
 
 class EditArticlePage extends React.Component {
     constructor(props) {
@@ -19,7 +20,7 @@ class EditArticlePage extends React.Component {
             });
         }).catch((err) => {
             console.log(err);
-            // window.location.href = ('/article-not-found');
+            window.location.href = ('/article-not-found');
         })
     }
 
@@ -35,12 +36,15 @@ class EditArticlePage extends React.Component {
         }
         // Render the article
         return (
-            <div>
+            <Container
+                component="main"
+                maxWidth="md"
+            >
                 <ArticleHeader article={this.state.article} />
                 {this.state.article.sections.map((section) =>
                     <EditArticleSection section={section}></EditArticleSection>
                 )}
-            </div>
+            </Container>
         )
     }
 }

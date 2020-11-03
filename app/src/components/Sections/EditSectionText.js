@@ -15,16 +15,18 @@ class EditSectionText extends React.Component {
         this.state = {
             editing: false,
             section: props.section,
-            mergeSection: null
+            mergeSection: null,
+            editValue: props.section.body
         };
-        this.editValue = props.section.body;
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
         this.publishChanges = this.publishChanges.bind(this);
     }
 
     handleChange(event) {
-        this.editValue = event.target.value
+        this.setState({
+            editValue: event.target.value
+        })
     }
 
     toggleEditing() {
@@ -34,7 +36,7 @@ class EditSectionText extends React.Component {
     }
 
     publishChanges(){
-        publishContribution(this.state.section, this.editValue).then((response)=>{
+        publishContribution(this.state.section, this.state.editValue).then((response)=>{
             if (response.conflict) {
                 this.setState({
                     mergeSection: response.section
@@ -43,7 +45,8 @@ class EditSectionText extends React.Component {
             this.setState({
                 editing: false,
                 section: response.section,
-                mergeSection: null
+                mergeSection: null,
+                editValue: response.section.body
             })
         })
     }
@@ -57,7 +60,7 @@ class EditSectionText extends React.Component {
                         label="Edit Section"
                         multiline
                         rowsMax={4}
-                        value={this.editValue}
+                        value={this.state.editValue}
                         onChange={(event) => this.handleChange(event)}
                     />
                 </CardContent>
