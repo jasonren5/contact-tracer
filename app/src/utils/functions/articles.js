@@ -14,7 +14,7 @@ async function getFullArticle(article_id) {
         let data = response.data;
         var sections = [];
         data.section_data.forEach((section) => {
-            var s = new ArticleSection(data.article_data.article_id, section.section_id, section.type, section.body, [])
+            var s = new ArticleSection(data.article_data.article_id, section.section_id, section.current_version, section.type, section.body, [])
             sections.push(s)
         });
 
@@ -36,4 +36,34 @@ async function getAllArticles() {
     return articlesPromise;
 };
 
-export { getFullArticle, getAllArticles };
+async function publishContribution(section, newBody) {
+    firebase.functions().useFunctionsEmulator('http://localhost:5001');
+    var addVersionToSection = functions.httpsCallable("addVersionToSection");
+    
+    let requestData = {
+        article_id: section.article_id,
+        section_id: section.id,
+        previous_version_id: section.version_id,
+        body: newBody
+    };
+
+    var response = await addVersionToSection(requestData);
+    var data = response.data.current_version;
+    const conflict = response.data.conflict;
+
+    var newSection = section;
+
+    if(conflict) {
+        newSection.body = data.body;
+    } else {
+        newSection.body = data.body;
+        newSection.version_id = data.version_id;
+    }
+
+    return {
+        conflict: conflict,
+        section: newSection
+    };
+}
+
+export { getFullArticle, getAllArticles, publishContribution };

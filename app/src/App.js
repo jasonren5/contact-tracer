@@ -14,6 +14,7 @@ import firebase from 'firebase'
 import HomePage from './pages/HomePage';
 import PageNotFound from './pages/PageNotFound.js';
 import ArticlePage from './pages/ArticlePage';
+import EditArticlePage from './pages/EditArticlePage';
 
 class App extends React.Component {
   constructor(props) {
@@ -52,6 +53,7 @@ class App extends React.Component {
             <Route path={'/signup'} component={SignUpPage} />
             <Route path={'/forgot-password'} component={PasswordForgetPage} />
             <Route path={'/article/:articleId'} component={ArticlePage} />
+            <Route path={'/contribute/:articleId'} component={EditArticlePage} />
             <Route component={PageNotFound} />
           </Switch>
         </Router>
