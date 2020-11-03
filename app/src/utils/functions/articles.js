@@ -26,7 +26,7 @@ async function getFullArticle(article_id) {
 };
 
 async function getAllArticles() {
-    var getAllArticles = functions.httpsCallable("getAllArticles");
+    var getAllArticles = functions.httpsCallable("getAllArticlesWithSummaries");
 
     var articlesPromise = getAllArticles().then((response) => {
         let data = response.data;

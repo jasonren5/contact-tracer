@@ -60,7 +60,7 @@ export default function ArticleContainer(props) {
 
     return (
         // <Box className="Article Container">
-        <Grid item xs={props.mediaQuery ? "auto" : "4"}>
+        <Grid item xs={props.mediaQuery ? "auto" : 4}>
             <Card className={classes.root}>
                 <CardMedia
                     className={classes.image}

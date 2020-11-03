@@ -154,6 +154,9 @@ exports.createSection = functions.https.onRequest((req, res) => {
 });
 
 exports.getAllArticles = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const articlesPromise = db.collection("articles").get();
+
     return articlesPromise.then(snapshot => {
         let resData = { "article_list": [] };
         snapshot.forEach(doc => {
@@ -177,10 +180,11 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
 
     // Articles promise
     return articlesPromise.then(async (snapshot) => {
-        // Preset return array
-        let resData = { "article_list": [] };
         // For each article
-        await Promise.all(snapshot.docs.map(async (article) => {
+        return await Promise.all(snapshot.docs.map(async (article) => {
+            // Preset return array
+            let resData = { "article_list": [] };
+
             // Default the snippet to having no summary data
             var snippet = "There is nothing written yet for this article. Be the first to contribute!";
 
@@ -207,9 +211,11 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
                 "image_url": article.data().image_url,
                 "summary": snippet
             });
+
+            // send the array of articles
+            return resData;
         }));
-        // send the array of articles
-        return resData;
+
     }).catch(error => {
         console.log(error);
         return error;
