@@ -70,7 +70,7 @@ exports.getFullArticleByID = functions.https.onCall((data, context) => {
 
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
-    promises.push(db.collection("articles").doc(article_id).collection("sections").get());
+    promises.push(db.collection("articles").doc(article_id).collection("sections").orderBy('order').get());
     return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
