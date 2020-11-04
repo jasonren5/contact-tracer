@@ -8,10 +8,14 @@ class SectionText extends React.Component {
     render() {
         return (
             <div>
-                <p>{this.props.section.body}</p>
+                <p style={textStyle}>{this.props.section.body}</p>
             </div>
         )
     }
 }
 
 export default SectionText;
+
+const textStyle = {
+    textAlign: "left"
+}

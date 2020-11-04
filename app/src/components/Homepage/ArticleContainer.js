@@ -43,12 +43,18 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function ArticleContainer(props) {
+    // Note: edit links are temporary, just need a way for the profs to access it in the mvp
     const articleURL = "/article/" + props.article.id;
+    const editArticleURL = "/contribute/" + props.article.id;
     const history = useHistory();
     const classes = useStyles();
 
     const handleReadMoreClick = () => {
         history.push(articleURL);
+    };
+
+    const handleEditClick = () => {
+        history.push(editArticleURL);
     };
 
     return (
@@ -68,6 +74,13 @@ export default function ArticleContainer(props) {
                     </Typography>
                 </CardContent>
                 <CardActions>
+                    <Button
+                        color="secondary"
+                        className={classes.button}
+                        onClick={handleEditClick}
+                    >
+                        Contribute
+                    </Button>
                     <Button
                         color="secondary"
                         className={classes.button}

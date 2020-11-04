@@ -15,8 +15,8 @@ async function getFullArticle(article_id) {
     var articlePromise = getFullArticleByID({ article_id: article_id }).then((response) => {
         let data = response.data;
         var sections = [];
-        data.section_data.forEach((section) => {
-            var s = new ArticleSection(data.article_data.article_id, section.section_id, section.type, section.body, [])
+        data.section_data.forEach((section, index) => {
+            var s = new ArticleSection(data.article_data.article_id, section.section_id, section.current_version, section.type, section.body, index, [])
             sections.push(s)
         });
 
@@ -38,4 +38,51 @@ async function getAllArticles() {
     return articlesPromise;
 };
 
-export { getFullArticle, getAllArticles };
+async function publishContribution(section, newBody) {
+    var addVersionToSection = functions.httpsCallable("addVersionToSection");
+    
+    let requestData = {
+        article_id: section.article_id,
+        section_id: section.id,
+        previous_version_id: section.version_id,
+        body: newBody
+    };
+
+    var response = await addVersionToSection(requestData);
+    var data = response.data.current_version;
+    const conflict = response.data.conflict;
+
+    var newSection = section;
+
+    if(conflict) {
+        newSection.body = data.body;
+    } else {
+        newSection.body = data.body;
+        newSection.version_id = data.version_id;
+    }
+
+    return {
+        conflict: conflict,
+        section: newSection
+    };
+}
+
+async function addSection(section){
+    var addSectionAtIndex = functions.httpsCallable("addSectionAtIndex");
+
+    let requestData = {
+        section: section
+    }
+
+    var response = await addSectionAtIndex(requestData);
+
+    console.log(response);
+
+    var newSection = section;
+    newSection.id = response.data.section_id;
+    newSection.version_id = response.data.version_id;
+
+    return newSection
+}
+
+export { getFullArticle, getAllArticles, publishContribution, addSection };

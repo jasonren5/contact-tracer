@@ -1,15 +1,16 @@
 import React from 'react';
-import Section from "../components/Articles/ArticleSection";
+import EditArticleSection from "../components/Articles/EditArticleSection";
 import ArticleHeader from "../components/Articles/ArticleHeader";
 import { getFullArticle } from '../utils/functions/articles';
 import { Container } from '@material-ui/core';
 
-class ArticlePage extends React.Component {
+class EditArticlePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             article: null
         }
+        this.addSectionToArticle = this.addSectionToArticle.bind(this);
     }
 
     componentDidMount() {
@@ -19,7 +20,24 @@ class ArticlePage extends React.Component {
                 article: article
             });
         }).catch((err) => {
+            console.log(err);
             window.location.href = ('/article-not-found');
+        })
+    }
+
+    addSectionToArticle(section){
+        var article = this.state.article;
+
+        console.log(article.sections.join());
+        for (let i = section.order; i < article.sections.length; i++) { 
+            article.sections[i].order+=1;
+          }
+        
+        article.sections.splice(section.order, 0, section);
+        console.log(article.sections.join());
+
+        this.setState({
+            article: article
         })
     }
 
@@ -42,11 +60,16 @@ class ArticlePage extends React.Component {
             >
                 <ArticleHeader article={this.state.article} />
                 {this.state.article.sections.map((section) =>
-                    <Section section={section}></Section>
+                    <EditArticleSection 
+                        key={section.id+section.order} 
+                        section={section}
+                        addSectionToArticle={this.addSectionToArticle}
+                    >
+                    </EditArticleSection>
                 )}
             </Container>
         )
     }
 }
 
-export default ArticlePage;
+export default EditArticlePage;

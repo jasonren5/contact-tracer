@@ -101,6 +101,105 @@ exports.getFullArticleByID = functions.https.onCall((data, context) => {
     });
 });
 
+exports.addVersionToSection = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const article_id = data.article_id;
+    const section_id = data.section_id;
+    const previous_version_id = data.previous_version_id;
+
+    const versionsPromise = db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").orderBy('order', 'desc').get();
+
+    return versionsPromise.then((versions) => {
+        let latestVersion = versions.docs[0];
+        let latestVersionData = versions.docs[0].data();
+
+        if(latestVersion.id !== previous_version_id && previous_version_id) {
+            // executes if the previous_verson_id is not null and also different then the most recent version in the database
+            let resData = {
+                conflict: true,
+                current_version: latestVersionData
+            }
+            return Promise.resolve(resData)
+        }
+
+        // assigns the order param of the new version, 0 if this is the first version of a new section
+        const newVersionOrder = (previous_version_id ? latestVersionData.order : -1) + 1;
+        const user_id = (context.auth ? context.auth.uid: null);
+
+        var newVersionData = {
+            body: data.body,
+            previous_version_id: previous_version_id,
+            user_id: user_id,
+            order: newVersionOrder
+        }
+
+        var versionPromise = db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").add(newVersionData);
+
+        return versionPromise.then((doc) => {
+            newVersionData["article_id"] = article_id;
+            newVersionData["section_id"] = section_id;
+            newVersionData["version_id"] = doc.id;
+
+            let resData = {
+                conflict: false,
+                current_version: newVersionData
+            }
+
+            return resData;
+        })
+    })
+})
+
+/*
+* Adds Section at correct index. 
+* Params:
+* section: the section object that should be added
+* 
+*/
+exports.addSectionAtIndex = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const index = data.section.order;
+    const article_id = data.section.article_id;
+
+    const increment = admin.firestore.FieldValue.increment(1);
+
+    var reorderPromise = db.collection("articles").doc(article_id).collection("sections").where("order", ">=", index).get().then((sections)=>{
+        const batch = db.batch();
+
+        sections.forEach((section) => {
+            batch.set(section.ref, { order: increment }, { merge: true });
+        });
+
+        return batch.commit();
+    })
+
+    var sectionPromise = reorderPromise.then(() => {
+        let sectionData = {
+            order: index,
+            type: data.section.type
+        }
+        return db.collection("articles").doc(article_id).collection("sections").add(sectionData);
+    })
+
+    var versionPromise = sectionPromise.then((section) => {
+        let versionData = {
+            order: 0,
+            body: data.section.body,
+            user_id: (context.auth ? context.auth.uid : null)
+        }
+        return db.doc(section.path).collection("versions").add(versionData);
+    })
+
+    var finalPromise = Promise.all([sectionPromise, versionPromise]);
+
+    return finalPromise.then((results) => {
+        return {
+            section_id: results[0].id,
+            version_id: results[1].id
+        }
+    })
+})
+
 
 /*
 *   Gets information for an article section from the client, and adds that information to the sections collection.
