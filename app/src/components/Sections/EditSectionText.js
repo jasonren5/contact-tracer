@@ -57,6 +57,7 @@ class EditSectionText extends React.Component {
                     mergeSection: response.section,
                     mergeValue: response.section.body,
                     merging: true,
+                    section: localSection
                 })
                 return;
             }
