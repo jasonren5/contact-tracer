@@ -47,7 +47,7 @@ class EditArticlePage extends React.Component {
         if (!this.state.article) {
             return (
                 <div>
-                    
+                    <h3>Loading...</h3>
                 </div>
             )
         }
