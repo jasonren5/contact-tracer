@@ -3,9 +3,6 @@ import {TextField, IconButton} from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import Edit from '@material-ui/icons/Edit';
-import Publish from '@material-ui/icons/Publish';
-import Undo from '@material-ui/icons/Undo';
 import { publishContribution, addSection } from "../../utils/functions/articles"
 import { Button } from '@material-ui/core';
 import ArticleSection from '../../classes/ArticleSection';
@@ -117,7 +114,7 @@ class EditSectionText extends React.Component {
         )
     }
 
-    renderNotEditing(){
+    renderNotEditing() {
         return (
             <Card>
                 <CardContent>
@@ -138,7 +135,7 @@ class EditSectionText extends React.Component {
     render() {
         return (
             <div>
-                {this.state.editing 
+                {this.state.editing
                     ? this.renderEditing()
                     : this.renderNotEditing()
                 }
