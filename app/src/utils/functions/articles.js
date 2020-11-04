@@ -39,7 +39,6 @@ async function getAllArticles() {
 };
 
 async function publishContribution(section, newBody) {
-    firebase.functions().useFunctionsEmulator('http://localhost:5001');
     var addVersionToSection = functions.httpsCallable("addVersionToSection");
     
     let requestData = {
@@ -69,7 +68,6 @@ async function publishContribution(section, newBody) {
 }
 
 async function addSection(section){
-    firebase.functions().useFunctionsEmulator('http://localhost:5001');
     var addSectionAtIndex = functions.httpsCallable("addSectionAtIndex");
 
     let requestData = {
