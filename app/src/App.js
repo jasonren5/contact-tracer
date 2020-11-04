@@ -15,6 +15,7 @@ import HomePage from './pages/HomePage';
 import PageNotFound from './pages/PageNotFound.js';
 import ArticlePage from './pages/ArticlePage';
 import EditArticlePage from './pages/EditArticlePage';
+import NavBar from './components/NavBar';
 
 class App extends React.Component {
   constructor(props) {
@@ -47,6 +48,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <div>
+          <NavBar />
           <Router>
             <Switch>
               <Route exact path={'/'} component={HomePage} />

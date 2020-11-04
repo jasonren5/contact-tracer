@@ -51,6 +51,8 @@ class EditSectionText extends React.Component {
         publishContribution(this.state.section, this.state.editValue).then((response)=>{
             // handle merge conflict
             if (response.conflict) {
+                var localSection = this.state.section;
+                localSection.version_id = response.section.version_id;
                 this.setState({
                     mergeSection: response.section,
                     mergeValue: response.section.body,

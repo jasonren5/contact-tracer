@@ -1,5 +1,4 @@
 import React from 'react';
-import NavBar from '../components/NavBar';
 import ArticleList from '../components/Homepage/ArticleList';
 import { useMediaQuery } from 'react-responsive';
 
@@ -18,7 +17,6 @@ export default function HomePage() {
 
     return (
         <div className="home-page">
-            <NavBar />
             <Container
                 component="main"
                 className={classes.body}
