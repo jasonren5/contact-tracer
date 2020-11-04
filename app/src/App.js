@@ -15,7 +15,6 @@ import HomePage from './pages/HomePage';
 import PageNotFound from './pages/PageNotFound.js';
 import ArticlePage from './pages/ArticlePage';
 import EditArticlePage from './pages/EditArticlePage';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 class App extends React.Component {
   constructor(props) {
@@ -47,7 +46,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <MuiThemeProvider>
+        <div>
           <Router>
             <Switch>
               <Route exact path={'/'} component={HomePage} />
@@ -59,7 +58,7 @@ class App extends React.Component {
               <Route component={PageNotFound} />
             </Switch>
           </Router>
-        </MuiThemeProvider>
+        </div>
       </div>
     )
   }

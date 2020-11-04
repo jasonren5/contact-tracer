@@ -2,6 +2,7 @@ import React from 'react';
 import Section from "../components/Articles/ArticleSection";
 import ArticleHeader from "../components/Articles/ArticleHeader";
 import { getFullArticle } from '../utils/functions/articles';
+import { Container } from '@material-ui/core';
 
 class ArticlePage extends React.Component {
     constructor(props) {
@@ -34,12 +35,16 @@ class ArticlePage extends React.Component {
         }
         // Render the article
         return (
-            <div>
+            <Container
+                component="main"
+                maxWidth="md"
+                spacing={2}
+            >
                 <ArticleHeader article={this.state.article} />
                 {this.state.article.sections.map((section) =>
                     <Section section={section}></Section>
                 )}
-            </div>
+            </Container>
         )
     }
 }

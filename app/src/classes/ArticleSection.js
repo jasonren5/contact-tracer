@@ -7,12 +7,13 @@
     edits: The firebase document id's of this section's
 */
 class ArticleSection {
-    constructor(article_id, id, version_id, type, body, edits) {
+    constructor(article_id, id, version_id, type, body, order, edits) {
         this.article_id = article_id;
         this.id = id;
         this.version_id = version_id;
         this.type = type;
         this.body = body;
+        this.order = order;
         this.edits = edits;
     }
 }

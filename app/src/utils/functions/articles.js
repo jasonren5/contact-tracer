@@ -13,8 +13,8 @@ async function getFullArticle(article_id) {
     var articlePromise = getFullArticleByID({ article_id: article_id }).then((response) => {
         let data = response.data;
         var sections = [];
-        data.section_data.forEach((section) => {
-            var s = new ArticleSection(data.article_data.article_id, section.section_id, section.current_version, section.type, section.body, [])
+        data.section_data.forEach((section, index) => {
+            var s = new ArticleSection(data.article_data.article_id, section.section_id, section.current_version, section.type, section.body, index, [])
             sections.push(s)
         });
 
@@ -66,4 +66,23 @@ async function publishContribution(section, newBody) {
     };
 }
 
-export { getFullArticle, getAllArticles, publishContribution };
+async function addSection(section){
+    firebase.functions().useFunctionsEmulator('http://localhost:5001');
+    var addSectionAtIndex = functions.httpsCallable("addSectionAtIndex");
+
+    let requestData = {
+        section: section
+    }
+
+    var response = await addSectionAtIndex(requestData);
+
+    console.log(response);
+
+    var newSection = section;
+    newSection.id = response.data.section_id;
+    newSection.version_id = response.data.version_id;
+
+    return newSection
+}
+
+export { getFullArticle, getAllArticles, publishContribution, addSection };
