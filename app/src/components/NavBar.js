@@ -20,6 +20,15 @@ class NavBar extends React.Component {
         console.log(error);
       });
   }
+
+  //calls function to create a blank article.
+  //Note: this is defined here rather than in /utils/functions as this is not expected to be used past the MVP
+  newArticle() {
+    console.log("creating article...");
+    let createBlankArticle = firebase.functions().httpsCallable("createBlankArticle");
+    createBlankArticle().then(response => console.log(response));
+  }
+
   // TODO: Need to import classes
   // for icon button: className={classes.menuButton}
   // For typography: className={classes.title}
@@ -37,6 +46,7 @@ class NavBar extends React.Component {
           <Button color="inherit" href="/">home</Button>
           <Button color="inherit" onPress={this.touchnavbar} href="/">logout</Button>
           <Button color="inherit" onPress={this.touchnavbar} href="/signin">sign in</Button>
+          <Button color="inherit" onClick={this.newArticle} href="/">create blank article</Button>
         </Toolbar>
       </AppBar>
     )

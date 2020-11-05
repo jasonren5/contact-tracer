@@ -113,7 +113,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
         let latestVersion = versions.docs[0];
         let latestVersionData = versions.docs[0].data();
 
-        if(latestVersion.id !== previous_version_id && previous_version_id) {
+        if (latestVersion.id !== previous_version_id && previous_version_id) {
             // executes if the previous_verson_id is not null and also different then the most recent version in the database
             let resData = {
                 conflict: true,
@@ -124,7 +124,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
 
         // assigns the order param of the new version, 0 if this is the first version of a new section
         const newVersionOrder = (previous_version_id ? latestVersionData.order : -1) + 1;
-        const user_id = (context.auth ? context.auth.uid: null);
+        const user_id = (context.auth ? context.auth.uid : null);
 
         var newVersionData = {
             body: data.body,
@@ -163,7 +163,7 @@ exports.addSectionAtIndex = functions.https.onCall((data, context) => {
 
     const increment = admin.firestore.FieldValue.increment(1);
 
-    var reorderPromise = db.collection("articles").doc(article_id).collection("sections").where("order", ">=", index).get().then((sections)=>{
+    var reorderPromise = db.collection("articles").doc(article_id).collection("sections").where("order", ">=", index).get().then((sections) => {
         const batch = db.batch();
 
         sections.forEach((section) => {
@@ -361,3 +361,63 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
 //         res.send(error);
 //     });
 // });
+
+/*
+*   Creates a blank article with two sections that have one version each
+*         using firestore batch commits
+*/
+exports.createBlankArticle = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    let articleData = {
+        title: "placeholder title",
+        image_url: "http://clipart-library.com/data_images/69339.gif"
+    };
+
+    let versionData = {
+        body: "first version of section",
+        order: "0",
+        previous_version_id: ""
+    }
+
+    let sectionData1 = {
+        order: 0,
+        type: "text"
+    };
+
+    let sectionData2 = {
+        order: 1,
+        type: "text"
+    };
+
+    //Even with batch writes, this still counts as five write operations... lol
+    let newArticleRef = db.collection("articles").doc();
+    batch.set(newArticleRef, articleData);
+
+    let newSectionRef1 = newArticleRef.collection("sections").doc();
+    batch.set(newSectionRef1, sectionData1);
+
+    let newSectionRef2 = newArticleRef.collection("sections").doc();
+    batch.set(newSectionRef2, sectionData2);
+
+    let versionRef1 = newSectionRef1.collection("versions").doc();
+    batch.set(versionRef1, versionData);
+
+    let versionRef2 = newSectionRef2.collection("versions").doc();
+    batch.set(versionRef2, versionData);
+
+    batch.commit()
+        .then(data => {
+            return {
+                "status": 200,
+                "message": "Successfully created blank article"
+            }
+        })
+        .catch(error => {
+            return {
+                "status": 500,
+                "message": "Failed to create blank article"
+            }
+        })
+});
