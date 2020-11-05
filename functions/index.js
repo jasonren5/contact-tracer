@@ -366,7 +366,7 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
 *   Creates a blank article with two sections that have one version each
 *         using firestore batch commits
 */
-exports.createBlankArticle = functions.https.onRequest((req, res) => {
+exports.createBlankArticle = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const batch = db.batch();
 
@@ -409,11 +409,15 @@ exports.createBlankArticle = functions.https.onRequest((req, res) => {
 
     batch.commit()
         .then(data => {
-            res.sendStatus(200);
-            return;
+            return {
+                "status": 200,
+                "message": "Successfully created blank article"
+            }
         })
         .catch(error => {
-            res.sendStatus(500);
-            return;
+            return {
+                "status": 500,
+                "message": "Failed to create blank article"
+            }
         })
 });
