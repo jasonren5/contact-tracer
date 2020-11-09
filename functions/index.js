@@ -436,9 +436,10 @@ exports.createBlankArticle = functions.https.onCall((data, context) => {
 });
 
 exports.getPrivateProfileData = functions.https.onCall((data, context) => {
-    // if there is no signed in user, return
     if(!context.auth){
-        return
+        return {
+            error: new functions.https.HttpsError("401") 
+        }; // send not-authed error
     }
     const db = admin.firestore();
     return db.collection("users").doc(context.auth.uid).get().then((doc)=>{
@@ -450,5 +451,9 @@ exports.getPublicProfileData = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     return db.collection("users").doc(data.user_id).get().then((doc)=>{
         return doc.data();
+    }).catch((error) => {
+        return {
+            error: error
+        }
     })
 })
