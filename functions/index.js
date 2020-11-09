@@ -457,3 +457,34 @@ exports.getPublicProfileData = functions.https.onCall((data, context) => {
         }
     })
 })
+
+exports.getContributionHistory = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const versionsPromise = db.collectionGroup("versions").where("user_id","==",data.user_id).limit(10).get()
+
+    const articlePromise = versionsPromise.then((querySnapshot) => {
+        var promises = [];
+        querySnapshot.docs.forEach((doc) => {
+            const path = doc.ref.path;
+            const articlePathIndex = path.indexOf("/sections");
+            const articlePath = path.substring(0,articlePathIndex);
+            var article = db.doc(articlePath).get();
+
+            var versionDataPromise = article.then((article) => {
+                return {
+                    article_id: article.id,
+                    article_data: article.data(),
+                    version_data: doc.data()
+                }
+            })
+            promises.push(versionDataPromise)
+        })
+        return Promise.all(promises);
+    })
+
+    return articlePromise.then((versions) => {
+        return {
+            versions: versions
+        };
+    })
+});

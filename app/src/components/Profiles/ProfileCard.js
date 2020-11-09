@@ -41,7 +41,7 @@ class ProfileCard extends React.Component {
         }
         const user_data = this.state.user_data;
         return (
-            <Grid item xs={3}>
+            <Grid item xs={4}>
                 <Paper style={cardStyles}>
                     <h1>{this.getUsername()}</h1>
                     <p><strong>{user_data.number_of_contributions}</strong> Contributions</p>
