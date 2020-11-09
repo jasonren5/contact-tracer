@@ -1,6 +1,7 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import ProfileCard from "../components/Profiles/ProfileCard"
+import ProfileCard from "../components/Profiles/ProfileCard";
+import ProfileSections from "../components/Profiles/ProfileSections";
 
 class PublicProfile extends React.Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class PublicProfile extends React.Component {
         return (
             <Grid container >
                 <ProfileCard user_id={user_id}></ProfileCard>
+                <ProfileSections user_id={user_id}></ProfileSections>
             </Grid>
         )
     }
