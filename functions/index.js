@@ -3,6 +3,7 @@ const functions = require('firebase-functions');
 
 //needed to interface with firebase firestore
 const admin = require('firebase-admin');
+const { user } = require('firebase-functions/lib/providers/auth');
 admin.initializeApp();
 
 // Returns user data based on input UID that corresponds to a document ID (and auth ID)
@@ -126,6 +127,11 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
         const newVersionOrder = (previous_version_id ? latestVersionData.order : -1) + 1;
         const user_id = (context.auth ? context.auth.uid : null);
 
+        // if there is a signed in user, increment thier contribution count
+        if(user_id) {
+            incrementContributions(user_id);
+        }
+
         var newVersionData = {
             body: data.body,
             previous_version_id: previous_version_id,
@@ -149,6 +155,13 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
         })
     })
 })
+
+function incrementContributions(userID) {
+    const db = admin.firestore();
+    const docRef = db.collection("users").doc(userID);
+    const increment = admin.firestore.FieldValue.increment(1);
+    docRef.update({ number_of_contributions: increment});
+}
 
 /*
 * Adds Section at correct index. 
@@ -421,3 +434,21 @@ exports.createBlankArticle = functions.https.onCall((data, context) => {
             }
         })
 });
+
+exports.getPrivateProfileData = functions.https.onCall((data, context) => {
+    // if there is no signed in user, return
+    if(!context.auth){
+        return
+    }
+    const db = admin.firestore();
+    return db.collection("users").doc(context.auth.uid).get().then((doc)=>{
+        return doc.data();
+    })
+})
+
+exports.getPublicProfileData = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    return db.collection("users").doc(data.user_id).get().then((doc)=>{
+        return doc.data();
+    })
+})
