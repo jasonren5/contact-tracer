@@ -16,6 +16,7 @@ import PageNotFound from './pages/PageNotFound.js';
 import ArticlePage from './pages/ArticlePage';
 import EditArticlePage from './pages/EditArticlePage';
 import PublicProfile from './pages/PublicProfile';
+import PrivateProfile from './pages/PrivateProfile';
 import NavBar from './components/NavBar';
 
 class App extends React.Component {
@@ -59,6 +60,7 @@ class App extends React.Component {
               <Route path={'/article/:articleId'} component={ArticlePage} />
               <Route path={'/contribute/:articleId'} component={EditArticlePage} />
               <Route path={'/user/:userId'} component={PublicProfile} />
+              <Route path={'/profile'} component={PrivateProfile} />
               <Route component={PageNotFound} />
             </Switch>
           </Router>
