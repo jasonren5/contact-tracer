@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ProfileHistory from './ProfileHistory';
+import ProfileSettings from './ProfileSettings'
 import Card from "@material-ui/core/Card";
 import CardContent from '@material-ui/core/CardContent';
 
@@ -17,6 +18,7 @@ class ProfileSections extends React.Component {
     }
 
     handleTabSelection(event, newVlaue) {
+        console.log(newVlaue);
         this.setState({selectedValue: newVlaue});
     }
 
@@ -24,6 +26,8 @@ class ProfileSections extends React.Component {
         switch(this.state.selectedValue) {
             case 0:
                 return (<ProfileHistory user_id={this.props.user_id}></ProfileHistory>);
+            case 1:
+                return (<ProfileSettings user_id={this.props.user_id}></ProfileSettings>);
             default:
                 return (<ProfileHistory user_id={this.props.user_id}></ProfileHistory>);
         }
@@ -42,6 +46,9 @@ class ProfileSections extends React.Component {
                             aria-label="Select profile section."
                         >
                             <Tab label="History" />
+                            {this.props.private && 
+                                <Tab label="Settings" />
+                            }
                         </Tabs>
                     </Paper>
                     <CardContent>
