@@ -26,9 +26,6 @@ export default function Navbar() {
     };
 
     const openNewArticleModal = () => {
-        console.log("creating article...");
-        // let createBlankArticle = firebase.functions().httpsCallable("createBlankArticle");
-        // createBlankArticle().then(response => console.log(response));
         setnewArticleIsOpen(true);
     };
 
