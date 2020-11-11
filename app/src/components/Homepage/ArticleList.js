@@ -2,17 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { getAllArticles } from '../../utils/functions/articles';
 import ArticleContainer from './ArticleContainer';
 
-import { Grid, CssBaseline, Backdrop, CircularProgress } from '@material-ui/core';
+import { Grid, CssBaseline } from '@material-ui/core';
+import PageLoading from '../../components/Loading/PageLoading';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-    },
-    backdrop: {
-        zIndex: theme.zIndex.drawer + 1,
-        color: '#fff',
-    },
+    }
 }));
 
 const INITIAL_STATE = {
@@ -49,9 +46,7 @@ export default function ArticleList(props) {
                         return <ArticleContainer key={article.id} article={article} mediaQuery={props.mediaQuery} />;
                     })
                     :
-                    <Backdrop className={classes.backdrop} open={true}>
-                        <CircularProgress size={200} color="secondary" />
-                    </Backdrop>
+                    <PageLoading />
                 }
             </Grid>
         </div>
