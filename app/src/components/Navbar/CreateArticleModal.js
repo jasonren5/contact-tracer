@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -8,19 +8,8 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
 export default function CreateArticleModal(props) {
-    const [open, setOpen] = useState(props.openModel);
-
-    const handleOpen = () => {
-        setOpen(true)
-    };
-
-    const handleClose = () => {
-        setOpen(false)
-        props.openModel = false;
-    };
-
     return (
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <Dialog open={props.isOpen} onClose={props.closeModal} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
             <DialogContent>
                 <DialogContentText>
@@ -37,10 +26,10 @@ export default function CreateArticleModal(props) {
                 />
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={props.closeModal} color="primary">
                     Cancel
           </Button>
-                <Button onClick={handleClose} color="primary">
+                <Button onClick={props.closeModal} color="primary">
                     Subscribe
           </Button>
             </DialogActions>
