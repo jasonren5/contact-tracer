@@ -73,10 +73,11 @@ export default function ArticleContainer(props) {
                         {props.article.summary}
                     </Typography>
                 </CardContent>
-                <CardActions>
+                <CardActions >
                     <Button
                         color="secondary"
                         className={classes.button}
+                        endIcon={<NavigateNextIcon />}
                         onClick={handleEditClick}
                     >
                         Contribute
