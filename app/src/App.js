@@ -17,7 +17,7 @@ import ArticlePage from './pages/Article/ArticlePage';
 import EditArticlePage from './pages/Article/EditArticlePage';
 import PublicProfile from './pages/Profile/PublicProfile';
 import PrivateProfile from './pages/Profile/PrivateProfile';
-import NavBar from './components/NavBar';
+import NavBar from './components/Navbar/NavBar';
 
 class App extends React.Component {
   constructor(props) {
