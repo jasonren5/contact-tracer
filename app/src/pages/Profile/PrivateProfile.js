@@ -1,9 +1,9 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import ProfileCard from "../components/Profiles/ProfileCard";
-import ProfileSections from "../components/Profiles/ProfileSections";
+import ProfileCard from "../../components/Profiles/ProfileCard";
+import ProfileSections from "../../components/Profiles/ProfileSections";
 
-import PageLoading from '../components/Loading/PageLoading';
+import PageLoading from '../../components/Loading/PageLoading';
 
 const firebase = require('firebase');
 

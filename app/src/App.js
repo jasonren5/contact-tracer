@@ -13,10 +13,10 @@ import firebaseConfig from './utils/firebase/config.js';
 import firebase from 'firebase'
 import HomePage from './pages/HomePage';
 import PageNotFound from './pages/PageNotFound.js';
-import ArticlePage from './pages/ArticlePage';
-import EditArticlePage from './pages/EditArticlePage';
-import PublicProfile from './pages/PublicProfile';
-import PrivateProfile from './pages/PrivateProfile';
+import ArticlePage from './pages/Article/ArticlePage';
+import EditArticlePage from './pages/Article/EditArticlePage';
+import PublicProfile from './pages/Profile/PublicProfile';
+import PrivateProfile from './pages/Profile/PrivateProfile';
 import NavBar from './components/NavBar';
 
 class App extends React.Component {

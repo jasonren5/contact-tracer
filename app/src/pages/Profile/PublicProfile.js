@@ -1,7 +1,7 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
-import ProfileCard from "../components/Profiles/ProfileCard";
-import ProfileSections from "../components/Profiles/ProfileSections";
+import ProfileCard from "../../components/Profiles/ProfileCard";
+import ProfileSections from "../../components/Profiles/ProfileSections";
 
 const firebase = require('firebase');
 
@@ -10,14 +10,14 @@ class PublicProfile extends React.Component {
     componentDidMount() {
         const user_id = this.props.match.params.userId;
         const currentUser = firebase.auth().currentUser;
-        if(currentUser) {
-            if(currentUser.uid === user_id) {
+        if (currentUser) {
+            if (currentUser.uid === user_id) {
                 window.location.href = ('/profile');
             }
-        } 
+        }
     }
 
-    render(){
+    render() {
         const user_id = this.props.match.params.userId;
 
         return (

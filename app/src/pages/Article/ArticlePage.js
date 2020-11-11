@@ -1,10 +1,10 @@
 import React from 'react';
-import Section from "../components/Articles/ArticleSection";
-import ArticleHeader from "../components/Articles/ArticleHeader";
-import { getFullArticle } from '../utils/functions/articles';
+import Section from "../../components/Articles/ArticleSection";
+import ArticleHeader from "../../components/Articles/ArticleHeader";
+import { getFullArticle } from '../../utils/functions/articles';
 import { Container } from '@material-ui/core';
 
-import PageLoading from '../components/Loading/PageLoading';
+import PageLoading from '../../components/Loading/PageLoading';
 
 class ArticlePage extends React.Component {
     constructor(props) {
