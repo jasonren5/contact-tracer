@@ -3,6 +3,8 @@ import Grid from "@material-ui/core/Grid";
 import ProfileCard from "../components/Profiles/ProfileCard";
 import ProfileSections from "../components/Profiles/ProfileSections";
 
+import PageLoading from '../components/Loading/PageLoading';
+
 const firebase = require('firebase');
 
 class PrivateProfile extends React.Component {
@@ -15,17 +17,17 @@ class PrivateProfile extends React.Component {
 
     componentDidMount() {
         const currentUser = firebase.auth().currentUser;
-        if(!currentUser) {
+        if (!currentUser) {
             console.log(currentUser);
             window.location.href = ('/signin');
         } else {
-            this.setState({user_id: currentUser.uid})
+            this.setState({ user_id: currentUser.uid })
         }
     }
 
-    render(){
-        if(!this.state.user_id) {
-            return (<p>Loading...</p>)
+    render() {
+        if (!this.state.user_id) {
+            return (<PageLoading />)
         }
         return (
             <Grid container >

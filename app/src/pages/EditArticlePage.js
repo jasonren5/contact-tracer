@@ -4,6 +4,8 @@ import ArticleHeader from "../components/Articles/ArticleHeader";
 import { getFullArticle } from '../utils/functions/articles';
 import { Container } from '@material-ui/core';
 
+import PageLoading from '../components/Loading/PageLoading';
+
 class EditArticlePage extends React.Component {
     constructor(props) {
         super(props);
@@ -25,14 +27,14 @@ class EditArticlePage extends React.Component {
         })
     }
 
-    addSectionToArticle(section){
+    addSectionToArticle(section) {
         var article = this.state.article;
 
         console.log(article.sections.join());
-        for (let i = section.order; i < article.sections.length; i++) { 
-            article.sections[i].order+=1;
-          }
-        
+        for (let i = section.order; i < article.sections.length; i++) {
+            article.sections[i].order += 1;
+        }
+
         article.sections.splice(section.order, 0, section);
         console.log(article.sections.join());
 
@@ -43,11 +45,10 @@ class EditArticlePage extends React.Component {
 
     render() {
         // If article hasn't loaded yet, render div
-        // TODO: render loading animation here
         if (!this.state.article) {
             return (
                 <div>
-                    <h3>Loading...</h3>
+                    <PageLoading />
                 </div>
             )
         }
@@ -60,8 +61,8 @@ class EditArticlePage extends React.Component {
             >
                 <ArticleHeader article={this.state.article} />
                 {this.state.article.sections.map((section) =>
-                    <EditArticleSection 
-                        key={section.id+section.order} 
+                    <EditArticleSection
+                        key={section.id + section.order}
                         section={section}
                         addSectionToArticle={this.addSectionToArticle}
                     >

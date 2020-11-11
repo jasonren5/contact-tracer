@@ -1,8 +1,8 @@
 import React from "react";
-import Grid from "@material-ui/core/Grid";
-import Divider from '@material-ui/core/Divider';
-import Paper from '@material-ui/core/Paper';
-import {getPublicProfileData} from '../../utils/functions/users';
+import { Grid, Divider, Paper } from "@material-ui/core";
+import { getPublicProfileData } from '../../utils/functions/users';
+
+import PageLoading from '../../components/Loading/PageLoading';
 
 class ProfileCard extends React.Component {
     constructor(props) {
@@ -14,10 +14,10 @@ class ProfileCard extends React.Component {
 
     componentDidMount() {
         getPublicProfileData(this.props.user_id).then((user_data) => {
-            if(!user_data) {
+            if (!user_data) {
                 window.location.href = ('/user-not-found');
             }
-            this.setState({user_data: user_data})
+            this.setState({ user_data: user_data })
         })
     }
 
@@ -33,10 +33,9 @@ class ProfileCard extends React.Component {
     }
 
     render() {
-        if(!this.state.user_data) {
-            // TODO Handle Loading Better
+        if (!this.state.user_data) {
             return (
-                <p>Loading...</p>
+                <PageLoading />
             )
         }
         const user_data = this.state.user_data;
@@ -45,7 +44,7 @@ class ProfileCard extends React.Component {
                 <Paper style={cardStyles}>
                     <h1>{this.getUsername()}</h1>
                     <p><strong>{user_data.number_of_contributions}</strong> Contributions</p>
-                    <Divider></Divider>
+                    <Divider />
                     <p>{user_data.username}</p>
                 </Paper>
             </Grid>

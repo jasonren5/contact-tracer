@@ -4,6 +4,8 @@ import ArticleHeader from "../components/Articles/ArticleHeader";
 import { getFullArticle } from '../utils/functions/articles';
 import { Container } from '@material-ui/core';
 
+import PageLoading from '../components/Loading/PageLoading';
+
 class ArticlePage extends React.Component {
     constructor(props) {
         super(props);
@@ -25,11 +27,10 @@ class ArticlePage extends React.Component {
 
     render() {
         // If article hasn't loaded yet, render div
-        // TODO: render loading animation here
         if (!this.state.article) {
             return (
                 <div>
-                    <h3>Loading...</h3>
+                    <PageLoading />
                 </div>
             )
         }

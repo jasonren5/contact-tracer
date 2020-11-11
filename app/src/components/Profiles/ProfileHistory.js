@@ -1,7 +1,9 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
 import ProfileVersion from './ProfileVersion';
-import {getUserContributionHistory} from '../../utils/functions/users';
+import { getUserContributionHistory } from '../../utils/functions/users';
+
+import PageLoading from '../../components/Loading/PageLoading';
 
 class ProfileHistory extends React.Component {
     constructor(props) {
@@ -14,22 +16,21 @@ class ProfileHistory extends React.Component {
 
     componentDidMount() {
         getUserContributionHistory(this.props.user_id).then((versions) => {
-            if(!versions) {
-                this.setState({error: true})
+            if (!versions) {
+                this.setState({ error: true })
             } else {
-                this.setState({versions: versions})
+                this.setState({ versions: versions })
             }
         })
     }
 
     render() {
-        if(!this.state.versions) {
-            // TODO Handle Loading Better
+        if (!this.state.versions) {
             return (
-                <p>Loading...</p>
+                <PageLoading />
             )
         }
-        if(this.state.error) {
+        if (this.state.error) {
             // TODO Handle Errors Better
             return (
                 <p>Error loading history, please try again.</p>
