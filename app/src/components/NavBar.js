@@ -44,8 +44,8 @@ class NavBar extends React.Component {
             News
           </Typography>
           <Button color="inherit" href="/">home</Button>
-          <Button color="inherit" onPress={this.touchnavbar} href="/">logout</Button>
-          <Button color="inherit" onPress={this.touchnavbar} href="/signin">sign in</Button>
+          <Button color="inherit" onClick={this.touchnavbar} href="/">logout</Button>
+          <Button color="inherit" onClick={this.touchnavbar} href="/signin">sign in</Button>
           <Button color="inherit" onClick={this.newArticle} href="/">create blank article</Button>
         </Toolbar>
       </AppBar>

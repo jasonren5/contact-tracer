@@ -40,7 +40,7 @@ async function getAllArticles() {
 
 async function publishContribution(section, newBody) {
     var addVersionToSection = functions.httpsCallable("addVersionToSection");
-    
+
     let requestData = {
         article_id: section.article_id,
         section_id: section.id,
@@ -54,7 +54,7 @@ async function publishContribution(section, newBody) {
 
     var newSection = section;
 
-    if(conflict) {
+    if (conflict) {
         newSection.body = data.body;
     } else {
         newSection.body = data.body;
@@ -67,7 +67,7 @@ async function publishContribution(section, newBody) {
     };
 }
 
-async function addSection(section){
+async function addSection(section) {
     var addSectionAtIndex = functions.httpsCallable("addSectionAtIndex");
 
     let requestData = {
@@ -83,6 +83,12 @@ async function addSection(section){
     newSection.version_id = response.data.version_id;
 
     return newSection
+}
+
+async function createBlankArticle() {
+    console.log("creating article...");
+    let createBlankArticle = firebase.functions().httpsCallable("createBlankArticle");
+    createBlankArticle().then(response => console.log(response));
 }
 
 export { getFullArticle, getAllArticles, publishContribution, addSection };
