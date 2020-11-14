@@ -128,7 +128,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
         const user_id = (context.auth ? context.auth.uid : null);
 
         // if there is a signed in user, increment thier contribution count
-        if(user_id) {
+        if (user_id) {
             incrementContributions(user_id);
         }
 
@@ -160,7 +160,7 @@ function incrementContributions(userID) {
     const db = admin.firestore();
     const docRef = db.collection("users").doc(userID);
     const increment = admin.firestore.FieldValue.increment(1);
-    docRef.update({ number_of_contributions: increment});
+    docRef.update({ number_of_contributions: increment });
 }
 
 /*
@@ -436,20 +436,20 @@ exports.createBlankArticle = functions.https.onCall((data, context) => {
 });
 
 exports.getPrivateProfileData = functions.https.onCall((data, context) => {
-    if(!context.auth){
+    if (!context.auth) {
         return {
-            error: new functions.https.HttpsError("401") 
+            error: new functions.https.HttpsError("401")
         }; // send not-authed error
     }
     const db = admin.firestore();
-    return db.collection("users").doc(context.auth.uid).get().then((doc)=>{
+    return db.collection("users").doc(context.auth.uid).get().then((doc) => {
         return doc.data();
     })
 })
 
 exports.getPublicProfileData = functions.https.onCall((data, context) => {
     const db = admin.firestore();
-    return db.collection("users").doc(data.user_id).get().then((doc)=>{
+    return db.collection("users").doc(data.user_id).get().then((doc) => {
         return doc.data();
     }).catch((error) => {
         return {
@@ -460,14 +460,14 @@ exports.getPublicProfileData = functions.https.onCall((data, context) => {
 
 exports.getContributionHistory = functions.https.onCall((data, context) => {
     const db = admin.firestore();
-    const versionsPromise = db.collectionGroup("versions").where("user_id","==",data.user_id).limit(10).get()
+    const versionsPromise = db.collectionGroup("versions").where("user_id", "==", data.user_id).limit(10).get()
 
     const articlePromise = versionsPromise.then((querySnapshot) => {
         var promises = [];
         querySnapshot.docs.forEach((doc) => {
             const path = doc.ref.path;
             const articlePathIndex = path.indexOf("/sections");
-            const articlePath = path.substring(0,articlePathIndex);
+            const articlePath = path.substring(0, articlePathIndex);
             var article = db.doc(articlePath).get();
 
             var versionDataPromise = article.then((article) => {
