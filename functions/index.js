@@ -435,6 +435,83 @@ exports.createBlankArticle = functions.https.onCall((data, context) => {
         })
 });
 
+/*
+*   Creates a blank article with one section
+*   Params:
+*       articleTitle = title of article
+*       image_url: url of article image
+*/
+exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    console.log(data);
+
+    const title = data.title;
+    const image = data.image_url;
+
+    //validate inputs
+    if (!title.length || title.length < 1) {
+        return {
+            error: functions.https.HttpsError("400")
+        };
+    }
+    if (!image || image.length < 1) {
+        return {
+            error: functions.https.HttpsError("400")
+        };
+    }
+
+    //validate auth
+    if (!context.auth) {
+        return {
+            error: functions.https.HttpsError("401")
+        };
+    }
+
+    const articleData = {
+        title: title,
+        image_url: image
+    };
+
+    const versionData = {
+        body: "",
+        order: "0",
+        previous_version_id: ""
+    }
+
+    const sectionData = {
+        order: 0,
+        type: "text"
+    };
+
+    const newArticleRef = db.collection("articles").doc();
+    batch.set(newArticleRef, articleData);
+
+    const newSectionRef = newArticleRef.collection("sections").doc();
+    batch.set(newSectionRef, sectionData);
+
+    const versionRef = newSectionRef.collection("versions").doc();
+    batch.set(versionRef, versionData);
+
+    return batch.commit()
+        .then(data => {
+            return {
+                status: 200,
+                message: "Successfully created article",
+                article_id: newArticleRef.id
+            }
+        })
+        .catch(error => {
+            return {
+                status: 500,
+                message: "Failed to create article",
+                error: error
+            }
+        })
+
+});
+
 exports.getPrivateProfileData = functions.https.onCall((data, context) => {
     if (!context.auth) {
         return {

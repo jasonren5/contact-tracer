@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 
-import { createBlankArticle } from '../../utils/functions/articles';
+import {
+    createBlankArticle,
+    createArticleWithTitleAndImage
+} from '../../utils/functions/articles';
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -38,17 +41,23 @@ export default function CreateArticleModal(props) {
         console.log("creating article...");
 
         const newArticleInfo = {
-            articleTitle: state.articleTitle,
-            imageURL: state.imageURL
+            title: state.articleTitle,
+            image_url: state.imageURL
         };
 
         console.log(newArticleInfo);
         setState({
             ...INITIAL_STATE
         });
-        // TODO: Ideally we call the function in utils, get the address and href to it
-        // createBlankArticle();
-        // history.push('/article/' + articleId);
+
+        //firebase functions call to createArticleWithTitleAndImage
+        createArticleWithTitleAndImage(newArticleInfo).then(response => {
+            console.log("Recieved response from server")
+            console.log(response);
+            if (response && response.status == 200) {
+                history.push('/article/' + response.article_id);
+            }
+        });
 
         // Not actually sure if we need to close the modal if we navigate away from it
         props.closeModal();

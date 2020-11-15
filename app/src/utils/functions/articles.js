@@ -97,4 +97,23 @@ async function createBlankArticle() {
     // Return the Article ID so that we can jump to that page right after you created 
 }
 
-export { getFullArticle, getAllArticles, publishContribution, addSection, createBlankArticle };
+//Creates an article with a title and an image url
+//Params: data = JSON containing fields title and image_url
+//Returns: response from server
+async function createArticleWithTitleAndImage(data) {
+    let createArticleWithTitleAndImage = firebase.functions().httpsCallable("createArticleWithTitleAndImage");
+
+    let response = await createArticleWithTitleAndImage(data);
+    console.log(response);
+
+    return response.data;
+}
+
+export {
+    getFullArticle,
+    getAllArticles,
+    publishContribution,
+    addSection,
+    createBlankArticle,
+    createArticleWithTitleAndImage
+};
