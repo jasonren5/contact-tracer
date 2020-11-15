@@ -38,22 +38,19 @@ export default function CreateArticleModal(props) {
     };
 
     const handleSubmitModal = () => {
-        console.log("creating article...");
-
+        // Get input information from state
         const newArticleInfo = {
             title: state.articleTitle,
             image_url: state.imageURL
         };
 
-        console.log(newArticleInfo);
+        // Clear state (clear modal inputs)
         setState({
             ...INITIAL_STATE
         });
 
-        //firebase functions call to createArticleWithTitleAndImage
+        // Firebase functions call to createArticleWithTitleAndImage
         createArticleWithTitleAndImage(newArticleInfo).then(response => {
-            console.log("Recieved response from server")
-            console.log(response);
             if (response && response.status == 200) {
                 history.push('/article/' + response.article_id);
             }

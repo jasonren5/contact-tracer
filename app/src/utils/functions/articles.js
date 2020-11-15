@@ -86,25 +86,19 @@ async function addSection(section) {
 }
 
 async function createBlankArticle() {
-    console.log("creating article...");
     let createBlankArticle = firebase.functions().httpsCallable("createBlankArticle");
     createBlankArticle().then(response => console.log(response));
-
-    // TODO: Handle the firebase function of this
-    // Ideally, this takes in form data (check CreateArticleModel)
-    // Take that in, send it to the firebase function
-    // Await the return, make sure we get the article ID
-    // Return the Article ID so that we can jump to that page right after you created 
 }
 
-//Creates an article with a title and an image url
-//Params: data = JSON containing fields title and image_url
-//Returns: response from server
+/*
+*   Creates an article with a title and an image url by targeting firebase function createArticleWithTitleAndImage
+*       Params: data = JSON containing fields title and image_url
+*       Returns: response from server
+*/
 async function createArticleWithTitleAndImage(data) {
     let createArticleWithTitleAndImage = firebase.functions().httpsCallable("createArticleWithTitleAndImage");
 
     let response = await createArticleWithTitleAndImage(data);
-    console.log(response);
 
     return response.data;
 }

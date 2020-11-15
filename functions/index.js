@@ -445,8 +445,6 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
     const db = admin.firestore();
     const batch = db.batch();
 
-    console.log(data);
-
     const title = data.title;
     const image = data.image_url;
 
