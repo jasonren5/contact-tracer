@@ -4,6 +4,7 @@ import ProfileVersion from './ProfileVersion';
 import { getUserContributionHistory } from '../../utils/functions/users';
 
 import PageLoading from '../../components/Loading/PageLoading';
+import ErrorAlert from '../../components/Alerts/ErrorAlert';
 
 class ProfileHistory extends React.Component {
     constructor(props) {
@@ -33,7 +34,7 @@ class ProfileHistory extends React.Component {
         if (this.state.error) {
             // TODO Handle Errors Better
             return (
-                <p>Error loading history, please try again.</p>
+                <ErrorAlert error={"Error loading history, please try again."} />
             )
         }
         return (
