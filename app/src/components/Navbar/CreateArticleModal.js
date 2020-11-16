@@ -4,7 +4,7 @@ import {
     createBlankArticle,
     createArticleWithTitleAndImage
 } from '../../utils/functions/articles';
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router-dom";
 
 import {
     Button,
@@ -52,7 +52,7 @@ export default function CreateArticleModal(props) {
         // Firebase functions call to createArticleWithTitleAndImage
         createArticleWithTitleAndImage(newArticleInfo).then(response => {
             if (response && response.status == 200) {
-                history.push('/article/' + response.article_id);
+                history.push('/contribute/' + response.article_id);
             }
         });
 

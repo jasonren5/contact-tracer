@@ -50,8 +50,8 @@ class App extends React.Component {
     return (
       <div className="App">
         <div>
-          <Navbar />
           <Router>
+            <Navbar />
             <Switch>
               <Route exact path={'/'} component={HomePage} />
               <Route path={'/signin'} component={SignInPage} />
