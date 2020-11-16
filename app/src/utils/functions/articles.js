@@ -40,7 +40,7 @@ async function getAllArticles() {
 
 async function publishContribution(section, newBody) {
     var addVersionToSection = functions.httpsCallable("addVersionToSection");
-    
+
     let requestData = {
         article_id: section.article_id,
         section_id: section.id,
@@ -54,7 +54,7 @@ async function publishContribution(section, newBody) {
 
     var newSection = section;
 
-    if(conflict) {
+    if (conflict) {
         newSection.body = data.body;
     } else {
         newSection.body = data.body;
@@ -67,7 +67,7 @@ async function publishContribution(section, newBody) {
     };
 }
 
-async function addSection(section){
+async function addSection(section) {
     var addSectionAtIndex = functions.httpsCallable("addSectionAtIndex");
 
     let requestData = {
@@ -85,4 +85,29 @@ async function addSection(section){
     return newSection
 }
 
-export { getFullArticle, getAllArticles, publishContribution, addSection };
+async function createBlankArticle() {
+    let createBlankArticle = firebase.functions().httpsCallable("createBlankArticle");
+    createBlankArticle().then(response => console.log(response));
+}
+
+/*
+*   Creates an article with a title and an image url by targeting firebase function createArticleWithTitleAndImage
+*       Params: data = JSON containing fields title and image_url
+*       Returns: response from server
+*/
+async function createArticleWithTitleAndImage(data) {
+    let createArticleWithTitleAndImage = firebase.functions().httpsCallable("createArticleWithTitleAndImage");
+
+    let response = await createArticleWithTitleAndImage(data);
+
+    return response.data;
+}
+
+export {
+    getFullArticle,
+    getAllArticles,
+    publishContribution,
+    addSection,
+    createBlankArticle,
+    createArticleWithTitleAndImage
+};

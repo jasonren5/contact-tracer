@@ -17,7 +17,7 @@ import ArticlePage from './pages/Article/ArticlePage';
 import EditArticlePage from './pages/Article/EditArticlePage';
 import PublicProfile from './pages/Profile/PublicProfile';
 import PrivateProfile from './pages/Profile/PrivateProfile';
-import NavBar from './components/NavBar';
+import Navbar from './components/Navbar/Navbar';
 
 class App extends React.Component {
   constructor(props) {
@@ -50,8 +50,8 @@ class App extends React.Component {
     return (
       <div className="App">
         <div>
-          <NavBar />
           <Router>
+            <Navbar />
             <Switch>
               <Route exact path={'/'} component={HomePage} />
               <Route path={'/signin'} component={SignInPage} />

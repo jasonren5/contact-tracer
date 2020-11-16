@@ -128,7 +128,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
         const user_id = (context.auth ? context.auth.uid : null);
 
         // if there is a signed in user, increment thier contribution count
-        if(user_id) {
+        if (user_id) {
             incrementContributions(user_id);
         }
 
@@ -160,7 +160,7 @@ function incrementContributions(userID) {
     const db = admin.firestore();
     const docRef = db.collection("users").doc(userID);
     const increment = admin.firestore.FieldValue.increment(1);
-    docRef.update({ number_of_contributions: increment});
+    docRef.update({ number_of_contributions: increment });
 }
 
 /*
@@ -435,21 +435,96 @@ exports.createBlankArticle = functions.https.onCall((data, context) => {
         })
 });
 
-exports.getPrivateProfileData = functions.https.onCall((data, context) => {
-    if(!context.auth){
+/*
+*   Creates a blank article with one section
+*   Params:
+*       articleTitle = title of article
+*       image_url: url of article image
+*/
+exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    const title = data.title;
+    const image = data.image_url;
+
+    //validate inputs
+    if (!title.length || title.length < 1) {
         return {
-            error: new functions.https.HttpsError("401") 
+            error: functions.https.HttpsError("400")
+        };
+    }
+    if (!image || image.length < 1) {
+        return {
+            error: functions.https.HttpsError("400")
+        };
+    }
+
+    //validate auth
+    if (!context.auth) {
+        return {
+            error: functions.https.HttpsError("401")
+        };
+    }
+
+    const articleData = {
+        title: title,
+        image_url: image
+    };
+
+    const versionData = {
+        body: "",
+        order: "0",
+        previous_version_id: ""
+    }
+
+    const sectionData = {
+        order: 0,
+        type: "text"
+    };
+
+    const newArticleRef = db.collection("articles").doc();
+    batch.set(newArticleRef, articleData);
+
+    const newSectionRef = newArticleRef.collection("sections").doc();
+    batch.set(newSectionRef, sectionData);
+
+    const versionRef = newSectionRef.collection("versions").doc();
+    batch.set(versionRef, versionData);
+
+    return batch.commit()
+        .then(data => {
+            return {
+                status: 200,
+                message: "Successfully created article",
+                article_id: newArticleRef.id
+            }
+        })
+        .catch(error => {
+            return {
+                status: 500,
+                message: "Failed to create article",
+                error: error
+            }
+        })
+
+});
+
+exports.getPrivateProfileData = functions.https.onCall((data, context) => {
+    if (!context.auth) {
+        return {
+            error: new functions.https.HttpsError("401")
         }; // send not-authed error
     }
     const db = admin.firestore();
-    return db.collection("users").doc(context.auth.uid).get().then((doc)=>{
+    return db.collection("users").doc(context.auth.uid).get().then((doc) => {
         return doc.data();
     })
 })
 
 exports.getPublicProfileData = functions.https.onCall((data, context) => {
     const db = admin.firestore();
-    return db.collection("users").doc(data.user_id).get().then((doc)=>{
+    return db.collection("users").doc(data.user_id).get().then((doc) => {
         return doc.data();
     }).catch((error) => {
         return {
@@ -460,14 +535,14 @@ exports.getPublicProfileData = functions.https.onCall((data, context) => {
 
 exports.getContributionHistory = functions.https.onCall((data, context) => {
     const db = admin.firestore();
-    const versionsPromise = db.collectionGroup("versions").where("user_id","==",data.user_id).limit(10).get()
+    const versionsPromise = db.collectionGroup("versions").where("user_id", "==", data.user_id).limit(10).get()
 
     const articlePromise = versionsPromise.then((querySnapshot) => {
         var promises = [];
         querySnapshot.docs.forEach((doc) => {
             const path = doc.ref.path;
             const articlePathIndex = path.indexOf("/sections");
-            const articlePath = path.substring(0,articlePathIndex);
+            const articlePath = path.substring(0, articlePathIndex);
             var article = db.doc(articlePath).get();
 
             var versionDataPromise = article.then((article) => {
