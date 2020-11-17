@@ -5,14 +5,25 @@ import {
     Toolbar,
     IconButton,
     Typography,
-    Button
+    Button,
+    Link
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Home } from "@material-ui/icons"
 
 import CreateArticleModal from './CreateArticleModal';
+import { makeStyles } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    titleText: {
+        marginLeft: "10px",
+    }
+}));
+
 
 export default function Navbar() {
     const [newArticleIsOpen, setnewArticleIsOpen] = useState(false);
+    const classes = useStyles();
 
     const handleLogout = () => {
         firebase.auth().signOut()
@@ -37,12 +48,17 @@ export default function Navbar() {
         <div className="navbar">
             <AppBar position="static">
                 <Toolbar>
+                    <IconButton edge="start" color="inherit" variant="link" href="/" aria-label="home">
+                        <Home />
+                        <Typography variant="h6" className={classes.titleText}>
+                            {/* <Link href="/" color="inherit" underline="none"> */}
+                            Crowd Sourced News
+                        {/* </Link> */}
+                        </Typography>
+                    </IconButton>
                     <IconButton edge="start" color="inherit" aria-label="menu">
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6">
-                        News
-                </Typography>
                     <Button color="inherit" href="/">home</Button>
                     <Button color="inherit" onClick={handleLogout} href="/">logout</Button>
                     <Button color="inherit" onClick={handleLogout} href="/signin">sign in</Button>
