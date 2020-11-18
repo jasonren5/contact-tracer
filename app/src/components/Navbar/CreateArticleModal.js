@@ -4,7 +4,7 @@ import {
     createArticleWithTitleAndImage
 } from '../../utils/functions/articles';
 import { useHistory } from "react-router-dom";
-import { FirebaseContext } from '../../../utils/firebase';
+import { FirebaseContext } from '../../utils/firebase';
 
 import {
     Button,
