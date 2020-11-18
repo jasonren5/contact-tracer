@@ -5,11 +5,14 @@ import App from './App';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './utils/material-ui/theme';
 import * as serviceWorker from './serviceWorker';
+import Firebase, { FirebaseContext } from './utils/firebase';
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <App />
+      <FirebaseContext.Provider value={new Firebase()}>
+        <App />
+      </FirebaseContext.Provider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
