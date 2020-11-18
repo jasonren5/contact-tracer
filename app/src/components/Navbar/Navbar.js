@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../utils/firebase';
+import { useHistory } from "react-router-dom";
 
 import {
     AppBar,
@@ -7,10 +8,21 @@ import {
     IconButton,
     Typography,
     Button,
-    Link
+    Link,
+    Menu,
+    MenuItem,
+    ListItemText,
+    ListItemIcon
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Home } from "@material-ui/icons"
+import {
+    AccountCircle,
+    ExitToApp,
+    Home,
+    Visibility,
+    Person
+} from '@material-ui/icons';
+// import VisibilityIcon from '@material-ui/icons/Visibility';
+import MenuIcon from '@material-ui/icons/Visibility';
 
 import CreateArticleModal from './CreateArticleModal';
 import { makeStyles } from '@material-ui/core/styles';
@@ -40,6 +52,18 @@ export default function Navbar() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.auth.currentUser;
+    const history = useHistory();
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
 
     useEffect(() => {
@@ -50,7 +74,9 @@ export default function Navbar() {
     }, [currentUser]);
 
     const handleSignOut = () => {
+        handleClose();
         firebase.doSignOut();
+        history.push('/');
     }
 
     const openNewArticleModal = () => {
@@ -61,12 +87,58 @@ export default function Navbar() {
         setnewArticleIsOpen(false);
     };
 
+    const handleViewProfile = () => {
+        handleClose();
+        history.push('/profile');
+    }
+
     const loggedInButtons = () => (
         <div className="loggedInButtons">
-            {/* <Typography variant="h6" className={classes.root} >Welcome {username}! </Typography> */}
             <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
-            <Button color="inherit" onClick={handleSignOut} href="/" className={classes.navButton}>Sign Out</Button>
-        </div>
+            <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+            >
+                <AccountCircle style={{ color: "#fff" }} fontSize="large" />
+            </IconButton>
+            <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+            >
+                <MenuItem disabled>
+                    <ListItemIcon>
+                        <Person fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary={username} />
+                </MenuItem>
+                <MenuItem onClick={handleViewProfile}>
+                    <ListItemIcon>
+                        <Visibility fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary="View Profile" />
+                </MenuItem>
+                <MenuItem onClick={handleSignOut} href="/">
+                    <ListItemIcon>
+                        <ExitToApp fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText primary="Sign Out" />
+                </MenuItem>
+            </Menu >
+        </div >
     );
 
     const loggedOutButtons = () => (
@@ -75,6 +147,7 @@ export default function Navbar() {
             <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
         </div>
     );
+
     // TODO: Need to make the navbar more mobile friendly
     return (
         <div className={classes.root}>
