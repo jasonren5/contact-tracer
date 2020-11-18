@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { FirebaseContext } from '../../utils/firebase';
+
 import { useHistory } from 'react-router-dom';
 
 import {
@@ -48,6 +50,7 @@ export default function ArticleContainer(props) {
     const editArticleURL = "/contribute/" + props.article.id;
     const history = useHistory();
     const classes = useStyles();
+    const firebase = useContext(FirebaseContext);
 
     const handleReadMoreClick = () => {
         history.push(articleURL);
@@ -74,14 +77,15 @@ export default function ArticleContainer(props) {
                     </Typography>
                 </CardContent>
                 <CardActions >
-                    <Button
-                        color="secondary"
-                        className={classes.button}
-                        endIcon={<NavigateNextIcon />}
-                        onClick={handleEditClick}
-                    >
-                        Contribute
-                    </Button>
+                    {firebase.auth.currentUser &&
+                        <Button
+                            color="secondary"
+                            className={classes.button}
+                            endIcon={<NavigateNextIcon />}
+                            onClick={handleEditClick}
+                        >
+                            Contribute
+                         </Button>}
                     <Button
                         color="secondary"
                         className={classes.button}

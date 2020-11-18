@@ -14,7 +14,6 @@ import { Home } from "@material-ui/icons"
 
 import CreateArticleModal from './CreateArticleModal';
 import { makeStyles } from '@material-ui/core/styles';
-import SignOutButton from '../Auth/SignOut';
 
 
 const useStyles = makeStyles((theme) => ({
