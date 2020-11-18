@@ -641,3 +641,63 @@ async function _publishArticleByID(db, article_id) {
 
     return db.collection("published_articles").doc(article_id).set(data);
 }
+
+exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    if(!context.auth) {
+        return {
+            error: 401
+        };
+    }
+    if(!data.article_id) {
+        return {
+            error: 400
+        };
+    }
+
+    const user_id = context.auth.uid;
+    const article_id = data.article_id;
+
+    const articleRef = db.collection("published_articles").doc(article_id);
+    const publishedArticle = await articleRef.get();
+    var liked_users = publishedArticle.data().liked_users;
+
+    if(liked_users.includes(user_id)){
+        return articleRef.update({
+            liked_users: admin.firestore.FieldValue.arrayRemove(user_id)
+        })
+    } else {
+        return articleRef.update({
+            liked_users: admin.firestore.FieldValue.arrayUnion(user_id)
+        })
+    }
+
+})
+
+// decodes a published article and returns it 
+exports.getPublishedArticleByID = functions.https.onRequest(async (req, res) => {
+    const db = admin.firestore();
+    const article_id = req.query.article_id;
+
+    _getPublishedArticleByID(db, article_id).then((data) => {
+        res.send(data);
+    }).catch((err) => {
+        res.send(err);
+    });
+})
+
+// Shared functionality for getting a published article
+async function _getPublishedArticleByID(db, article_id) {
+    const article = await db.collection("published_articles").doc(article_id).get();
+    var data = article.data();
+
+    const articleJSONString = data.article_json;
+    delete data.article_json;
+    const articleJSON = JSON.parse(articleJSONString);
+
+    data.article_data = articleJSON.article_data;
+    data.section_data = articleJSON.section_data;
+
+    return data;
+}

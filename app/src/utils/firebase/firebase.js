@@ -25,6 +25,8 @@ class Firebase {
     doDeleteUser = () => this.auth.currentUser.delete();
 
     doReauthenticateWithCredential = credential => this.auth.currentUser.reauthenticateWithCredential(credential);
+
+    doGetCurrentUser = () => {return this.auth.currentUser;};
 }
 
 export default Firebase;

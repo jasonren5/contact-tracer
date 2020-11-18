@@ -92,9 +92,17 @@ async function createBlankArticle(firebase) {
 *       Returns: response from server
 */
 async function createArticleWithTitleAndImage(firebase, data) {
-    let createArticleWithTitleAndImage = firebase.httpsCallable("createArticleWithTitleAndImage");
+    let createArticleWithTitleAndImage = firebase.functions.httpsCallable("createArticleWithTitleAndImage");
 
     let response = await createArticleWithTitleAndImage(data);
+
+    return response.data;
+}
+
+async function toggleLikeByArticleID(firebase, article_id) {
+    let toggleLikeByArticleID = firebase.functions.httpsCallable("toggleLikeByArticleID");
+
+    const response = await toggleLikeByArticleID({article_id: article_id});
 
     return response.data;
 }
@@ -105,5 +113,6 @@ export {
     publishContribution,
     addSection,
     createBlankArticle,
-    createArticleWithTitleAndImage
+    createArticleWithTitleAndImage,
+    toggleLikeByArticleID
 };
