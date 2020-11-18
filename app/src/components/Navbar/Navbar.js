@@ -21,8 +21,6 @@ import {
     Visibility,
     Person
 } from '@material-ui/icons';
-// import VisibilityIcon from '@material-ui/icons/Visibility';
-import MenuIcon from '@material-ui/icons/Visibility';
 
 import CreateArticleModal from './CreateArticleModal';
 import { makeStyles } from '@material-ui/core/styles';
@@ -92,7 +90,7 @@ export default function Navbar() {
         history.push('/profile');
     }
 
-    const loggedInButtons = () => (
+    const LoggedInButtons = () => (
         <div className="loggedInButtons">
             <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
             <IconButton
@@ -141,7 +139,7 @@ export default function Navbar() {
         </div >
     );
 
-    const loggedOutButtons = () => (
+    const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
             <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
@@ -161,13 +159,10 @@ export default function Navbar() {
                             Crowd Sourced News
                         </Link>
                     </Typography>
-                    {/* <IconButton edge="start" color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton> */}
                     <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
                     {currentUser ?
-                        loggedInButtons() :
-                        loggedOutButtons()
+                        <LoggedInButtons /> :
+                        <LoggedOutButtons />
                     }
                 </Toolbar>
             </AppBar>
