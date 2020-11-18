@@ -1,8 +1,6 @@
 import Article from '../../classes/Article'
 import ArticleSection from '../../classes/ArticleSection'
 
-// Local functions line  
-// var localFunctions = firebase.functions().useFunctionsEmulator("http://localhost:5001");
 
 async function getFullArticle(firebase, article_id) {
 

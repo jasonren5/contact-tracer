@@ -28,6 +28,7 @@ export default function ArticleList(props) {
 
     useEffect(() => {
         getAllArticles(firebase).then((articles) => {
+            console.log(articles);
             setState({ articles: articles.article_list });
         }).catch((err) => {
             console.log(err);
@@ -44,7 +45,7 @@ export default function ArticleList(props) {
                 alignItems="center"
                 spacing={4}
             >
-                {state.articles.length > 0 ?
+                {state.articles ?
                     state.articles.map(article => {
                         return <ArticleContainer key={article.id} article={article} mediaQuery={props.mediaQuery} />;
                     })

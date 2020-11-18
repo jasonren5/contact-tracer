@@ -11,6 +11,9 @@ class Firebase {
         this.auth = app.auth();
         this.db = app.firestore();
         this.functions = app.functions();
+
+        // Local functions line  
+        // this.localFunctions = app.functions().useFunctionsEmulator("http://localhost:5001");
     }
 
     // Firebase Auth API
