@@ -622,6 +622,25 @@ exports.publishArticleByID = functions.https.onRequest(async (req, res) => {
     });
 })
 
+// Shared functionality for publishing an article
+async function _publishArticleByID(db, article_id) {
+    const article = await _getFullArticleByID(db, article_id);
+    const type = (article.article_data.type ? article.article_data.type : "general");
+    const article_json = JSON.stringify(article);
+    const time_now = admin.firestore.Timestamp.now();
+
+    const data = {
+        article_json: article_json,
+        type: type,
+        liked_users: [],
+        strikes: [],
+        created: time_now,
+        updated: time_now
+    }
+
+    return db.collection("published_articles").doc(article_id).set(data);
+}
+
 exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
 
