@@ -363,6 +363,53 @@ exports.getAllArticlesWithSummaries = functions.https.onCall(() => {
 });
 
 /*
+* Get all the published articles, as well as a short summary. Summary is pulled from the first section, and the latest version.
+*/
+// TODO: Order the returned articles by date edited
+exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
+    const db = admin.firestore();
+    const articlesPromise = db.collection("published_articles").get();
+
+    return articlesPromise.then(async (articles) => {
+        let resData = { "article_list": [] };
+        articles.forEach((article) => {
+            var data = article.data();
+            const articleJSONString = data.article_json;
+            const articleJSON = JSON.parse(articleJSONString);
+
+            const article_data = articleJSON.article_data;
+            const section_data = articleJSON.section_data;
+
+            var snippet = "There is nothing written for this article yet. Be the first to contribute by editing!";
+
+            if(section_data[0]){
+                if (section_data[0].body.length > 0) {
+                    snippet = section_data[0].body;
+                }
+            }
+
+            if (snippet.length > 250) {
+                snippet = snippet.substring(0, 249) + "...";
+            }
+
+            resData["article_list"].push({
+                "id": article_data.article_id,
+                "title": article_data.title,
+                "image_url": article_data.image_url,
+                "type": data.type,
+                "created": data.created,
+                "published": data.published,
+                "summary": snippet
+            });
+        })
+        
+        return resData;
+    }).catch(error => {
+        return error;
+    });
+});
+
+/*
 * Test GET request for the getAllArticles
 */
 
