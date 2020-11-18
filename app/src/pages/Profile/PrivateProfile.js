@@ -15,7 +15,7 @@ class PrivateProfile extends React.Component {
     }
 
     componentDidMount() {
-        const currentUser = this.props.currentUser;
+        const currentUser = this.props.firebase.currentUser;
         if (!currentUser) {
             console.log(currentUser);
             window.location.href = ('/signin');

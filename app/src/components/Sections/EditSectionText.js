@@ -1,9 +1,10 @@
 import React from 'react';
-import {TextField, IconButton} from '@material-ui/core';
+import { TextField, IconButton } from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import { publishContribution, addSection } from "../../utils/functions/articles"
+import { withFirebase } from '../../utils/firebase';
 import { Button } from '@material-ui/core';
 import ArticleSection from '../../classes/ArticleSection';
 
@@ -25,7 +26,7 @@ class EditSectionText extends React.Component {
     }
 
     handleChange(event) {
-        if(this.state.merging) {
+        if (this.state.merging) {
             this.setState({
                 mergeValue: event.target.value
             })
@@ -45,10 +46,10 @@ class EditSectionText extends React.Component {
         });
     }
 
-    publishChanges(){
+    publishChanges() {
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
-        publishContribution(this.state.section, this.state.editValue).then((response)=>{
+        publishContribution(this.props.firebase, this.state.section, this.state.editValue).then((response) => {
             // handle merge conflict
             if (response.conflict) {
                 var localSection = this.state.section;
@@ -71,8 +72,8 @@ class EditSectionText extends React.Component {
     }
 
     addSectionBelow() {
-        let section = new ArticleSection(this.state.section.article_id,null,null,"text","This is a new section, edit it to add content.",(this.state.section.order+1),[]);
-        addSection(section).then((section) => {
+        let section = new ArticleSection(this.state.section.article_id, null, null, "text", "This is a new section, edit it to add content.", (this.state.section.order + 1), []);
+        addSection(this.props.firebase.section).then((section) => {
             console.log(section);
             this.props.addSectionToArticle(section);
         })
@@ -147,7 +148,7 @@ class EditSectionText extends React.Component {
     }
 }
 
-export default EditSectionText;
+export default withFirebase(EditSectionText);
 
 const textStyle = {
     textAlign: "left"
