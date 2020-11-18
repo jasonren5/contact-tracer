@@ -2,6 +2,7 @@ import React from 'react';
 import EditArticleSection from "../../components/Articles/EditArticleSection";
 import ArticleHeader from "../../components/Articles/ArticleHeader";
 import { getFullArticle } from '../../utils/functions/articles';
+import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { withFirebase } from '../../utils/firebase';
 import { Container } from '@material-ui/core';
 
@@ -74,4 +75,4 @@ class EditArticlePage extends React.Component {
     }
 }
 
-export default withFirebase(EditArticlePage);
+export default withAuthorization(userLoggedInCondition)(EditArticlePage);
