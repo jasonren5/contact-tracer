@@ -1,15 +1,10 @@
-const firebase = require("firebase");
-require("firebase/functions");
-
-var functions = firebase.functions();
-
-async function getPublicProfileData(user_id) {
-    var getData = functions.httpsCallable("getPublicProfileData");
-    var response = await getData({user_id: user_id});
+async function getPublicProfileData(firebase, user_id) {
+    var getData = firebase.functions.httpsCallable("getPublicProfileData");
+    var response = await getData({ user_id: user_id });
 
     // handle user for user_id doesn't exist (null)
-    if(response.data){
-        if(response.data.error){
+    if (response.data) {
+        if (response.data.error) {
             return null
         }
         return response.data;
@@ -17,13 +12,13 @@ async function getPublicProfileData(user_id) {
     return null;
 }
 
-async function getPrivateProfileData(user_id) {
-    var getData = functions.httpsCallable("getPrivateProfileData");
+async function getPrivateProfileData(firebase, user_id) {
+    var getData = firebase.functions.httpsCallable("getPrivateProfileData");
     var response = await getData();
 
     // handle user not signed in
-    if(response.data){
-        if(response.data.error){
+    if (response.data) {
+        if (response.data.error) {
             return null
         }
         return response.data;
@@ -42,13 +37,13 @@ async function getPrivateProfileData(user_id) {
 *       version_data: the version's data
 *   }
 */
-async function getUserContributionHistory(user_id) {
-    var getData = functions.httpsCallable("getContributionHistory");
-    var response = await getData({user_id: user_id});
+async function getUserContributionHistory(firebase, user_id) {
+    var getData = firebase.functions.httpsCallable("getContributionHistory");
+    var response = await getData({ user_id: user_id });
 
     // handle query error
-    if(response.data){
-        if(response.data.error){
+    if (response.data) {
+        if (response.data.error) {
             return null;
         }
         return response.data.versions;
@@ -56,4 +51,4 @@ async function getUserContributionHistory(user_id) {
     return null;
 }
 
-export {getPublicProfileData, getPrivateProfileData, getUserContributionHistory};
+export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory };

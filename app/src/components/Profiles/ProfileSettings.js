@@ -1,7 +1,8 @@
-import React from "react";
+import React, { } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
+import { withFirebase } from '../../utils/firebase';
 
 const firebase = require('firebase');
 
@@ -42,15 +43,15 @@ class ProfileSettings extends React.Component {
 
     resetPassword() {
         var self = this;
-        var currentUser = firebase.auth().currentUser;
+        var currentUser = this.props.firebase.auth.currentUser;
         const passwordsMatch = (self.state.newPassword === self.state.confirmPassword)
         if (currentUser && passwordsMatch) {
-            self.setState({loading: true})
+            self.setState({ loading: true })
             const credential = firebase.auth.EmailAuthProvider.credential(
-                currentUser.email, 
+                currentUser.email,
                 self.state.currentPassword
             );
-            firebase.auth().currentUser.reauthenticateWithCredential(credential).then((result) => {
+            this.props.firebase.doReauthenticateWithCredential(credential).then((result) => {
                 result.user.updatePassword(self.state.newPassword).then(() => {
                     self.setState({
                         currentPassword: "",
@@ -78,7 +79,7 @@ class ProfileSettings extends React.Component {
         const newPasswordEntered = this.state.newPassword.length > 0;
         const confirmPasswordEntered = this.state.confirmPassword.length > 0;
 
-        if(currentPasswordEntered && newPasswordEntered && confirmPasswordEntered) {
+        if (currentPasswordEntered && newPasswordEntered && confirmPasswordEntered) {
             this.setState({
                 allFieldsFull: true
             });
@@ -114,8 +115,8 @@ class ProfileSettings extends React.Component {
                     value={this.state.confirmPassword}
                     onChange={(event) => this.confirmPasswordChange(event)}
                 />
-                <Button 
-                    variant="contained" 
+                <Button
+                    variant="contained"
                     color="primary"
                     disabled={!this.state.allFieldsFull}
                 >
@@ -126,4 +127,4 @@ class ProfileSettings extends React.Component {
     }
 }
 
-export default ProfileSettings;
+export default withFirebase(ProfileSettings);

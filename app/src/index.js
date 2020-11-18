@@ -1,4 +1,5 @@
 import React from 'react';
+import Firebase, { FirebaseContext } from './utils/firebase';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -9,7 +10,9 @@ import * as serviceWorker from './serviceWorker';
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <App />
+      <FirebaseContext.Provider value={new Firebase()}>
+        <App />
+      </FirebaseContext.Provider>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')

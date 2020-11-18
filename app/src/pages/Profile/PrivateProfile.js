@@ -2,10 +2,9 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import ProfileCard from "../../components/Profiles/ProfileCard";
 import ProfileSections from "../../components/Profiles/ProfileSections";
-
 import PageLoading from '../../components/Loading/PageLoading';
 
-const firebase = require('firebase');
+import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 
 class PrivateProfile extends React.Component {
     constructor(props) {
@@ -16,13 +15,15 @@ class PrivateProfile extends React.Component {
     }
 
     componentDidMount() {
-        const currentUser = firebase.auth().currentUser;
-        if (!currentUser) {
-            console.log(currentUser);
-            window.location.href = ('/signin');
-        } else {
-            this.setState({ user_id: currentUser.uid })
-        }
+        const currentUser = this.props.firebase.auth.currentUser;
+        console.log(currentUser)
+        // if (!currentUser) {
+        //     console.log(currentUser);
+        //     window.location.href = ('/signin');
+        // } else {
+        //     this.setState({ user_id: currentUser.uid })
+        // }
+        this.setState({ user_id: currentUser.uid });
     }
 
     render() {
@@ -38,4 +39,4 @@ class PrivateProfile extends React.Component {
     }
 }
 
-export default PrivateProfile;
+export default withAuthorization(userLoggedInCondition)(PrivateProfile);

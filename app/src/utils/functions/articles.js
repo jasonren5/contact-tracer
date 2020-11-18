@@ -1,16 +1,12 @@
 import Article from '../../classes/Article'
 import ArticleSection from '../../classes/ArticleSection'
 
-const firebase = require("firebase");
-require("firebase/functions");
-
-var functions = firebase.functions();
 // Local functions line  
 // var localFunctions = firebase.functions().useFunctionsEmulator("http://localhost:5001");
 
-async function getFullArticle(article_id) {
+async function getFullArticle(firebase, article_id) {
 
-    var getFullArticleByID = functions.httpsCallable("getFullArticleByID");
+    var getFullArticleByID = firebase.functions.httpsCallable("getFullArticleByID");
 
     var articlePromise = getFullArticleByID({ article_id: article_id }).then((response) => {
         let data = response.data;
@@ -27,8 +23,8 @@ async function getFullArticle(article_id) {
     return articlePromise;
 };
 
-async function getAllArticles() {
-    var getAllArticles = functions.httpsCallable("getAllArticlesWithSummaries");
+async function getAllArticles(firebase) {
+    var getAllArticles = firebase.functions.httpsCallable("getAllArticlesWithSummaries");
 
     var articlesPromise = getAllArticles().then((response) => {
         let data = response.data;
@@ -38,8 +34,8 @@ async function getAllArticles() {
     return articlesPromise;
 };
 
-async function publishContribution(section, newBody) {
-    var addVersionToSection = functions.httpsCallable("addVersionToSection");
+async function publishContribution(firebase, section, newBody) {
+    var addVersionToSection = firebase.functions.httpsCallable("addVersionToSection");
 
     let requestData = {
         article_id: section.article_id,
@@ -67,8 +63,8 @@ async function publishContribution(section, newBody) {
     };
 }
 
-async function addSection(section) {
-    var addSectionAtIndex = functions.httpsCallable("addSectionAtIndex");
+async function addSection(firebase, section) {
+    var addSectionAtIndex = firebase.functions.httpsCallable("addSectionAtIndex");
 
     let requestData = {
         section: section
@@ -85,8 +81,8 @@ async function addSection(section) {
     return newSection
 }
 
-async function createBlankArticle() {
-    let createBlankArticle = firebase.functions().httpsCallable("createBlankArticle");
+async function createBlankArticle(firebase) {
+    let createBlankArticle = firebase.functions.httpsCallable("createBlankArticle");
     createBlankArticle().then(response => console.log(response));
 }
 
@@ -95,8 +91,8 @@ async function createBlankArticle() {
 *       Params: data = JSON containing fields title and image_url
 *       Returns: response from server
 */
-async function createArticleWithTitleAndImage(data) {
-    let createArticleWithTitleAndImage = firebase.functions().httpsCallable("createArticleWithTitleAndImage");
+async function createArticleWithTitleAndImage(firebase, data) {
+    let createArticleWithTitleAndImage = firebase.httpsCallable("createArticleWithTitleAndImage");
 
     let response = await createArticleWithTitleAndImage(data);
 

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import {
-    createBlankArticle,
     createArticleWithTitleAndImage
 } from '../../utils/functions/articles';
 import { useHistory } from "react-router-dom";
+import { FirebaseContext } from '../../utils/firebase';
 
 import {
     Button,
@@ -25,6 +25,8 @@ export default function CreateArticleModal(props) {
     const [state, setState] = useState({
         ...INITIAL_STATE
     });
+
+    const firebase = useContext(FirebaseContext);
 
     const history = useHistory();
 
@@ -50,8 +52,8 @@ export default function CreateArticleModal(props) {
         });
 
         // Firebase functions call to createArticleWithTitleAndImage
-        createArticleWithTitleAndImage(newArticleInfo).then(response => {
-            if (response && response.status == 200) {
+        createArticleWithTitleAndImage(firebase, newArticleInfo).then(response => {
+            if (response && response.status === 200) {
                 history.push('/contribute/' + response.article_id);
             }
         });

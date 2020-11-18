@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useAuthStyles } from '../AuthPage';
-import firebase from 'firebase';
+import { FirebaseContext } from '../../../utils/firebase';
 
 import {
     TextField,
@@ -23,6 +23,7 @@ function PasswordChangeForm() {
         ...INITIAL_STATE
     });
 
+    const firebase = useContext(FirebaseContext);
     const classes = useAuthStyles();
 
     const handleSubmit = event => {
@@ -31,7 +32,7 @@ function PasswordChangeForm() {
         const { passwordOne, passwordTwo } = state;
 
         if (passwordOne === passwordTwo) {
-            firebase.auth().currentUser.updatePassword(passwordOne)
+            firebase.doPasswordUpdate(passwordOne)
                 .then(() => {
                     setState({
                         success: {
@@ -44,7 +45,7 @@ function PasswordChangeForm() {
                 })
         }
         else {
-            setState({ error: { message: "Password were not equal!" } });
+            setState({ error: { message: "Passwords were not equal!" } });
         }
         setState({ ...INITIAL_STATE });
     };

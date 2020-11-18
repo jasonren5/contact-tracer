@@ -1,10 +1,11 @@
 import React from 'react';
 import Section from "../../components/Articles/ArticleSection";
 import ArticleHeader from "../../components/Articles/ArticleHeader";
-import { getFullArticle } from '../../utils/functions/articles';
 import { Container } from '@material-ui/core';
-
 import PageLoading from '../../components/Loading/PageLoading';
+
+import { getFullArticle } from '../../utils/functions/articles';
+import { withFirebase } from '../../utils/firebase';
 
 class ArticlePage extends React.Component {
     constructor(props) {
@@ -16,7 +17,7 @@ class ArticlePage extends React.Component {
 
     componentDidMount() {
         let article_id = this.props.match.params.articleId
-        getFullArticle(article_id).then((article) => {
+        getFullArticle(this.props.firebase, article_id).then((article) => {
             this.setState({
                 article: article
             });
@@ -50,4 +51,4 @@ class ArticlePage extends React.Component {
     }
 }
 
-export default ArticlePage;
+export default withFirebase(ArticlePage);

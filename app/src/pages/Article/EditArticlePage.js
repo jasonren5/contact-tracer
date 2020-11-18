@@ -2,6 +2,7 @@ import React from 'react';
 import EditArticleSection from "../../components/Articles/EditArticleSection";
 import ArticleHeader from "../../components/Articles/ArticleHeader";
 import { getFullArticle } from '../../utils/functions/articles';
+import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { Container } from '@material-ui/core';
 
 import PageLoading from '../../components/Loading/PageLoading';
@@ -17,7 +18,7 @@ class EditArticlePage extends React.Component {
 
     componentDidMount() {
         let article_id = this.props.match.params.articleId
-        getFullArticle(article_id).then((article) => {
+        getFullArticle(this.props.firebase, article_id).then((article) => {
             this.setState({
                 article: article
             });
@@ -73,4 +74,4 @@ class EditArticlePage extends React.Component {
     }
 }
 
-export default EditArticlePage;
+export default withAuthorization(userLoggedInCondition)(EditArticlePage);

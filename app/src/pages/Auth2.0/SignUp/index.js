@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import firebase from 'firebase';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { FirebaseContext } from '../../../utils/firebase';
 
 import {
     Button,
@@ -34,6 +34,7 @@ function SignUpForm() {
 
     const classes = useAuthStyles();
     const history = useHistory();
+    const firebase = useContext(FirebaseContext);
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -41,7 +42,7 @@ function SignUpForm() {
         const { email, password } = state;
 
         if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-            firebase.auth().createUserWithEmailAndPassword(email, password)
+            firebase.doCreateUserWithEmailAndPassword(email, password)
                 .then(authUser => {
                     history.push('/');
                 })

@@ -1,9 +1,13 @@
 import React from "react";
 import { Grid, Divider, Paper } from "@material-ui/core";
 import { getPublicProfileData } from '../../utils/functions/users';
-
+import { withFirebase } from '../../utils/firebase';
 import PageLoading from '../../components/Loading/PageLoading';
 
+const cardStyles = {
+    margin: 25,
+    padding: 15
+}
 class ProfileCard extends React.Component {
     constructor(props) {
         super(props);
@@ -13,7 +17,7 @@ class ProfileCard extends React.Component {
     }
 
     componentDidMount() {
-        getPublicProfileData(this.props.user_id).then((user_data) => {
+        getPublicProfileData(this.props.firebase, this.props.user_id).then((user_data) => {
             if (!user_data) {
                 window.location.href = ('/user-not-found');
             }
@@ -34,6 +38,7 @@ class ProfileCard extends React.Component {
 
     render() {
         if (!this.state.user_data) {
+            // TODO: Going to need to do a bit better loading animation for final product
             return (
                 <PageLoading />
             )
@@ -52,9 +57,4 @@ class ProfileCard extends React.Component {
     }
 }
 
-export default ProfileCard;
-
-const cardStyles = {
-    margin: 25,
-    padding: 15
-}
+export default withFirebase(ProfileCard);
