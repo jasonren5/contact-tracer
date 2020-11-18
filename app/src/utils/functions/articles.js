@@ -22,7 +22,7 @@ async function getFullArticle(firebase, article_id) {
 };
 
 async function getAllArticles(firebase) {
-    var getAllArticles = firebase.functions.httpsCallable("getAllArticlesWithSummaries");
+    var getAllArticles = firebase.functions.httpsCallable("getAllPublishedArticlesWithSummaries");
 
     var articlesPromise = getAllArticles().then((response) => {
         let data = response.data;
