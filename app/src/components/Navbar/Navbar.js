@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../utils/firebase';
 
 import {
@@ -25,16 +25,30 @@ const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
     },
+    navButton: {
+        fontSize: 15,
+    },
+    activeButton: {
+        fontSize: 15,
+        fontWeight: "bold"
+    },
 }));
 
 
 export default function Navbar() {
     const [newArticleIsOpen, setnewArticleIsOpen] = useState(false);
+    const [username, setUsername] = useState();
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.auth.currentUser;
 
-    console.log(currentUser);
+
+    useEffect(() => {
+        // TODO: Once we have an actual user database, grab that instead of this jank username
+        if (currentUser) {
+            setUsername(currentUser.email.substring(0, currentUser.email.indexOf("@")));
+        }
+    }, [currentUser]);
 
     const handleSignOut = () => {
         firebase.doSignOut();
@@ -47,6 +61,21 @@ export default function Navbar() {
     const closeNewArticleModal = () => {
         setnewArticleIsOpen(false);
     };
+
+    const loggedInButtons = () => (
+        <div className="loggedInButtons">
+            {/* <Typography variant="h6" className={classes.root} >Welcome {username}! </Typography> */}
+            <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
+            <Button color="inherit" onClick={handleSignOut} href="/" className={classes.navButton}>Sign Out</Button>
+        </div>
+    );
+
+    const loggedOutButtons = () => (
+        <div className="loggedOutButtons">
+            <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
+            <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
+        </div>
+    );
 
     return (
         <div className={classes.root}>
@@ -63,10 +92,11 @@ export default function Navbar() {
                     {/* <IconButton edge="start" color="inherit" aria-label="menu">
                         <MenuIcon />
                     </IconButton> */}
-                    <Button color="inherit" href="/">Home</Button>
-                    <Button color="inherit" onClick={handleSignOut} href="/" >Sign Out</Button>
-                    <Button color="inherit" onClick={handleSignOut} href="/signin">Sign In</Button>
-                    <Button color="inherit" onClick={openNewArticleModal}>create blank article</Button>
+                    <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
+                    {currentUser ?
+                        loggedInButtons() :
+                        loggedOutButtons()
+                    }
                 </Toolbar>
             </AppBar>
             <CreateArticleModal isOpen={newArticleIsOpen} closeModal={closeNewArticleModal} />
