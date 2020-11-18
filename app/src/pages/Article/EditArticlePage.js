@@ -3,7 +3,6 @@ import EditArticleSection from "../../components/Articles/EditArticleSection";
 import ArticleHeader from "../../components/Articles/ArticleHeader";
 import { getFullArticle } from '../../utils/functions/articles';
 import { withAuthorization, userLoggedInCondition } from '../../utils/session';
-import { withFirebase } from '../../utils/firebase';
 import { Container } from '@material-ui/core';
 
 import PageLoading from '../../components/Loading/PageLoading';

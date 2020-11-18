@@ -4,7 +4,7 @@ import ProfileCard from "../../components/Profiles/ProfileCard";
 import ProfileSections from "../../components/Profiles/ProfileSections";
 import PageLoading from '../../components/Loading/PageLoading';
 
-import { withFirebase } from '../../utils/firebase';
+import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 
 class PrivateProfile extends React.Component {
     constructor(props) {
@@ -16,12 +16,14 @@ class PrivateProfile extends React.Component {
 
     componentDidMount() {
         const currentUser = this.props.firebase.auth.currentUser;
-        if (!currentUser) {
-            console.log(currentUser);
-            window.location.href = ('/signin');
-        } else {
-            this.setState({ user_id: currentUser.uid })
-        }
+        console.log(currentUser)
+        // if (!currentUser) {
+        //     console.log(currentUser);
+        //     window.location.href = ('/signin');
+        // } else {
+        //     this.setState({ user_id: currentUser.uid })
+        // }
+        this.setState({ user_id: currentUser.uid });
     }
 
     render() {
@@ -37,4 +39,4 @@ class PrivateProfile extends React.Component {
     }
 }
 
-export default withFirebase(PrivateProfile);
+export default withAuthorization(userLoggedInCondition)(PrivateProfile);

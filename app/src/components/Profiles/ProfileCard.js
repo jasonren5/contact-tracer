@@ -38,6 +38,7 @@ class ProfileCard extends React.Component {
 
     render() {
         if (!this.state.user_data) {
+            // TODO: Going to need to do a bit better loading animation for final product
             return (
                 <PageLoading />
             )
