@@ -2,9 +2,11 @@ import React from "react";
 import Grid from "@material-ui/core/Grid";
 import ProfileVersion from './ProfileVersion';
 import { getUserContributionHistory } from '../../utils/functions/users';
+import { withFirebase } from '../../utils/firebase';
 
 import PageLoading from '../../components/Loading/PageLoading';
 import ErrorAlert from '../../components/Alerts/ErrorAlert';
+
 
 class ProfileHistory extends React.Component {
     constructor(props) {
@@ -16,7 +18,7 @@ class ProfileHistory extends React.Component {
     }
 
     componentDidMount() {
-        getUserContributionHistory(this.props.user_id).then((versions) => {
+        getUserContributionHistory(this.props.firebase, this.props.user_id).then((versions) => {
             if (!versions) {
                 this.setState({ error: true })
             } else {
@@ -47,4 +49,4 @@ class ProfileHistory extends React.Component {
     }
 }
 
-export default ProfileHistory;
+export default withFirebase(ProfileHistory);
