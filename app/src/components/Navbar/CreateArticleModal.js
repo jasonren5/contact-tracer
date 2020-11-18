@@ -51,7 +51,7 @@ export default function CreateArticleModal(props) {
 
         // Firebase functions call to createArticleWithTitleAndImage
         createArticleWithTitleAndImage(newArticleInfo).then(response => {
-            if (response && response.status == 200) {
+            if (response && response.status === 200) {
                 history.push('/contribute/' + response.article_id);
             }
         });
