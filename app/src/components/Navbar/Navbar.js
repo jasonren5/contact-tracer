@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../utils/firebase';
+import { useHistory } from "react-router-dom";
 
 import {
     AppBar,
@@ -7,10 +8,19 @@ import {
     IconButton,
     Typography,
     Button,
-    Link
+    Link,
+    Menu,
+    MenuItem,
+    ListItemText,
+    ListItemIcon
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Home } from "@material-ui/icons"
+import {
+    AccountCircle,
+    ExitToApp,
+    Home,
+    Visibility,
+    Person
+} from '@material-ui/icons';
 
 import CreateArticleModal from './CreateArticleModal';
 import { makeStyles } from '@material-ui/core/styles';
@@ -40,7 +50,20 @@ export default function Navbar() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.auth.currentUser;
+    const history = useHistory();
 
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [menuOpen, setMenuOpen] = useState(false);
+
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+        console.log(event.currentTarget);
+        setMenuOpen(true);
+    };
+
+    const handleClose = () => {
+        setMenuOpen(false);
+    };
 
     useEffect(() => {
         // TODO: Once we have an actual user database, grab that instead of this jank username
@@ -50,7 +73,9 @@ export default function Navbar() {
     }, [currentUser]);
 
     const handleSignOut = () => {
+        handleClose();
         firebase.doSignOut();
+        history.push('/');
     }
 
     const openNewArticleModal = () => {
@@ -61,15 +86,45 @@ export default function Navbar() {
         setnewArticleIsOpen(false);
     };
 
-    const loggedInButtons = () => (
+    const handleViewProfile = () => {
+        handleClose();
+        history.push('/profile');
+    }
+
+    const LoggedInButtons = () => (
         <div className="loggedInButtons">
-            {/* <Typography variant="h6" className={classes.root} >Welcome {username}! </Typography> */}
             <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
-            <Button color="inherit" onClick={handleSignOut} href="/" className={classes.navButton}>Sign Out</Button>
+            <IconButton
+                aria-label="account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+            >
+                <AccountCircle />
+            </IconButton>
+            <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                open={menuOpen}
+                onClose={handleClose}
+            >
+                <MenuItem onClick={handleClose}>Profile</MenuItem>
+                <MenuItem onClick={handleClose}>My account</MenuItem>
+            </Menu>
         </div>
     );
 
-    const loggedOutButtons = () => (
+    const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
             <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
@@ -93,8 +148,8 @@ export default function Navbar() {
                     </IconButton> */}
                     <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
                     {currentUser ?
-                        loggedInButtons() :
-                        loggedOutButtons()
+                        <LoggedInButtons /> :
+                        <LoggedOutButtons />
                     }
                 </Toolbar>
             </AppBar>
