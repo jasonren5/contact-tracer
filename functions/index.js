@@ -3,7 +3,7 @@ const functions = require('firebase-functions');
 
 //needed to interface with firebase firestore
 const admin = require('firebase-admin');
-const { user } = require('firebase-functions/lib/providers/auth');
+require('firebase-functions/lib/providers/auth');
 admin.initializeApp();
 
 // Returns user data based on input UID that corresponds to a document ID (and auth ID)
@@ -65,7 +65,7 @@ exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
 });
 
 // Get a full article by id
-exports.getFullArticleByID = functions.https.onCall((data, context) => {
+exports.getFullArticleByID = functions.https.onCall((data) => {
     const db = admin.firestore();
     let article_id = data.article_id;
 
@@ -280,8 +280,7 @@ exports.createSection = functions.https.onRequest((req, res) => {
             res.send(200);
             return;
         })
-        .catch(error => {
-            functions.logger.info("Error adding section with ID: " + docRef.id, { structuredData: true });
+        .catch(() => {
             res.send(200);
             return;
         });
@@ -292,7 +291,7 @@ exports.createSection = functions.https.onRequest((req, res) => {
 /*
 * Get the all of the articles in the collection. Just get the ID, title, and image URL
 */
-exports.getAllArticles = functions.https.onCall((data, context) => {
+exports.getAllArticles = functions.https.onCall(() => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
 
@@ -311,7 +310,6 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
 
         return resData;
     }).catch(error => {
-        console.log(error);
         return error;
     });
 });
@@ -320,7 +318,7 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
 * Get all the articles, as well as a short summary. Summary is pulled from the first section, and the latest version. This is pacckaged with id, title, and imageURL
 */
 // TODO: Order the returned articles by date edited
-exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => {
+exports.getAllArticlesWithSummaries = functions.https.onCall(() => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
 
@@ -360,7 +358,6 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
         // Send the array of articles
         return resData;
     }).catch(error => {
-        console.log(error);
         return error;
     });
 });
@@ -419,7 +416,7 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
 *   Creates a blank article with two sections that have one version each
 *         using firestore batch commits
 */
-exports.createBlankArticle = functions.https.onCall((data, context) => {
+exports.createBlankArticle = functions.https.onCall(() => {
     const db = admin.firestore();
     const batch = db.batch();
 
@@ -461,13 +458,13 @@ exports.createBlankArticle = functions.https.onCall((data, context) => {
     batch.set(versionRef2, versionData);
 
     batch.commit()
-        .then(data => {
+        .then(() => {
             return {
                 "status": 200,
                 "message": "Successfully created blank article"
             }
         })
-        .catch(error => {
+        .catch(() => {
             return {
                 "status": 500,
                 "message": "Failed to create blank article"
@@ -539,7 +536,7 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
     batch.set(versionRef, versionData);
 
     return batch.commit()
-        .then(data => {
+        .then(() => {
             return {
                 status: 200,
                 message: "Successfully created article",
@@ -568,7 +565,7 @@ exports.getPrivateProfileData = functions.https.onCall((data, context) => {
     })
 })
 
-exports.getPublicProfileData = functions.https.onCall((data, context) => {
+exports.getPublicProfileData = functions.https.onCall((data) => {
     const db = admin.firestore();
     return db.collection("users").doc(data.user_id).get().then((doc) => {
         return doc.data();
