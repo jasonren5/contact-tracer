@@ -39,7 +39,7 @@ class LikeButton extends React.Component {
 
     render() {
         return (
-            <IconButton aria-label="Like" onClick>
+            <IconButton aria-label="Like" onClick={this.toggleLike}>
                 {this.state.liked ?(
                     <FavoriteIcon></FavoriteIcon>
                 ):(

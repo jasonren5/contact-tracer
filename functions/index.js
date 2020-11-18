@@ -579,7 +579,7 @@ exports.getPublicProfileData = functions.https.onCall((data, context) => {
     })
 })
 
-exports.getContributionHistory = functions.https.onCall((data, context) => {
+exports.getContributionHistory = functions.https.onCall((data) => {
     const db = admin.firestore();
     const versionsPromise = db.collectionGroup("versions").where("user_id", "==", data.user_id).limit(10).get()
 
