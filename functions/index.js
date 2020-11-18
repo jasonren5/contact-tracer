@@ -327,7 +327,6 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
     return articlesPromise.then(async (snapshot) => {
         let resData = { "article_list": [] };
         await Promise.all(snapshot.docs.map(async (article) => {
-
             // Default the snippet to having no summary data
             var snippet = "There is nothing written for this article yet. Be the first to contribute by editing!";
 
@@ -352,9 +351,9 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
                 "id": article.id,
                 "title": article.data().title,
                 "image_url": article.data().image_url,
-                "type": doc.data().type,
-                "created": doc.data().created,
-                "published": doc.data().published,
+                "type": article.data().type,
+                "created": article.data().created,
+                "published": article.data().published,
                 "summary": snippet
             });
         }));
@@ -612,32 +611,32 @@ exports.getContributionHistory = functions.https.onCall((data, context) => {
 });
 
 // compiles an article and publishes it to the published_articles collection in firestore
-exports.publishArticleByID = functions.https.onRequest(async (req, res) => {
-    const db = admin.firestore();
-    const article_id = req.query.article_id;
+// exports.publishArticleByID = functions.https.onRequest(async (req, res) => {
+//     const db = admin.firestore();
+//     const article_id = req.query.article_id;
 
-    _publishArticleByID(db, article_id).then((doc) => {
-        res.send(doc);
-    }).catch((err) => {
-        res.send(err);
-    });
-})
+//     _publishArticleByID(db, article_id).then((doc) => {
+//         res.send(doc);
+//     }).catch((err) => {
+//         res.send(err);
+//     });
+// })
 
-// Shared functionality for publishing an article
-async function _publishArticleByID(db, article_id) {
-    const article = await _getFullArticleByID(db, article_id);
-    const type = (article.article_data.type ? article.article_data.type : "general");
-    const article_json = JSON.stringify(article);
-    const time_now = admin.firestore.Timestamp.now();
-    
-    const data = {
-        article_json: article_json,
-        type: type,
-        liked_users: [],
-        strikes: [],
-        created: time_now,
-        updated: time_now
-    }
+// // Shared functionality for publishing an article
+// async function _publishArticleByID(db, article_id) {
+//     const article = await _getFullArticleByID(db, article_id);
+//     const type = (article.article_data.type ? article.article_data.type : "general");
+//     const article_json = JSON.stringify(article);
+//     const time_now = admin.firestore.Timestamp.now();
 
-    return db.collection("published_articles").doc(article_id).set(data);
-}
+//     const data = {
+//         article_json: article_json,
+//         type: type,
+//         liked_users: [],
+//         strikes: [],
+//         created: time_now,
+//         updated: time_now
+//     }
+
+//     return db.collection("published_articles").doc(article_id).set(data);
+// }
