@@ -268,7 +268,10 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
             resData["article_list"].push({
                 "id": doc.id,
                 "title": doc.data().title,
-                "image_url": doc.data().image_url
+                "image_url": doc.data().image_url,
+                "type": doc.data().type,
+                "created": doc.data().created,
+                "published": doc.data().published
             });
         });
 
@@ -315,6 +318,9 @@ exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => 
                 "id": article.id,
                 "title": article.data().title,
                 "image_url": article.data().image_url,
+                "type": doc.data().type,
+                "created": doc.data().created,
+                "published": doc.data().published,
                 "summary": snippet
             });
         }));
@@ -448,6 +454,9 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
 
     const title = data.title;
     const image = data.image_url;
+    const created = admin.firestore.Timestamp.now();
+    const type = (data.type ? data.type : "general");
+    const published = false;
 
     //validate inputs
     if (!title.length || title.length < 1) {
@@ -470,7 +479,10 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
 
     const articleData = {
         title: title,
-        image_url: image
+        image_url: image,
+        type: type,
+        published: published,
+        created: created
     };
 
     const versionData = {
