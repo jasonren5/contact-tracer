@@ -102,6 +102,40 @@ exports.getFullArticleByID = functions.https.onCall((data, context) => {
     });
 });
 
+async function _getFullArticleByID(db, article_id) {
+    var promises = [];
+    promises.push(db.collection("articles").doc(article_id).get());
+    promises.push(db.collection("articles").doc(article_id).collection("sections").orderBy('order').get());
+    return Promise.all(promises).then(async (values) => {
+        var articleData = values[0].data();
+        articleData["article_id"] = values[0].id;
+
+        let sectionData = values[1];
+
+        let sections = await Promise.all(sectionData.docs.map(async (doc) => {
+            const versions = await db.collection("articles").doc(article_id).collection("sections").doc(doc.id).collection("versions").orderBy('order', 'desc').get();
+            var section = doc.data();
+            let latestVersion = versions.docs[0];
+            let latestVersionData = versions.docs[0].data();
+
+            section["section_id"] = doc.id;
+            section["current_version"] = latestVersion.id;
+            section["body"] = latestVersionData.body;
+
+            return section;
+        }))
+
+        let data = {
+            article_data: articleData,
+            section_data: sections
+        }
+
+        return data;
+    }).catch(err => {
+        return err;
+    });
+}
+
 exports.addVersionToSection = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const article_id = data.article_id;
@@ -576,3 +610,34 @@ exports.getContributionHistory = functions.https.onCall((data, context) => {
         };
     })
 });
+
+// compiles an article and publishes it to the published_articles collection in firestore
+exports.publishArticleByID = functions.https.onRequest(async (req, res) => {
+    const db = admin.firestore();
+    const article_id = req.query.article_id;
+
+    _publishArticleByID(db, article_id).then((doc) => {
+        res.send(doc);
+    }).catch((err) => {
+        res.send(err);
+    });
+})
+
+// Shared functionality for publishing an article
+async function _publishArticleByID(db, article_id) {
+    const article = await _getFullArticleByID(db, article_id);
+    const type = (article.article_data.type ? article.article_data.type : "general");
+    const article_json = JSON.stringify(article);
+    const time_now = admin.firestore.Timestamp.now();
+    
+    const data = {
+        article_json: article_json,
+        type: type,
+        liked_users: [],
+        strikes: [],
+        created: time_now,
+        updated: time_now
+    }
+
+    return db.collection("published_articles").doc(article_id).set(data);
+}
