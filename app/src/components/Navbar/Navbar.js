@@ -15,18 +15,25 @@ import CreateArticleModal from './CreateArticleModal';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-    titleText: {
-        marginLeft: "10px",
-    }
+    title: {
+        flexGrow: 1,
+        textAlign: "left",
+    },
+    root: {
+        flexGrow: 1,
+    },
 }));
 
 
 export default function Navbar() {
     const [newArticleIsOpen, setnewArticleIsOpen] = useState(false);
     const classes = useStyles();
+    const auth = firebase.auth();
+
+    console.log(auth.currentUser);
 
     const handleLogout = () => {
-        firebase.auth().signOut()
+        auth.signOut()
             .then(function () {
                 // Sign-out successful.
             })
@@ -45,20 +52,20 @@ export default function Navbar() {
     };
 
     return (
-        <div className="navbar">
+        <div className={classes.root}>
             <AppBar position="static">
                 <Toolbar>
                     <IconButton edge="start" color="inherit" variant="link" href="/" aria-label="home">
                         <Home />
-                        <Typography variant="h6" className={classes.titleText}>
-                            {/* <Link href="/" color="inherit" underline="none"> */}
+                    </IconButton>
+                    <Typography variant="h6" className={classes.title}>
+                        <Link href="/" color="inherit" underline="none">
                             Crowd Sourced News
-                        {/* </Link> */}
-                        </Typography>
-                    </IconButton>
-                    <IconButton edge="start" color="inherit" aria-label="menu">
+                        </Link>
+                    </Typography>
+                    {/* <IconButton edge="start" color="inherit" aria-label="menu">
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton> */}
                     <Button color="inherit" href="/">home</Button>
                     <Button color="inherit" onClick={handleLogout} href="/">logout</Button>
                     <Button color="inherit" onClick={handleLogout} href="/signin">sign in</Button>
