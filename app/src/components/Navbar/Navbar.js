@@ -24,6 +24,7 @@ import {
 
 import CreateArticleModal from './CreateArticleModal';
 import { makeStyles } from '@material-ui/core/styles';
+import { useMediaQuery } from 'react-responsive';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +55,8 @@ export default function Navbar() {
 
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
+
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     const handleMenu = (event) => {
         setAnchorEl(event.currentTarget);
@@ -92,6 +95,7 @@ export default function Navbar() {
 
     const LoggedInButtons = () => (
         <div className="loggedInButtons">
+            <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
             <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
             <IconButton
                 aria-label="account of current user"
@@ -141,6 +145,7 @@ export default function Navbar() {
 
     const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
+            <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
         </div>
