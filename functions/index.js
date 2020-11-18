@@ -615,8 +615,12 @@ exports.publishArticleByID = functions.https.onRequest(async (req, res) => {
     const db = admin.firestore();
     const article_id = req.query.article_id;
 
-    return db.collection("published_articles").doc(article_id).set(data);
-});
+    _publishArticleByID(db, article_id).then((doc) => {
+        res.send(doc);
+    }).catch((err) => {
+        res.send(err);
+    });
+})
 
 exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
