@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Copyright from '../../Copyright';
 
-import { useMediaQuery } from 'react-responsive';
+import { useMediaQuery } from 'react-responsive'
 
 const useAuthStyles = makeStyles((theme) => ({
     paper: {
