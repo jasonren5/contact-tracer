@@ -11,7 +11,7 @@ class PublicProfile extends React.Component {
 
     componentDidMount() {
         const user_id = this.props.match.params.userId;
-        const currentUser = this.props.firebase.currentUser;
+        const currentUser = this.props.firebase.auth.currentUser;
         if (currentUser) {
             if (currentUser.uid === user_id) {
                 window.location.href = ('/profile');

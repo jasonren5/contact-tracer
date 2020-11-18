@@ -43,7 +43,7 @@ class ProfileSettings extends React.Component {
 
     resetPassword() {
         var self = this;
-        var currentUser = this.props.firebase.currentUser;
+        var currentUser = this.props.firebase.auth.currentUser;
         const passwordsMatch = (self.state.newPassword === self.state.confirmPassword)
         if (currentUser && passwordsMatch) {
             self.setState({ loading: true })

@@ -11,7 +11,6 @@ class Firebase {
         this.auth = app.auth();
         this.db = app.firestore();
         this.functions = app.functions();
-        this.currentUser = this.auth.currentUser;
     }
 
     // Firebase Auth API
