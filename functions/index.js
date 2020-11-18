@@ -282,6 +282,7 @@ exports.getAllArticles = functions.https.onCall((data, context) => {
 /*
 * Get all the articles, as well as a short summary. Summary is pulled from the first section, and the latest version. This is pacckaged with id, title, and imageURL
 */
+// TODO: Order the returned articles by date edited
 exports.getAllArticlesWithSummaries = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
