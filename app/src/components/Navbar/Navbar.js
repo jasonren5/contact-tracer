@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import firebase from 'firebase';
+// import firebase from 'firebase';
 import {
     AppBar,
     Toolbar,
@@ -30,16 +30,17 @@ export default function Navbar() {
     const classes = useStyles();
 
     // TODO: Import the signout button i already made in auth components
-    const handleLogout = () => {
-        auth.signOut()
-            .then(function () {
-                // Sign-out successful.
-            })
-            .catch(function (error) {
-                // An error happened
-                console.log(error);
-            });
-    };
+    // TODO: Remeber that signin should also sign the user out
+    // const handleLogout = () => {
+    //     auth.signOut()
+    //         .then(function () {
+    //             // Sign-out successful.
+    //         })
+    //         .catch(function (error) {
+    //             // An error happened
+    //             console.log(error);
+    //         });
+    // };
 
     const openNewArticleModal = () => {
         setnewArticleIsOpen(true);
@@ -65,8 +66,8 @@ export default function Navbar() {
                         <MenuIcon />
                     </IconButton> */}
                     <Button color="inherit" href="/">home</Button>
-                    <Button color="inherit" onClick={handleLogout} href="/">logout</Button>
-                    <Button color="inherit" onClick={handleLogout} href="/signin">sign in</Button>
+                    <Button color="inherit" href="/">logout</Button>
+                    <Button color="inherit" href="/signin">sign in</Button>
                     <Button color="inherit" onClick={openNewArticleModal}>create blank article</Button>
                 </Toolbar>
             </AppBar>

@@ -2,13 +2,11 @@ import React, { } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-import { FirebaseContext } from '../../utils/firebase';
+import { withFirebase } from '../../utils/firebase';
 
 const firebase = require('firebase');
 
 class ProfileSettings extends React.Component {
-    static contextType = FirebaseContext;
-
     constructor(props) {
         super(props);
         this.state = {
@@ -23,10 +21,6 @@ class ProfileSettings extends React.Component {
         this.newPasswordChange = this.newPasswordChange.bind(this);
         this.confirmPasswordChange = this.confirmPasswordChange.bind(this);
         this.resetPassword = this.resetPassword.bind(this);
-    }
-
-    componentDidMount() {
-        const firebaseAuth = this.context;
     }
 
     currentPasswordChange(event) {
@@ -49,7 +43,7 @@ class ProfileSettings extends React.Component {
 
     resetPassword() {
         var self = this;
-        var currentUser = firebaseAuth.currentUser;
+        var currentUser = this.props.firebase.currentUser;
         const passwordsMatch = (self.state.newPassword === self.state.confirmPassword)
         if (currentUser && passwordsMatch) {
             self.setState({ loading: true })
@@ -57,7 +51,7 @@ class ProfileSettings extends React.Component {
                 currentUser.email,
                 self.state.currentPassword
             );
-            firebaseAuth.reauthenticateWithCredential(credential).then((result) => {
+            this.props.firebase.doReauthenticateWithCredential(credential).then((result) => {
                 result.user.updatePassword(self.state.newPassword).then(() => {
                     self.setState({
                         currentPassword: "",
@@ -133,4 +127,4 @@ class ProfileSettings extends React.Component {
     }
 }
 
-export default ProfileSettings;
+export default withFirebase(ProfileSettings);
