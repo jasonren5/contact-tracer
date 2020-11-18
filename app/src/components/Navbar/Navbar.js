@@ -28,10 +28,8 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar() {
     const [newArticleIsOpen, setnewArticleIsOpen] = useState(false);
     const classes = useStyles();
-    const auth = firebase.auth();
 
-    console.log(auth.currentUser);
-
+    // TODO: Import the signout button i already made in auth components
     const handleLogout = () => {
         auth.signOut()
             .then(function () {

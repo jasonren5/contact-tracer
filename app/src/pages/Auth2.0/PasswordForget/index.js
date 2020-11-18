@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
-import firebase from 'firebase';
+import { FirebaseContext } from '../../../utils/firebase';
+
 import { SignUpLink } from '../SignUp';
 import { SignInLink } from '../SignIn';
 
@@ -28,6 +29,7 @@ function PasswordForgetForm() {
     const [state, setState] = useState({
         ...INITIAL_STATE
     });
+    const firebase = useContext(FirebaseContext);
 
     const classes = useAuthStyles();
 
@@ -36,7 +38,7 @@ function PasswordForgetForm() {
 
         const { email } = state;
 
-        firebase.auth().sendPasswordResetEmail(email)
+        firebase.doPasswordReset(email)
             .then(() => {
                 setState({
                     success: {

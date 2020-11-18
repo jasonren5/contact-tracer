@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import firebase from 'firebase';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import { FirebaseContext } from '../../../utils/firebase';
 
 import {
     Button,
@@ -17,6 +17,8 @@ import { PasswordForgetLink } from '../PasswordForget'
 
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
 
+
+
 const INITIAL_STATE = {
     email: "",
     password: "",
@@ -32,7 +34,7 @@ function SignInForm() {
     const [state, setState] = useState({
         ...INITIAL_STATE
     });
-
+    const firebase = useContext(FirebaseContext);
     const classes = useAuthStyles();
     const history = useHistory();
 
@@ -40,7 +42,7 @@ function SignInForm() {
         event.preventDefault();
 
         const { email, password } = state;
-        firebase.auth().signInWithEmailAndPassword(email, password)
+        firebase.doSignInWithEmailAndPassword(email, password)
             .then(() => {
                 history.push('/');
             })

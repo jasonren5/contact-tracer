@@ -9,10 +9,10 @@ class Firebase {
 
         this.auth = app.auth();
         this.db = app.firestore();
+        this.currentUser = this.auth.currentUser;
     }
 
     // Firebase Auth API
-
     doCreateUserWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password);
     doSignInWithEmailAndPassword = (email, password) => this.auth.signInWithEmailAndPassword(email, password);
 
@@ -22,6 +22,8 @@ class Firebase {
     doPasswordUpdate = password => this.auth.currentUser.updatePassword(password);
 
     doDeleteUser = () => this.auth.currentUser.delete();
+
+    doReauthenticateWithCredential = credential => this.auth.currentUser.reauthenticateWithCredential(credential);
 }
 
 export default Firebase;
