@@ -24,7 +24,6 @@ import {
 
 import CreateArticleModal from './CreateArticleModal';
 import { makeStyles } from '@material-ui/core/styles';
-import { useMediaQuery } from 'react-responsive';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -57,6 +56,8 @@ export default function Navbar() {
     const open = Boolean(anchorEl);
 
     const handleMenu = (event) => {
+        // console.log(event);
+        // console.log(event.currentTarget);
         setAnchorEl(event.currentTarget);
     };
 
@@ -107,36 +108,19 @@ export default function Navbar() {
                 id="menu-appbar"
                 anchorEl={anchorEl}
                 anchorOrigin={{
-                    vertical: 'top',
+                    vertical: 'bottom',
                     horizontal: 'right',
                 }}
                 keepMounted
                 transformOrigin={{
-                    vertical: 'top',
+                    vertical: 'bottom',
                     horizontal: 'right',
                 }}
                 open={open}
                 onClose={handleClose}
             >
-                <MenuItem disabled>
-                    <ListItemIcon>
-                        <Person fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary={username} />
-                </MenuItem>
-                <MenuItem onClick={handleViewProfile}>
-                    <ListItemIcon>
-                        <Visibility fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="View Profile" />
-                </MenuItem>
-                <MenuItem onClick={handleSignOut} href="/">
-                    <ListItemIcon>
-                        <ExitToApp fontSize="small" />
-                    </ListItemIcon>
-                    <ListItemText primary="Sign Out" />
-                </MenuItem>
-            </Menu >
+
+            </Menu>
         </div >
     );
 
