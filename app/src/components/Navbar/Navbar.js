@@ -15,6 +15,8 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import CreateArticleModal from './CreateArticleModal';
 import ProfileButton from './ProfileButton';
+import MobileMenu from './MobileMenu';
+import { useMediaQuery } from 'react-responsive';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -31,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 15,
         fontWeight: "bold"
     },
+    placeHolder: {
+        display: "inline",
+    },
 }));
 
 
@@ -41,6 +46,7 @@ export default function Navbar() {
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.auth.currentUser;
     const history = useHistory();
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     useEffect(() => {
         // TODO: Once we have an actual user database, grab that instead of this jank username
@@ -64,6 +70,7 @@ export default function Navbar() {
 
     const LoggedInButtons = () => (
         <div className="loggedInButtons">
+            <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
             <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
             <ProfileButton username={username} />
         </div >
@@ -71,6 +78,7 @@ export default function Navbar() {
 
     const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
+            <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
         </div>
@@ -89,10 +97,19 @@ export default function Navbar() {
                             Crowd Sourced News
                         </Link>
                     </Typography>
-                    <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-                    {currentUser ?
-                        <LoggedInButtons /> :
-                        <LoggedOutButtons />
+                    {!isTabletOrMobile ?
+                        <div className={classes.placeHolder}>
+                            {currentUser ?
+                                <LoggedInButtons /> :
+                                <LoggedOutButtons />
+                            }
+                        </div>
+                        :
+                        <MobileMenu
+                            username={username}
+                            currentUser={currentUser}
+                            openNewArticleModal={openNewArticleModal}
+                        />
                     }
                 </Toolbar>
             </AppBar>

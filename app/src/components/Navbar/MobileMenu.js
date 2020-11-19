@@ -62,12 +62,12 @@ export default function ProfileButton(props) {
     }
 
     const handleSignIn = () => {
-        props.handleSignout();
+        firebase.doSignOut();
         history.push('/signin');
     }
 
     const handleSignUp = () => {
-        props.handleSignout();
+        firebase.doSignOut();
         history.push('/signup');
     }
 
