@@ -17,13 +17,11 @@ class PrivateProfile extends React.Component {
     componentDidMount() {
         const currentUser = this.props.firebase.auth.currentUser;
         console.log(currentUser)
-        // if (!currentUser) {
-        //     console.log(currentUser);
-        //     window.location.href = ('/signin');
-        // } else {
-        //     this.setState({ user_id: currentUser.uid })
-        // }
-        this.setState({ user_id: currentUser.uid });
+        if(currentUser) {
+            this.setState({ user_id: currentUser.uid });
+        } else {
+            window.location.href = ('/sign-in');
+        }
     }
 
     render() {
