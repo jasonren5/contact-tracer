@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../utils/firebase';
+import { useHistory } from "react-router-dom";
 
 import {
     AppBar,
@@ -7,14 +8,15 @@ import {
     IconButton,
     Typography,
     Button,
-    Link
+    Link,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import { Home } from "@material-ui/icons"
-
-import CreateArticleModal from './CreateArticleModal';
+import { Home } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
+import CreateArticleModal from './CreateArticleModal';
+import ProfileButton from './ProfileButton';
+import MobileMenu from './MobileMenu';
+import { useMediaQuery } from 'react-responsive';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -31,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
         fontSize: 15,
         fontWeight: "bold"
     },
+    placeHolder: {
+        display: "inline",
+    },
 }));
 
 
@@ -40,7 +45,8 @@ export default function Navbar() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.auth.currentUser;
-
+    const history = useHistory();
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     useEffect(() => {
         // TODO: Once we have an actual user database, grab that instead of this jank username
@@ -51,6 +57,7 @@ export default function Navbar() {
 
     const handleSignOut = () => {
         firebase.doSignOut();
+        history.push('/');
     }
 
     const openNewArticleModal = () => {
@@ -61,20 +68,22 @@ export default function Navbar() {
         setnewArticleIsOpen(false);
     };
 
-    const loggedInButtons = () => (
+    const LoggedInButtons = () => (
         <div className="loggedInButtons">
-            {/* <Typography variant="h6" className={classes.root} >Welcome {username}! </Typography> */}
+            <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
             <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
-            <Button color="inherit" onClick={handleSignOut} href="/" className={classes.navButton}>Sign Out</Button>
-        </div>
+            <ProfileButton username={username} />
+        </div >
     );
 
-    const loggedOutButtons = () => (
+    const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
+            <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
         </div>
     );
+
     // TODO: Need to make the navbar more mobile friendly
     return (
         <div className={classes.root}>
@@ -88,13 +97,19 @@ export default function Navbar() {
                             Crowd Sourced News
                         </Link>
                     </Typography>
-                    {/* <IconButton edge="start" color="inherit" aria-label="menu">
-                        <MenuIcon />
-                    </IconButton> */}
-                    <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-                    {currentUser ?
-                        loggedInButtons() :
-                        loggedOutButtons()
+                    {!isTabletOrMobile ?
+                        <div className={classes.placeHolder}>
+                            {currentUser ?
+                                <LoggedInButtons /> :
+                                <LoggedOutButtons />
+                            }
+                        </div>
+                        :
+                        <MobileMenu
+                            username={username}
+                            currentUser={currentUser}
+                            openNewArticleModal={openNewArticleModal}
+                        />
                     }
                 </Toolbar>
             </AppBar>

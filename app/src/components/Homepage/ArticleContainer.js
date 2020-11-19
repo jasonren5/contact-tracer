@@ -77,6 +77,14 @@ export default function ArticleContainer(props) {
                     </Typography>
                 </CardContent>
                 <CardActions >
+                    <Button
+                        color="secondary"
+                        className={classes.button}
+                        endIcon={<NavigateNextIcon />}
+                        onClick={handleReadMoreClick}
+                    >
+                        Read More
+                    </Button>
                     {firebase.auth.currentUser &&
                         <Button
                             color="secondary"
@@ -86,14 +94,6 @@ export default function ArticleContainer(props) {
                         >
                             Contribute
                          </Button>}
-                    <Button
-                        color="secondary"
-                        className={classes.button}
-                        endIcon={<NavigateNextIcon />}
-                        onClick={handleReadMoreClick}
-                    >
-                        Read More
-                    </Button>
                 </CardActions>
             </Card>
         </Grid>
