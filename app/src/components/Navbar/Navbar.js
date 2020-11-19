@@ -9,22 +9,12 @@ import {
     Typography,
     Button,
     Link,
-    Menu,
-    MenuItem,
-    ListItemText,
-    ListItemIcon
 } from '@material-ui/core';
-import {
-    AccountCircle,
-    ExitToApp,
-    Home,
-    Visibility,
-    Person
-} from '@material-ui/icons';
-
-import CreateArticleModal from './CreateArticleModal';
+import { Home } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
+import CreateArticleModal from './CreateArticleModal';
+import ProfileButton from './ProfileButton';
 
 const useStyles = makeStyles((theme) => ({
     title: {
@@ -52,20 +42,6 @@ export default function Navbar() {
     const currentUser = firebase.auth.currentUser;
     const history = useHistory();
 
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const open = Boolean(anchorEl);
-
-    const handleMenu = (event) => {
-        // console.log(event);
-        // console.log(event.currentTarget);
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-
     useEffect(() => {
         // TODO: Once we have an actual user database, grab that instead of this jank username
         if (currentUser) {
@@ -74,7 +50,6 @@ export default function Navbar() {
     }, [currentUser]);
 
     const handleSignOut = () => {
-        handleClose();
         firebase.doSignOut();
         history.push('/');
     }
@@ -87,40 +62,10 @@ export default function Navbar() {
         setnewArticleIsOpen(false);
     };
 
-    const handleViewProfile = () => {
-        handleClose();
-        history.push('/profile');
-    }
-
     const LoggedInButtons = () => (
         <div className="loggedInButtons">
             <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
-            <IconButton
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-            >
-                <AccountCircle style={{ color: "#fff" }} fontSize="large" />
-            </IconButton>
-            <Menu
-                id="menu-appbar"
-                anchorEl={anchorEl}
-                anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-                keepMounted
-                transformOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                }}
-                open={open}
-                onClose={handleClose}
-            >
-
-            </Menu>
+            <ProfileButton username={username} />
         </div >
     );
 
