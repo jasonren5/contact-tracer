@@ -719,7 +719,7 @@ exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => 
 })
 
 // decodes a published article and returns it 
-exports.getPublishedArticleByID = functions.https.onCall(async (data, context) => {
+exports.getPublishedArticleByID = functions.https.onCall(async (data) => {
     const db = admin.firestore();
     const article_id = data.article_id;
 
