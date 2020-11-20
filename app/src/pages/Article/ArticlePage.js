@@ -5,7 +5,7 @@ import { Container } from '@material-ui/core';
 import PageLoading from '../../components/Loading/PageLoading';
 import LikeButton from '../../components/Articles/LikeButton';
 
-import { getFullArticle } from '../../utils/functions/articles';
+import { getPublishedArticleByID } from '../../utils/functions/articles';
 import { withFirebase } from '../../utils/firebase';
 
 class ArticlePage extends React.Component {
@@ -18,7 +18,7 @@ class ArticlePage extends React.Component {
 
     componentDidMount() {
         let article_id = this.props.match.params.articleId
-        getFullArticle(this.props.firebase, article_id).then((article) => {
+        getPublishedArticleByID(this.props.firebase, article_id).then((article) => {
             this.setState({
                 article: article
             });
@@ -44,7 +44,7 @@ class ArticlePage extends React.Component {
                 spacing={2}
             >
                 <ArticleHeader article={this.state.article} />
-                <LikeButton article_id={this.state.article.id} liked_users={[]} />
+                <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
                 {this.state.article.sections.map((section) =>
                     <Section section={section}></Section>
                 )}

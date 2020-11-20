@@ -9,13 +9,15 @@ class LikeButton extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            liked: false
+            liked: false,
+            numLikes: this.props.liked_users.length
         }
         this.toggleLike = this.toggleLike.bind(this);
     }
 
     componentDidMount() {
-        const user_id = this.props.firebase.doGetCurrentUser();
+        const user = this.props.firebase.doGetCurrentUser();
+        const user_id = (user ? user.uid : null);
         if(this.props.liked_users.includes(user_id)){
             this.setState({
                 liked: true
@@ -29,7 +31,8 @@ class LikeButton extends React.Component {
                 console.log("Error toggling like!");
             } else {
                 this.setState({
-                    liked: !this.state.liked
+                    liked: !this.state.liked,
+                    numLikes: (this.state.liked ? this.state.numLikes - 1 : this.state.numLikes + 1)
                 })
             }
         }).catch((err) => {
@@ -45,6 +48,7 @@ class LikeButton extends React.Component {
                 ):(
                     <FavoriteBorderIcon></FavoriteBorderIcon>
                 )}
+                {this.state.numLikes}
             </IconButton>
         )
     }
