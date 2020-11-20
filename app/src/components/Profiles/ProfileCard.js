@@ -40,7 +40,9 @@ class ProfileCard extends React.Component {
         if (!this.state.user_data) {
             // TODO: Going to need to do a bit better loading animation for final product
             return (
-                <PageLoading />
+                <Grid item xs={4}>
+                    <PageLoading />
+                </Grid>
             )
         }
         const user_data = this.state.user_data;
