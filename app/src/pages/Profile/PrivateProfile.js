@@ -16,7 +16,6 @@ class PrivateProfile extends React.Component {
 
     componentDidMount() {
         const currentUser = this.props.firebase.auth.currentUser;
-        console.log(currentUser)
         if(currentUser) {
             this.setState({ user_id: currentUser.uid });
         } else {

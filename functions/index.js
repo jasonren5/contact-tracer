@@ -719,14 +719,16 @@ exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => 
 })
 
 // decodes a published article and returns it 
-exports.getPublishedArticleByID = functions.https.onRequest(async (req, res) => {
+exports.getPublishedArticleByID = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
-    const article_id = req.query.article_id;
+    const article_id = data.article_id;
 
-    _getPublishedArticleByID(db, article_id).then((data) => {
-        res.send(data);
+    return _getPublishedArticleByID(db, article_id).then((data) => {
+        return data;
     }).catch((err) => {
-        res.send(err);
+        return {
+            error: err
+        }
     });
 })
 
@@ -736,11 +738,16 @@ async function _getPublishedArticleByID(db, article_id) {
     var data = article.data();
 
     const articleJSONString = data.article_json;
-    delete data.article_json;
     const articleJSON = JSON.parse(articleJSONString);
 
-    data.article_data = articleJSON.article_data;
-    data.section_data = articleJSON.section_data;
+    var resData = articleJSON.article_data;
 
-    return data;
+    resData.created = data.created;
+    resData.liked_users = data.liked_users;
+    resData.strikes = data.strikes;
+    resData.type = data.type;
+    resData.updated = data.updated;
+    resData.sections = articleJSON.section_data;
+
+    return resData;
 }

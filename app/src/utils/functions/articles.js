@@ -1,6 +1,6 @@
 import Article from '../../classes/Article'
 import ArticleSection from '../../classes/ArticleSection'
-
+import PublishedArticle from '../../classes/PublishedArticle'
 
 async function getFullArticle(firebase, article_id) {
 
@@ -105,6 +105,16 @@ async function toggleLikeByArticleID(firebase, article_id) {
     return response.data;
 }
 
+async function getPublishedArticleByID(firebase, article_id) {
+    let getPublishedArticleByID = firebase.functions.httpsCallable("getPublishedArticleByID");
+
+    const response = await getPublishedArticleByID({article_id: article_id});
+
+    var article = new PublishedArticle(response.data)
+
+    return article;
+}
+
 export {
     getFullArticle,
     getAllArticles,
@@ -112,5 +122,6 @@ export {
     addSection,
     createBlankArticle,
     createArticleWithTitleAndImage,
-    toggleLikeByArticleID
+    toggleLikeByArticleID,
+    getPublishedArticleByID
 };
