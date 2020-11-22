@@ -806,3 +806,30 @@ async function _getPublishedArticleByID(db, article_id) {
 
     return resData;
 }
+
+exports.insertTopHeadlines = functions.https.onRequest((req, res) => {
+    const articlesToCreate = 3;
+
+    const apiKey = functions.config().news_api.key;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
+
+    axios.get(url)
+        .then(function (response) {
+
+            let data = response.data;
+            if (data.status == "ok") {
+                let i;
+                for (i = 0; i < articlesToCreate; i++) {
+                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general");
+                }
+            }
+            res.status(200).send({
+                message: "ok"
+            });
+        })
+        .catch(function (error) {
+            res.send(error);
+        });
+
+
+})
