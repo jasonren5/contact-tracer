@@ -1,4 +1,4 @@
-//default code, needed to interface with firebase cloud functions
+// Default code, needed to interface with firebase cloud functions
 const functions = require('firebase-functions');
 
 // Used for fetch requests to third party APIs
