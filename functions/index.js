@@ -1,7 +1,10 @@
 //default code, needed to interface with firebase cloud functions
 const functions = require('firebase-functions');
 
-//needed to interface with firebase firestore
+// Used for fetch requests to third party APIs
+const axios = require('axios');
+
+// Needed to interface with firebase firestore
 const admin = require('firebase-admin');
 require('firebase-functions/lib/providers/auth');
 admin.initializeApp();
