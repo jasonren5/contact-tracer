@@ -382,7 +382,7 @@ exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
 
             var snippet = "There is nothing written for this article yet. Be the first to contribute by editing!";
 
-            if(section_data[0]){
+            if (section_data[0]) {
                 if (section_data[0].body.length > 0) {
                     snippet = section_data[0].body;
                 }
@@ -402,7 +402,7 @@ exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
                 "summary": snippet
             });
         })
-        
+
         return resData;
     }).catch(error => {
         return error;
@@ -688,12 +688,12 @@ async function _publishArticleByID(db, article_id) {
 exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
 
-    if(!context.auth) {
+    if (!context.auth) {
         return {
             error: 401
         };
     }
-    if(!data.article_id) {
+    if (!data.article_id) {
         return {
             error: 400
         };
@@ -706,7 +706,7 @@ exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => 
     const publishedArticle = await articleRef.get();
     var liked_users = publishedArticle.data().liked_users;
 
-    if(liked_users.includes(user_id)){
+    if (liked_users.includes(user_id)) {
         return articleRef.update({
             liked_users: admin.firestore.FieldValue.arrayRemove(user_id)
         })
