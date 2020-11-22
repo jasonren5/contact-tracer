@@ -603,6 +603,58 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
 
 });
 
+function _createArticleWithTitleAndImage(title, image, type) {
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    const created = admin.firestore.Timestamp.now();
+    const published = false;
+
+    const articleData = {
+        title: title,
+        image_url: image,
+        type: type,
+        published: published,
+        created: created
+    };
+
+    const versionData = {
+        body: "",
+        order: "0",
+        previous_version_id: ""
+    }
+
+    const sectionData = {
+        order: 0,
+        type: "text"
+    };
+
+    const newArticleRef = db.collection("articles").doc();
+    batch.set(newArticleRef, articleData);
+
+    const newSectionRef = newArticleRef.collection("sections").doc();
+    batch.set(newSectionRef, sectionData);
+
+    const versionRef = newSectionRef.collection("versions").doc();
+    batch.set(versionRef, versionData);
+
+    return batch.commit()
+        .then(() => {
+            return {
+                status: 200,
+                message: "Successfully created article",
+                article_id: newArticleRef.id
+            }
+        })
+        .catch(error => {
+            return {
+                status: 500,
+                message: "Failed to create article",
+                error: error
+            }
+        })
+}
+
 exports.getPrivateProfileData = functions.https.onCall((data, context) => {
     if (!context.auth) {
         return {
