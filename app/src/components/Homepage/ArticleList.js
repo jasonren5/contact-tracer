@@ -64,7 +64,6 @@ export default function ArticleList(props) {
                 value={searchTerm}
                 onChange={(newValue) => setSearchTerm(newValue)}
                 onCancelSearch={() => setSearchTerm("")}
-                onRequestSearch={() => console.log('onRequestSearch')}
                 className={classes.searchBar}
                 placeholder={"Search for Article"}
                 cancelOnEscape
