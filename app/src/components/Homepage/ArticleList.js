@@ -7,11 +7,18 @@ import PageLoading from '../../components/Loading/PageLoading';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { FirebaseContext } from '../../utils/firebase';
+import SearchBar from "material-ui-search-bar";
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-    }
+    },
+    searchBar: {
+        margin: '0 auto',
+        marginBottom: '1%',
+        maxWidth: 800
+    },
 }));
 
 const INITIAL_STATE = {
@@ -36,6 +43,12 @@ export default function ArticleList(props) {
 
     return (
         <div className={classes.root}>
+            <SearchBar
+                onChange={() => console.log('onChange')}
+                onRequestSearch={() => console.log('onRequestSearch')}
+                className={classes.searchBar}
+            />
+
             <CssBaseline />
             <Grid
                 container
