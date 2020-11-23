@@ -21,30 +21,34 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const INITIAL_STATE = {
-    articles: []
-};
-
 export default function ArticleList(props) {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
 
-    const [state, setState] = useState({
-        ...INITIAL_STATE
-    });
+    const [allArticles, setAllArticles] = useState([]);
+    const [displayArticles, setDisplayArticles] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         getAllArticles(firebase).then((articles) => {
-            setState({ articles: articles.article_list });
+            setAllArticles(articles.article_list);
+            setDisplayArticles(articles.article_list);
         }).catch((err) => {
             console.log(err);
         })
     }, []);
 
+    useEffect(() => {
+        // We want to compare the search term to the titles (and possibly description) of allArticles
+        // We then see where there is overlap, and for any of the titles with our term is inside of it, we insert that article into displayArticles
+        console.log("search term");
+    }, [searchTerm]);
+
     return (
         <div className={classes.root}>
             <SearchBar
-                onChange={() => console.log('onChange')}
+                value={searchTerm}
+                onChange={(newValue) => setSearchTerm(newValue)}
                 onRequestSearch={() => console.log('onRequestSearch')}
                 className={classes.searchBar}
             />
@@ -57,8 +61,8 @@ export default function ArticleList(props) {
                 alignItems="center"
                 spacing={4}
             >
-                {state.articles.length > 0 ?
-                    state.articles.map(article => {
+                {displayArticles.length > 0 ?
+                    displayArticles.map(article => {
                         return <ArticleContainer key={article.id} article={article} mediaQuery={props.mediaQuery} />;
                     })
                     :
