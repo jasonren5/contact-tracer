@@ -1,7 +1,10 @@
-//default code, needed to interface with firebase cloud functions
+// Default code, needed to interface with firebase cloud functions
 const functions = require('firebase-functions');
 
-//needed to interface with firebase firestore
+// Used for fetch requests to third party APIs
+const axios = require('axios');
+
+// Needed to interface with firebase firestore
 const admin = require('firebase-admin');
 require('firebase-functions/lib/providers/auth');
 admin.initializeApp();
@@ -382,7 +385,7 @@ exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
 
             var snippet = "There is nothing written for this article yet. Be the first to contribute by editing!";
 
-            if(section_data[0]){
+            if (section_data[0]) {
                 if (section_data[0].body.length > 0) {
                     snippet = section_data[0].body;
                 }
@@ -402,7 +405,7 @@ exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
                 "summary": snippet
             });
         })
-        
+
         return resData;
     }).catch(error => {
         return error;
@@ -600,6 +603,58 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
 
 });
 
+function _createArticleWithTitleAndImage(title, image, type, body) {
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    const created = admin.firestore.Timestamp.now();
+    const published = false;
+
+    const articleData = {
+        title: title,
+        image_url: image,
+        type: type,
+        published: published,
+        created: created
+    };
+
+    const versionData = {
+        body: body,
+        order: "0",
+        previous_version_id: ""
+    }
+
+    const sectionData = {
+        order: 0,
+        type: "text"
+    };
+
+    const newArticleRef = db.collection("articles").doc();
+    batch.set(newArticleRef, articleData);
+
+    const newSectionRef = newArticleRef.collection("sections").doc();
+    batch.set(newSectionRef, sectionData);
+
+    const versionRef = newSectionRef.collection("versions").doc();
+    batch.set(versionRef, versionData);
+
+    return batch.commit()
+        .then(() => {
+            return {
+                status: 200,
+                message: "Successfully created article",
+                article_id: newArticleRef.id
+            }
+        })
+        .catch(error => {
+            return {
+                status: 500,
+                message: "Failed to create article",
+                error: error
+            }
+        })
+}
+
 exports.getPrivateProfileData = functions.https.onCall((data, context) => {
     if (!context.auth) {
         return {
@@ -688,12 +743,12 @@ async function _publishArticleByID(db, article_id) {
 exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
 
-    if(!context.auth) {
+    if (!context.auth) {
         return {
             error: 401
         };
     }
-    if(!data.article_id) {
+    if (!data.article_id) {
         return {
             error: 400
         };
@@ -706,7 +761,7 @@ exports.toggleLikeByArticleID = functions.https.onCall(async (data, context) => 
     const publishedArticle = await articleRef.get();
     var liked_users = publishedArticle.data().liked_users;
 
-    if(liked_users.includes(user_id)){
+    if (liked_users.includes(user_id)) {
         return articleRef.update({
             liked_users: admin.firestore.FieldValue.arrayRemove(user_id)
         })
@@ -751,3 +806,35 @@ async function _getPublishedArticleByID(db, article_id) {
 
     return resData;
 }
+
+/*
+*   At midnight every day, gets top english headlines from news API, 
+*   and then takes first three entries (definied in const articlesToCreate)
+*   and creates an unpublished article entry in firestore.
+*/
+exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(function () {
+    const articlesToCreate = 3;
+
+    // get API key from firebase config
+    const apiKey = functions.config().news_api.key;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
+
+    // make fetch request using axios package
+    axios.get(url)
+        .then(function (response) {
+            let data = response.data;
+            if (data.status == "ok") {
+                let i;
+                for (i = 0; i < articlesToCreate; i++) {
+                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                }
+                //console.log("Successfully added daily articles");
+            }
+        });
+    /*
+    * Why does our linter not allow logging to console? It would be very helpful in situations like this.
+    .catch (function (error) {
+    console.log("Failed to add daily articles");
+    console.log(error);
+}); */
+})
