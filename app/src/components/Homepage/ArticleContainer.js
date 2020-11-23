@@ -75,6 +75,7 @@ export default function ArticleContainer(props) {
                     <Typography className={classes.contentSnipet} variant="body2" color="textSecondary">
                         {props.article.summary}
                     </Typography>
+                    <Typography>{props.article.searchTerm}</Typography>
                 </CardContent>
                 <CardActions >
                     <Button

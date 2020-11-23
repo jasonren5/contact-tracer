@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { getAllArticles } from '../../utils/functions/articles';
 import ArticleContainer from './ArticleContainer';
 
-import { Grid, CssBaseline } from '@material-ui/core';
+import { Grid, CssBaseline, Card, Typography } from '@material-ui/core';
 import PageLoading from '../../components/Loading/PageLoading';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -16,8 +16,15 @@ const useStyles = makeStyles((theme) => ({
     },
     searchBar: {
         margin: '0 auto',
-        marginBottom: '1%',
+        marginBottom: '1rem',
         maxWidth: 800
+    },
+    card: {
+        padding: theme.spacing(2),
+        color: theme.palette.text.secondary,
+        maxWidth: '600px',
+        flexGrow: 1,
+        marginTop: '1rem',
     },
 }));
 
@@ -39,9 +46,16 @@ export default function ArticleList(props) {
     }, []);
 
     useEffect(() => {
-        // We want to compare the search term to the titles (and possibly description) of allArticles
-        // We then see where there is overlap, and for any of the titles with our term is inside of it, we insert that article into displayArticles
-        console.log("search term");
+        var passedArticles = [];
+
+        allArticles.forEach((article) => {
+            // TODO: We should do regex here instead
+            if (article.title.toLowerCase().includes(searchTerm.toLowerCase()) || article.summary.toLowerCase().includes(searchTerm.toLowerCase())) {
+                article.searchTerm = searchTerm;
+                passedArticles.push(article);
+            }
+        });
+        setDisplayArticles(passedArticles);
     }, [searchTerm]);
 
     return (
@@ -49,8 +63,11 @@ export default function ArticleList(props) {
             <SearchBar
                 value={searchTerm}
                 onChange={(newValue) => setSearchTerm(newValue)}
+                onCancelSearch={() => setSearchTerm("")}
                 onRequestSearch={() => console.log('onRequestSearch')}
                 className={classes.searchBar}
+                placeholder={"Search for Article"}
+                cancelOnEscape
             />
 
             <CssBaseline />
@@ -61,14 +78,20 @@ export default function ArticleList(props) {
                 alignItems="center"
                 spacing={4}
             >
-                {displayArticles.length > 0 ?
+                {allArticles.length > 0 ?
                     displayArticles.map(article => {
                         return <ArticleContainer key={article.id} article={article} mediaQuery={props.mediaQuery} />;
                     })
                     :
                     <PageLoading />
                 }
+                {(allArticles.length > 0 && displayArticles.length === 0) &&
+                    <Card fontWeight="fontWeightBold" className={classes.card}>
+                        <Typography variant="h5" >No articles found with that keyword!</Typography>
+                    </Card>
+                }
             </Grid>
+
         </div>
     );
 }
