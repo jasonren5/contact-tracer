@@ -37,6 +37,7 @@ class ArticlePage extends React.Component {
             )
         }
         // Render the article
+        // TODO: Add contribute button in a grid with the like button. Make sure you are signed in for both functionalities
         return (
             <Container
                 component="main"
