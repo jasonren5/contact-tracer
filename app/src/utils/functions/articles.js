@@ -19,7 +19,7 @@ async function getFullArticle(firebase, article_id) {
     });
 
     return articlePromise;
-};
+}
 
 async function getAllArticles(firebase) {
     var getAllArticles = firebase.functions.httpsCallable("getAllPublishedArticlesWithSummaries");
@@ -30,7 +30,7 @@ async function getAllArticles(firebase) {
     });
 
     return articlesPromise;
-};
+}
 
 async function publishContribution(firebase, section, newBody) {
     var addVersionToSection = firebase.functions.httpsCallable("addVersionToSection");
@@ -100,7 +100,7 @@ async function createArticleWithTitleAndImage(firebase, data) {
 async function toggleLikeByArticleID(firebase, article_id) {
     let toggleLikeByArticleID = firebase.functions.httpsCallable("toggleLikeByArticleID");
 
-    const response = await toggleLikeByArticleID({article_id: article_id});
+    const response = await toggleLikeByArticleID({ article_id: article_id });
 
     return response.data;
 }
@@ -108,7 +108,7 @@ async function toggleLikeByArticleID(firebase, article_id) {
 async function getPublishedArticleByID(firebase, article_id) {
     let getPublishedArticleByID = firebase.functions.httpsCallable("getPublishedArticleByID");
 
-    const response = await getPublishedArticleByID({article_id: article_id});
+    const response = await getPublishedArticleByID({ article_id: article_id });
 
     var article = new PublishedArticle(response.data)
 
