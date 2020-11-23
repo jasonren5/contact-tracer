@@ -15,6 +15,7 @@
     "material-ui-search-bar": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "react-highlighter": "^0.4.3",
     "react-responsive": "^8.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.0",

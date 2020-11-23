@@ -16,6 +16,8 @@ import {
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { makeStyles } from '@material-ui/core/styles';
 
+var Highlight = require('react-highlighter');
+
 const useStyles = makeStyles((theme) => ({
     card: {
         padding: theme.spacing(2),
@@ -70,12 +72,17 @@ export default function ArticleContainer(props) {
                 />
                 <CardContent>
                     <Link href={articleURL} color={"primary"}>
-                        <Typography component="h5" variant="h5" gutterBottom>{props.article.title}</Typography>
+                        <Typography component="h5" variant="h5" gutterBottom>
+                            <Highlight search={props.article.searchTerm}>
+                                {props.article.title}
+                            </Highlight>
+                        </Typography>
                     </Link>
                     <Typography className={classes.contentSnipet} variant="body2" color="textSecondary">
-                        {props.article.summary}
+                        <Highlight search={props.article.searchTerm}>
+                            {props.article.summary}
+                        </Highlight>
                     </Typography>
-                    <Typography>{props.article.searchTerm}</Typography>
                 </CardContent>
                 <CardActions >
                     <Button
