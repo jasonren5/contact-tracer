@@ -603,7 +603,7 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
 
 });
 
-function _createArticleWithTitleAndImage(title, image, type) {
+function _createArticleWithTitleAndImage(title, image, type, body) {
     const db = admin.firestore();
     const batch = db.batch();
 
@@ -619,7 +619,7 @@ function _createArticleWithTitleAndImage(title, image, type) {
     };
 
     const versionData = {
-        body: "",
+        body: body,
         order: "0",
         previous_version_id: ""
     }
@@ -826,7 +826,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
             if (data.status == "ok") {
                 let i;
                 for (i = 0; i < articlesToCreate; i++) {
-                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general");
+                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
                 }
                 //console.log("Successfully added daily articles");
             }
