@@ -807,29 +807,34 @@ async function _getPublishedArticleByID(db, article_id) {
     return resData;
 }
 
-exports.insertTopHeadlines = functions.https.onRequest((req, res) => {
+/*
+*   At midnight every day, gets top english headlines from news API, 
+*   and then takes first three entries (definied in const articlesToCreate)
+*   and creates an unpublished article entry in firestore.
+*/
+exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(function () {
     const articlesToCreate = 3;
 
+    // get API key from firebase config
     const apiKey = functions.config().news_api.key;
     const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
 
+    // make fetch request using axios package
     axios.get(url)
         .then(function (response) {
-
             let data = response.data;
             if (data.status == "ok") {
                 let i;
                 for (i = 0; i < articlesToCreate; i++) {
                     _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general");
                 }
+                //console.log("Successfully added daily articles");
             }
-            res.status(200).send({
-                message: "ok"
-            });
-        })
-        .catch(function (error) {
-            res.send(error);
         });
-
-
+    /*
+    * Why does our linter not allow logging to console? It would be very helpful in situations like this.
+    .catch (function (error) {
+    console.log("Failed to add daily articles");
+    console.log(error);
+}); */
 })
