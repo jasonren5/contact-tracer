@@ -57,7 +57,6 @@ export default function Navbar() {
 
     const handleSignOut = () => {
         firebase.doSignOut();
-        history.push('/');
     }
 
     const openNewArticleModal = () => {

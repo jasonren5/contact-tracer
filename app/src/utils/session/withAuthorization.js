@@ -12,6 +12,7 @@ const withAuthorization = condition => Component => {
                 authUser => {
                     if (!condition(authUser)) {
                         this.props.history.push('/signin');
+                        // TODO: figure out how to launch an error saying that you need to be signed in
                     }
                 },
             );
