@@ -20,6 +20,8 @@ import Navbar from './components/Navbar/Navbar';
 
 import { withAuthentication } from './utils/session';
 
+// TODO: Add footer to site
+
 const App = () => (
   <div className="App">
     <Router>
