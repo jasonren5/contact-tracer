@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+// TODO: Deal with merge conflicts
 export default function EditArticleHeader(props) {
     const theme = useTheme();
     const classes = useStyles(theme);
@@ -59,6 +60,7 @@ export default function EditArticleHeader(props) {
     const [editValue, setEditValue] = useState(props.title);
 
     const handleSubmitEdit = () => {
+        // TODO: Firebase function to deal with updated title
         console.log("submit edit");
     };
 

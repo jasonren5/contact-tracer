@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
         border: "2px #37393b",
         width: "100%",
         borderRadius: "8px",
-        opacity: ".4",
+        opacity: ".25",
         transition: ".5s ease",
         "&:hover": {
             background: "#8eacbb",
@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         },
     },
     button: {
-        padding: ".25rem",
+        padding: "0px",
     }
 }));
 
