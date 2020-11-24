@@ -4,6 +4,7 @@ import { toggleLikeByArticleID } from '../../../utils/functions/articles';
 import { withFirebase } from '../../../utils/firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import ForceSignInModal from '../../Auth/ForceSignInModal';
 
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
@@ -14,10 +15,12 @@ class LikeButton extends React.Component {
         super(props);
         this.state = {
             liked: false,
-            numLikes: this.props.liked_users.length
+            numLikes: this.props.liked_users.length,
+            signInModal: false
         }
         this.toggleLike = this.toggleLike.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.handleCloseModal = this.handleCloseModal.bind(this);
     }
 
     componentDidMount() {
@@ -36,8 +39,17 @@ class LikeButton extends React.Component {
         }
         else {
             const { history } = this.props;
-            history.push('/signin');
+            // history.push('/signin');
+            this.setState({
+                signInModal: true
+            });
         }
+    }
+
+    handleCloseModal() {
+        this.setState({
+            signInModal: false
+        });
     }
 
     toggleLike() {
@@ -61,14 +73,17 @@ class LikeButton extends React.Component {
 
     render() {
         return (
-            <IconButton aria-label="Like" onClick={this.handleClick}>
-                {this.state.liked ? (
-                    <FavoriteIcon></FavoriteIcon>
-                ) : (
-                        <FavoriteBorderIcon></FavoriteBorderIcon>
-                    )}
-                {this.state.numLikes}
-            </IconButton>
+            <div className="Like Button Wrapper">
+                <IconButton aria-label="Like" onClick={this.handleClick}>
+                    {this.state.liked ? (
+                        <FavoriteIcon></FavoriteIcon>
+                    ) : (
+                            <FavoriteBorderIcon></FavoriteBorderIcon>
+                        )}
+                    {this.state.numLikes}
+                </IconButton>
+                <ForceSignInModal isOpen={this.state.signInModal} closeModal={this.handleCloseModal} />
+            </div>
         )
     }
 
