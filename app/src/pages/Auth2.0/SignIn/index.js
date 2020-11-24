@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+// import { useLastLocation } from 'react-router-last-location';
 import { FirebaseContext } from '../../../utils/firebase';
 
 import {
@@ -37,6 +38,9 @@ function SignInForm() {
     const firebase = useContext(FirebaseContext);
     const classes = useAuthStyles();
     const history = useHistory();
+    // const lastLocation = useLastLocation();
+
+    // console.log(lastLocation);
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -45,7 +49,7 @@ function SignInForm() {
         firebase.doSignInWithEmailAndPassword(email, password)
             .then(() => {
                 // TODO: this should push to the previous page you were on before auth
-                history.push('/');
+                history.goBack();
             })
             .catch(error => {
                 setState({ error });
