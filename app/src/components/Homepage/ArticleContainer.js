@@ -50,6 +50,8 @@ export default function ArticleContainer(props) {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
 
+    const highlightTerm = props.article.searchTerm ? props.article.searchTerm : "";
+
     return (
         <Grid item xs={props.mediaQuery ? "auto" : 4}>
             <Card className={classes.root}>
@@ -61,13 +63,13 @@ export default function ArticleContainer(props) {
                 <CardContent>
                     <Link href={articleURL} color={"primary"}>
                         <Typography component="h5" variant="h5" gutterBottom>
-                            <Highlight search={props.article.searchTerm}>
+                            <Highlight search={highlightTerm}>
                                 {props.article.title}
                             </Highlight>
                         </Typography>
                     </Link>
                     <Typography className={classes.contentSnipet} variant="body2" color="textSecondary">
-                        <Highlight search={props.article.searchTerm}>
+                        <Highlight search={highlightTerm}>
                             {props.article.summary}
                         </Highlight>
                     </Typography>
