@@ -57,6 +57,7 @@ class EditArticlePage extends React.Component {
         // Render the article
         // TODO: Utilize hover effects on each of the section parts (make it just like the ArticleSection until hovered over)
         // TODO: Loading animation for when someone creates/edits a section and it hasn't updated yet
+        //TODO: Once this is done, we don't need create article with a blank section
         return (
             <Container
                 component="main"
