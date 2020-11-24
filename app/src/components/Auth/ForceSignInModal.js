@@ -16,14 +16,15 @@ export default function ForceSignInModal(props) {
     const history = useHistory();
 
     const handleClose = () => {
-        props.closeModal();
         if (props.accessPage) {
             history.goBack();
+        }
+        else {
+            props.closeModal();
         }
     };
 
     const handleSignIn = () => {
-        props.closeModal();
         history.push("/signin");
     }
 
