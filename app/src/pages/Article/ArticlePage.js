@@ -56,7 +56,7 @@ class ArticlePage extends React.Component {
                     </Grid>
                 }
                 {this.state.article.sections.map((section) =>
-                    <Section section={section}></Section>
+                    <Section key={section.id} section={section}></Section>
                 )}
             </Container>
         )
