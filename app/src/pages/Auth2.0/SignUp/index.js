@@ -44,6 +44,7 @@ function SignUpForm() {
         if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
             firebase.doCreateUserWithEmailAndPassword(email, password)
                 .then(authUser => {
+                    // TODO: this should push to the previous page you were on before auth
                     history.push('/');
                 })
                 .catch(error => {

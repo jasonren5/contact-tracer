@@ -1,9 +1,9 @@
 import React from 'react';
 import Section from "../../components/Articles/ArticleSection";
 import ArticleHeader from "../../components/Articles/ArticleHeader";
-import { Container } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import PageLoading from '../../components/Loading/PageLoading';
-import LikeButton from '../../components/Articles/LikeButton';
+import { LikeButton, ContributeButton } from '../../components/Articles/Buttons';
 
 import { getPublishedArticleByID } from '../../utils/functions/articles';
 import { withFirebase } from '../../utils/firebase';
@@ -23,6 +23,7 @@ class ArticlePage extends React.Component {
                 article: article
             });
         }).catch((err) => {
+            console.log(err);
             window.location.href = ('/article-not-found');
         })
     }
@@ -37,6 +38,7 @@ class ArticlePage extends React.Component {
             )
         }
         // Render the article
+        // TODO: Eventually always display the like button, but if you aren't signed in we redirect to sign-in. (withAuthorization).
         return (
             <Container
                 component="main"
@@ -44,9 +46,18 @@ class ArticlePage extends React.Component {
                 spacing={2}
             >
                 <ArticleHeader article={this.state.article} />
-                <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
+                {this.props.firebase.auth.currentUser &&
+                    <Grid container>
+                        <Grid item xs>
+                            <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
+                        </Grid>
+                        {/* <Grid item xs>
+                            <ContributeButton inArticleButton articleID={this.state.article.id} />
+                        </Grid> */}
+                    </Grid>
+                }
                 {this.state.article.sections.map((section) =>
-                    <Section section={section}></Section>
+                    <Section key={section.id} section={section}></Section>
                 )}
             </Container>
         )

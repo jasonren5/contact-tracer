@@ -1,22 +1,26 @@
 import React from 'react'
 
-class ArticleHeader extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+import { Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-    render() {
-        return (
-            <div>
-                <h1>{this.props.article.title}</h1>
-                <img src={this.props.article.image_url} alt={this.props.article.alt_text} style={imageStyle} />
-            </div>
-        );
-    }
-}
+const useStyles = makeStyles((theme) => ({
+    image: {
+        width: "100%",
+    },
+    title: {
+        margin: "1rem",
+        fontWeight: "bold"
+    },
+}));
 
-export default ArticleHeader;
 
-const imageStyle = {
-    width: "100%"
+export default function ArticleHeader(props) {
+    const classes = useStyles();
+
+    return (
+        <div className="Article Header">
+            <Typography variant="h4" className={classes.title} >{props.article.title}</Typography>
+            <img src={props.article.image_url} alt={props.article.alt_text} className={classes.image} />
+        </div>
+    );
 }

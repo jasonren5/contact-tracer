@@ -57,7 +57,6 @@ export default function Navbar() {
 
     const handleSignOut = () => {
         firebase.doSignOut();
-        history.push('/');
     }
 
     const openNewArticleModal = () => {
@@ -83,8 +82,6 @@ export default function Navbar() {
             <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
         </div>
     );
-
-    // TODO: Need to make the navbar more mobile friendly
     return (
         <div className={classes.root}>
             <AppBar position="static">

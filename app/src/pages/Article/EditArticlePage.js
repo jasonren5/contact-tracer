@@ -54,6 +54,9 @@ class EditArticlePage extends React.Component {
             )
         }
         // Render the article
+        // TODO: Create an EditArticleHeader
+        // TODO: Make an add section component that is rendered before and after each section  instead of the add section button
+        // TODO: Utilize hover effects on each of the section parts (make it just like the ArticleSection until hovered over)
         return (
             <Container
                 component="main"

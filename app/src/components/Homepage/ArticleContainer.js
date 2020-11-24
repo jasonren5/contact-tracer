@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { FirebaseContext } from '../../utils/firebase';
 
-import { useHistory } from 'react-router-dom';
+import { ContributeButton, ReadMoreButton } from '../Articles/Buttons';
 
 import {
     Card,
@@ -10,10 +10,8 @@ import {
     CardContent,
     CardActions,
     Typography,
-    Link,
-    Button
+    Link
 } from '@material-ui/core';
-import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { makeStyles } from '@material-ui/core/styles';
 
 var Highlight = require('react-highlighter');
@@ -49,18 +47,10 @@ const useStyles = makeStyles((theme) => ({
 export default function ArticleContainer(props) {
     // Note: edit links are temporary, just need a way for the profs to access it in the mvp
     const articleURL = "/article/" + props.article.id;
-    const editArticleURL = "/contribute/" + props.article.id;
-    const history = useHistory();
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
 
-    const handleReadMoreClick = () => {
-        history.push(articleURL);
-    };
-
-    const handleEditClick = () => {
-        history.push(editArticleURL);
-    };
+    const highlightTerm = props.article.searchTerm ? props.article.searchTerm : "";
 
     return (
         <Grid item xs={props.mediaQuery ? "auto" : 4}>
@@ -73,35 +63,21 @@ export default function ArticleContainer(props) {
                 <CardContent>
                     <Link href={articleURL} color={"primary"}>
                         <Typography component="h5" variant="h5" gutterBottom>
-                            <Highlight search={props.article.searchTerm}>
+                            <Highlight search={highlightTerm}>
                                 {props.article.title}
                             </Highlight>
                         </Typography>
                     </Link>
                     <Typography className={classes.contentSnipet} variant="body2" color="textSecondary">
-                        <Highlight search={props.article.searchTerm}>
+                        <Highlight search={highlightTerm}>
                             {props.article.summary}
                         </Highlight>
                     </Typography>
                 </CardContent>
                 <CardActions >
-                    <Button
-                        color="secondary"
-                        className={classes.button}
-                        endIcon={<NavigateNextIcon />}
-                        onClick={handleReadMoreClick}
-                    >
-                        Read More
-                    </Button>
+                    <ReadMoreButton articleID={props.article.id} />
                     {firebase.auth.currentUser &&
-                        <Button
-                            color="secondary"
-                            className={classes.button}
-                            endIcon={<NavigateNextIcon />}
-                            onClick={handleEditClick}
-                        >
-                            Contribute
-                         </Button>}
+                        <ContributeButton articleID={props.article.id} />}
                 </CardActions>
             </Card>
         </Grid>
