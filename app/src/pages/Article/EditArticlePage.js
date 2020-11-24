@@ -55,7 +55,6 @@ class EditArticlePage extends React.Component {
             )
         }
         // Render the article
-        // TODO: Is the first section 1 or 0?
         // TODO: Utilize hover effects on each of the section parts (make it just like the ArticleSection until hovered over)
         // TODO: Loading animation for when someone creates/edits a section and it hasn't updated yet
         return (
@@ -68,7 +67,7 @@ class EditArticlePage extends React.Component {
                 <AddSectionField
                     article_id={this.state.article.id}
                     addSectionToArticle={this.addSectionToArticle}
-                    order={0}
+                    order={-1}
                 />
                 {this.state.article.sections.map((section) =>
                     <EditArticleSection

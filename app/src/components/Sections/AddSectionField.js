@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
         opacity: ".25",
         transition: ".5s ease",
         "&:hover": {
-            background: "#8eacbb",
+            // background: "#8eacbb",
             backgroundClip: "content-box",
             opacity: "1",
         },
