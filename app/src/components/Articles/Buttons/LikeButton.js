@@ -82,7 +82,11 @@ class LikeButton extends React.Component {
                         )}
                     {this.state.numLikes}
                 </IconButton>
-                <ForceSignInModal isOpen={this.state.signInModal} closeModal={this.handleCloseModal} />
+                <ForceSignInModal
+                    isOpen={this.state.signInModal}
+                    closeModal={this.handleCloseModal}
+                    accessing={"liking articles"}
+                />
             </div>
         )
     }

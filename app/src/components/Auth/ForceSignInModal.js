@@ -37,7 +37,7 @@ export default function ForceSignInModal(props) {
             <DialogTitle id="alert-dialog-title">Sign In Required</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    You must be logged in to access {props.accessing ? props.accessing : "this functionality"}. Please log in or go back.
+                    You must be logged in to access {props.accessing ? props.accessing : "this functionality"}. Please log in {props.accessPage ? "or go back to another page" : "or go back to the page"}.
           </DialogContentText>
             </DialogContent>
             <DialogActions>
