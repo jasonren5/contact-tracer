@@ -7,6 +7,7 @@ import { publishContribution, addSection } from "../../utils/functions/articles"
 import { withFirebase } from '../../utils/firebase';
 import { Button } from '@material-ui/core';
 import ArticleSection from '../../classes/ArticleSection';
+import { CircularProgress } from '@material-ui/core';
 
 class EditSectionText extends React.Component {
     constructor(props) {
@@ -17,7 +18,9 @@ class EditSectionText extends React.Component {
             section: props.section,
             mergeSection: null,
             editValue: props.section.body,
-            mergeValue: ""
+            mergeValue: "",
+            publishingNewSection: false,
+            publishingChanges: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
@@ -47,6 +50,7 @@ class EditSectionText extends React.Component {
     }
 
     publishChanges() {
+        this.setState({publishingChanges: true});
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
         publishContribution(this.props.firebase, this.state.section, this.state.editValue).then((response) => {
@@ -58,7 +62,8 @@ class EditSectionText extends React.Component {
                     mergeSection: response.section,
                     mergeValue: response.section.body,
                     merging: true,
-                    section: localSection
+                    section: localSection,
+                    publishingChanges: false
                 })
                 return;
             }
@@ -66,15 +71,17 @@ class EditSectionText extends React.Component {
                 editing: false,
                 section: response.section,
                 mergeSection: null,
-                editValue: response.section.body
+                editValue: response.section.body,
+                publishingChanges: false
             })
         })
     }
 
     addSectionBelow() {
+        this.setState({publishingNewSection: true});
         let section = new ArticleSection(this.state.section.article_id, null, null, "text", "This is a new section, edit it to add content.", (this.state.section.order + 1), []);
         addSection(this.props.firebase, section).then((section) => {
-            console.log(section);
+            this.setState({publishingNewSection: false});
             this.props.addSectionToArticle(section);
         })
     }
@@ -111,7 +118,10 @@ class EditSectionText extends React.Component {
                         Cancel
                     </Button>
                     <Button color="primary" aria-label="upload picture" component="span" onClick={this.publishChanges}>
-                        Publish
+                        {this.state.publishingChanges
+                            ? <CircularProgress size={20} color="primary" />
+                            : 'Publish Changes'
+                        }
                     </Button>
                 </CardActions>
             </Card>
@@ -129,7 +139,10 @@ class EditSectionText extends React.Component {
                         Edit
                     </Button>
                     <Button color="primary" aria-label="edit" component="span" onClick={this.addSectionBelow}>
-                        Add Section
+                        {this.state.publishingNewSection
+                            ? <CircularProgress size={20} color="primary" />
+                            : 'Add Section'
+                        }
                     </Button>
                 </CardActions>
             </Card>
