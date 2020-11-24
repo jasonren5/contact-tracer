@@ -15,7 +15,9 @@ import {
     Person,
     Add,
     Home,
-    LockOpen
+    LockOpen,
+    FindInPage,
+    Create
 } from '@material-ui/icons';
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -70,6 +72,16 @@ export default function ProfileButton(props) {
         history.push('/signup');
     }
 
+    const handleBrowsePublished = () => {
+        handleClose();
+        history.push('/browse/published');
+    }
+
+    const handleBrowseContribute = () => {
+        handleClose();
+        history.push('/browse/contribute');
+    }
+
     const SignedInMobile = () => (
         <div className="signed-in-mobile">
             <MenuItem disabled>
@@ -83,6 +95,18 @@ export default function ProfileButton(props) {
                     <Home fontSize="small" />
                 </ListItemIcon>
                 <ListItemText primary="Home" />
+            </MenuItem>
+            <MenuItem onClick={handleBrowsePublished}>
+                <ListItemIcon>
+                    <FindInPage fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Browse" />
+            </MenuItem>
+            <MenuItem onClick={handleBrowseContribute}>
+                <ListItemIcon>
+                    <Create fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Contribute" />
             </MenuItem>
             <MenuItem onClick={props.openNewArticleModal}>
                 <ListItemIcon>
@@ -112,6 +136,12 @@ export default function ProfileButton(props) {
                     <Home fontSize="small" />
                 </ListItemIcon>
                 <ListItemText primary="Home" />
+            </MenuItem>
+            <MenuItem onClick={handleBrowsePublished}>
+                <ListItemIcon>
+                    <FindInPage fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Browse" />
             </MenuItem>
             <MenuItem onClick={handleSignIn}>
                 <ListItemIcon>
