@@ -57,6 +57,7 @@ export default function EditArticleImage(props) {
                         <IconButton
                             onClick={openEditImageModal}
                             aria-label="edit-title"
+                            color="secondary"
                         >
                             <EditIcon />
                         </IconButton>

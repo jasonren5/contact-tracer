@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+
 import { Typography, TextField, IconButton } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+
 import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,20 +37,23 @@ const useStyles = makeStyles((theme) => ({
         margin: "1rem",
         padding: ".5rem",
     },
-    editButton: {
+    editButtonWrapper: {
         position: "absolute",
         top: 0,
         right: 0,
     },
     submitButton: {
-        position: "absolute",
-        top: 0,
-        right: 20,
+        color: theme.palette.success.main
+    },
+    cancelButton: {
+        color: theme.palette.error.main
     },
 }));
 
 export default function EditArticleHeader(props) {
-    const classes = useStyles();
+    const theme = useTheme();
+    const classes = useStyles(theme);
+
     const [titleHover, setTitleHover] = useState(false);
     const [titleEdit, setTitleEdit] = useState(false);
     const [editValue, setEditValue] = useState(props.title);
@@ -65,10 +71,11 @@ export default function EditArticleHeader(props) {
 
             <Typography variant="h4" className={classes.title} >{props.title}</Typography>
             {titleHover &&
-                <div className={classes.editButton} >
+                <div className={classes.editButtonWrapper} >
                     <IconButton
                         onClick={() => setTitleEdit(true)}
                         aria-label="edit-title"
+                        color="secondary"
                     >
                         <EditIcon />
                     </IconButton>
@@ -90,16 +97,18 @@ export default function EditArticleHeader(props) {
                 onChange={(event) => setEditValue(event.target.value)}
                 className={classes.editField}
             />
-            <div className={classes.editButton} >
+            <div className={classes.editButtonWrapper} >
                 <IconButton
                     onClick={handleSubmitEdit}
                     aria-label="submit-edit"
+                    className={classes.submitButton}
                 >
                     <DoneIcon />
                 </IconButton>
                 <IconButton
                     onClick={() => setTitleEdit(false)}
                     aria-label="cancel-edit"
+                    className={classes.cancelButton}
                 >
                     <CloseIcon />
                 </IconButton>
