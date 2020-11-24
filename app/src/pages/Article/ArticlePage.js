@@ -23,6 +23,7 @@ class ArticlePage extends React.Component {
                 article: article
             });
         }).catch((err) => {
+            console.log(err);
             window.location.href = ('/article-not-found');
         })
     }
