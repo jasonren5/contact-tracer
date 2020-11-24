@@ -1,9 +1,13 @@
 import React from 'react';
+
+import { toggleLikeByArticleID } from '../../../utils/functions/articles';
+import { withFirebase } from '../../../utils/firebase';
+import { withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
+
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { toggleLikeByArticleID } from '../../../utils/functions/articles';
-import { withFirebase } from '../../../utils/firebase';
 
 class LikeButton extends React.Component {
     constructor(props) {
@@ -13,6 +17,7 @@ class LikeButton extends React.Component {
             numLikes: this.props.liked_users.length
         }
         this.toggleLike = this.toggleLike.bind(this);
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -22,6 +27,16 @@ class LikeButton extends React.Component {
             this.setState({
                 liked: true
             })
+        }
+    }
+
+    handleClick() {
+        if (this.props.firebase.auth.currentUser) {
+            this.toggleLike();
+        }
+        else {
+            const { history } = this.props;
+            history.push('/signin');
         }
     }
 
@@ -46,7 +61,7 @@ class LikeButton extends React.Component {
 
     render() {
         return (
-            <IconButton aria-label="Like" onClick={this.toggleLike}>
+            <IconButton aria-label="Like" onClick={this.handleClick}>
                 {this.state.liked ? (
                     <FavoriteIcon></FavoriteIcon>
                 ) : (
@@ -59,4 +74,4 @@ class LikeButton extends React.Component {
 
 }
 
-export default withFirebase(LikeButton);
+export default compose(withFirebase, withRouter)(LikeButton);
