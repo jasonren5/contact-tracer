@@ -2,6 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import EditHeaderText from './EditHeaderText';
+import EditArticleImage from './EditArticleImage';
 
 const useStyles = makeStyles((theme) => ({
     image: {
@@ -18,7 +19,7 @@ export default function EditArticleHeader(props) {
             <EditHeaderText
                 title={props.article.title}
             />
-            <img src={props.article.image_url} alt={props.article.alt_text} className={classes.image} />
+            <EditArticleImage image_url={props.article.image_url} alt_text={props.article.alt_text} />
         </div>
     );
 }

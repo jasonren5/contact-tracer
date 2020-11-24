@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
-import zIndex from '@material-ui/core/styles/zIndex';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -20,10 +19,11 @@ const useStyles = makeStyles((theme) => ({
     },
     highlightWrapper: {
         position: "relative",
-        margin: "1rem",
+        marginTop: "1rem",
+        padding: ".25rem",
         borderRadius: "8px",
         transition: ".5s ease",
-        zIndex: "10",
+        zIndex: "200",
         // TODO: Fix one way hover
         "&:hover": {
             // border: "3px solid #ccc",
@@ -34,6 +34,7 @@ const useStyles = makeStyles((theme) => ({
     wrapper: {
         position: "relative",
         margin: "1rem",
+        padding: ".5rem",
     },
     editButton: {
         position: "absolute",
