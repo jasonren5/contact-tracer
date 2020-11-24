@@ -73,7 +73,7 @@ class EditSectionText extends React.Component {
 
     addSectionBelow() {
         let section = new ArticleSection(this.state.section.article_id, null, null, "text", "This is a new section, edit it to add content.", (this.state.section.order + 1), []);
-        addSection(this.props.firebase.section).then((section) => {
+        addSection(this.props.firebase, section).then((section) => {
             console.log(section);
             this.props.addSectionToArticle(section);
         })
