@@ -4,6 +4,7 @@ import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import { toggleLikeByArticleID } from '../../../utils/functions/articles';
 import { withFirebase } from '../../../utils/firebase';
+import { withAuthorization, userLoggedInCondition } from '../../../utils/session';
 
 class LikeButton extends React.Component {
     constructor(props) {
@@ -59,4 +60,4 @@ class LikeButton extends React.Component {
 
 }
 
-export default withFirebase(LikeButton);
+export default withAuthorization(userLoggedInCondition)(LikeButton);
