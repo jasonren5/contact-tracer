@@ -48,7 +48,7 @@ function SignInForm() {
         const { email, password } = state;
         firebase.doSignInWithEmailAndPassword(email, password)
             .then(() => {
-                // TODO: this should push to the previous page you were on before auth
+                // TODO: this should not redirect to a previous auth page. Not easy to do.
                 history.goBack();
             })
             .catch(error => {
