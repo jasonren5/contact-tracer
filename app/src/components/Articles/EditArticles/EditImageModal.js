@@ -2,9 +2,8 @@ import React, { useState, useContext } from 'react';
 
 import {
     createArticleWithTitleAndImage
-} from '../../utils/functions/articles';
-import { useHistory } from "react-router-dom";
-import { FirebaseContext } from '../../utils/firebase';
+} from '../../../utils/functions/articles';
+import { FirebaseContext } from '../../../utils/firebase';
 
 import {
     Button,
@@ -17,7 +16,6 @@ import {
 } from '@material-ui/core';
 
 const INITIAL_STATE = {
-    articleTitle: "",
     imageURL: "",
 };
 
@@ -27,8 +25,6 @@ export default function CreateArticleModal(props) {
     });
 
     const firebase = useContext(FirebaseContext);
-
-    const history = useHistory();
 
     const handleChange = event => {
         const { id, value } = event.target;
@@ -42,7 +38,6 @@ export default function CreateArticleModal(props) {
     const handleSubmitModal = () => {
         // Get input information from state
         const newArticleInfo = {
-            title: state.articleTitle,
             image_url: state.imageURL
         };
 
@@ -51,37 +46,30 @@ export default function CreateArticleModal(props) {
             ...INITIAL_STATE
         });
 
-        // Firebase functions call to createArticleWithTitleAndImage
-        createArticleWithTitleAndImage(firebase, newArticleInfo).then(response => {
-            if (response && response.status === 200) {
-                history.push('/contribute/' + response.article_id);
-            }
-        });
+        // TODO: Need to create firebase function to update image
 
-        // Not actually sure if we need to close the modal if we navigate away from it
-        props.closeModal();
+        // // Firebase functions call to createArticleWithTitleAndImage
+        // createArticleWithTitleAndImage(firebase, newArticleInfo).then(response => {
+        //     if (response && response.status === 200) {
+        //          props.closeModal();
+        //     }
+        // });
+
     };
 
-    const isInvalid = state.articleTitle === '';
+
+    //eslint-disable-next-line
+    const isInvalid = state.imageURL === '' || (state.imageURL && !/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png)/gi.test(state.imageURL));
 
     // TODO: Allow for direct uploads of images
 
     return (
         <Dialog open={props.isOpen} onClose={props.closeModal} aria-labelledby="form-dialog-title">
-            <DialogTitle id="form-dialog-title">Create New Article</DialogTitle>
+            <DialogTitle id="form-dialog-title">Edit Image</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Create a new article, starting with the title and an image address.
+                    To edit the image, please submit a new URL ending in <i>.jpg</i> or <i>.png</i>.
           </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="articleTitle"
-                    onChange={handleChange}
-                    label="Article Title"
-                    fullWidth
-                    required
-                />
                 <TextField
                     autoFocus
                     margin="dense"
@@ -90,6 +78,7 @@ export default function CreateArticleModal(props) {
                     onChange={handleChange}
                     label="Image URL"
                     fullWidth
+                    required
                 />
             </DialogContent>
             <DialogActions>

@@ -1,6 +1,6 @@
 import React from 'react';
-import EditArticleSection from "../../components/Articles/EditArticleSection";
-import EditArticleHeader from "../../components/Articles/EditArticleHeader";
+import EditArticleSection from "../../components/Articles/EditArticles/EditArticleSection";
+import EditArticleHeader from "../../components/Articles/EditArticles/EditArticleHeader";
 import { getFullArticle } from '../../utils/functions/articles';
 import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { Container } from '@material-ui/core';
@@ -24,7 +24,7 @@ class EditArticlePage extends React.Component {
             });
         }).catch((err) => {
             console.log(err);
-            window.location.href = ('/article-not-found');
+            // window.location.href = ('/article-not-found');
         })
     }
 

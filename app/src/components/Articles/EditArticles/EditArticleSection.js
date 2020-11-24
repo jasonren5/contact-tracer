@@ -1,6 +1,6 @@
 import React from 'react';
-import SectionImage from "../Sections/SectionImage";
-import EditSectionText from "../Sections/EditSectionText";
+import SectionImage from "../../Sections/SectionImage";
+import EditSectionText from "../../Sections/EditSectionText";
 
 class EditArticleSection extends React.Component {
     constructor(props) {
