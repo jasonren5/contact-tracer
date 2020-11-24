@@ -4,8 +4,12 @@ import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
+import zIndex from '@material-ui/core/styles/zIndex';
 
 const useStyles = makeStyles((theme) => ({
+    root: {
+        zIndex: "-1"
+    },
     title: {
         margin: "1rem",
         fontWeight: "bold",
@@ -17,10 +21,14 @@ const useStyles = makeStyles((theme) => ({
     highlightWrapper: {
         position: "relative",
         margin: "1rem",
+        borderRadius: "8px",
+        transition: ".5s ease",
+        zIndex: "10",
+        // TODO: Fix one way hover
         "&:hover": {
-            border: "3px solid #ccc",
-            borderRadius: "5px",
-            background: "aliceblue",
+            // border: "3px solid #ccc",
+            // borderRadius: "5px",
+            background: "#8eacbb",
         },
     },
     wrapper: {
@@ -102,7 +110,7 @@ export default function EditArticleHeader(props) {
     );
 
     return (
-        <div className="Edit Title">
+        <div className={classes.root}>
             {titleEdit ?
                 <Editing /> :
                 <NotEditing />
