@@ -2,11 +2,11 @@ import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { toggleLikeByArticleID } from '../../utils/functions/articles';
-import { withFirebase } from '../../utils/firebase';
+import { toggleLikeByArticleID } from '../../../utils/functions/articles';
+import { withFirebase } from '../../../utils/firebase';
 
 class LikeButton extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
         this.state = {
             liked: false,
@@ -18,7 +18,7 @@ class LikeButton extends React.Component {
     componentDidMount() {
         const user = this.props.firebase.doGetCurrentUser();
         const user_id = (user ? user.uid : null);
-        if(this.props.liked_users.includes(user_id)){
+        if (this.props.liked_users.includes(user_id)) {
             this.setState({
                 liked: true
             })
@@ -26,8 +26,8 @@ class LikeButton extends React.Component {
     }
 
     toggleLike() {
-        toggleLikeByArticleID(this.props.firebase, this.props.article_id).then((res)=>{
-            if(res.error) {
+        toggleLikeByArticleID(this.props.firebase, this.props.article_id).then((res) => {
+            if (res.error) {
                 console.log("Error toggling like!");
             } else {
                 this.setState({
@@ -43,11 +43,11 @@ class LikeButton extends React.Component {
     render() {
         return (
             <IconButton aria-label="Like" onClick={this.toggleLike}>
-                {this.state.liked ?(
+                {this.state.liked ? (
                     <FavoriteIcon></FavoriteIcon>
-                ):(
-                    <FavoriteBorderIcon></FavoriteBorderIcon>
-                )}
+                ) : (
+                        <FavoriteBorderIcon></FavoriteBorderIcon>
+                    )}
                 {this.state.numLikes}
             </IconButton>
         )

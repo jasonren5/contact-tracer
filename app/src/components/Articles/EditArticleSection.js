@@ -7,7 +7,7 @@ class EditArticleSection extends React.Component {
         super(props);
     }
 
-    renderCorrectSection(){
+    renderCorrectSection() {
         switch (this.props.section.type) {
             case "text":
                 return (<EditSectionText section={this.props.section} addSectionToArticle={this.props.addSectionToArticle}></EditSectionText>);
@@ -20,7 +20,7 @@ class EditArticleSection extends React.Component {
     }
 
     render() {
-        return(
+        return (
             <div style={sectionStyle}>
                 {this.renderCorrectSection()}
             </div>
