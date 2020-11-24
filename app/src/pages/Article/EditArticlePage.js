@@ -1,6 +1,7 @@
 import React from 'react';
 import EditArticleSection from "../../components/Articles/EditArticles/EditArticleSection";
 import EditArticleHeader from "../../components/Articles/EditArticles/EditArticleHeader";
+import AddSectionField from "../../components/Sections/AddSectionField";
 import { getFullArticle } from '../../utils/functions/articles';
 import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { Container } from '@material-ui/core';
@@ -54,7 +55,6 @@ class EditArticlePage extends React.Component {
             )
         }
         // Render the article
-        // TODO: Create an EditArticleHeader
         // TODO: Make an add section component that is rendered before and after each section  instead of the add section button
         // TODO: Utilize hover effects on each of the section parts (make it just like the ArticleSection until hovered over)
         return (
@@ -64,6 +64,7 @@ class EditArticlePage extends React.Component {
                 spacing={2}
             >
                 <EditArticleHeader article={this.state.article} />
+                <AddSectionField />
                 {this.state.article.sections.map((section) =>
                     <EditArticleSection
                         key={section.id + section.order}
