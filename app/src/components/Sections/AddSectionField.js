@@ -13,8 +13,8 @@ const useStyles = makeStyles((theme) => ({
         margin: "1rem",
         borderStyle: "dashed",
         border: "2px #37393b",
-        width: "100%",
         borderRadius: "8px",
+        width: "100%",
         opacity: ".25",
         transition: ".5s ease",
         "&:hover": {

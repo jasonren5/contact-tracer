@@ -24,6 +24,8 @@ const useStyles = makeStyles((theme) => ({
         position: "relative",
         marginTop: "1rem",
         padding: ".25rem",
+        // borderStyle: "dashed",
+        // border: "2px #37393b",
         borderRadius: "8px",
         transition: ".5s ease",
         zIndex: "200",
@@ -42,6 +44,11 @@ const useStyles = makeStyles((theme) => ({
         top: 0,
         right: 0,
     },
+    editingButtonsWrapper: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+    },
     submitButton: {
         color: theme.palette.success.main
     },
@@ -51,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // TODO: Deal with merge conflicts
-export default function EditArticleHeader(props) {
+export default function EditHeaderText(props) {
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -64,66 +71,60 @@ export default function EditArticleHeader(props) {
         console.log("submit edit");
     };
 
-    const NotEditing = () => (
-        <div
-            className={classes.highlightWrapper}
-            onMouseEnter={() => setTitleHover(true)}
-            onMouseLeave={() => setTitleHover(false)}
-        >
-
-            <Typography variant="h4" className={classes.title} >{props.title}</Typography>
-            {titleHover &&
-                <div className={classes.editButtonWrapper} >
-                    <IconButton
-                        onClick={() => setTitleEdit(true)}
-                        aria-label="edit-title"
-                        color="secondary"
-                    >
-                        <EditIcon />
-                    </IconButton>
-                </div>
-            }
-        </div>
-
-    );
-
-    const Editing = () => (
-        <div className={classes.wrapper}>
-            <TextField
-                id="open_editor"
-                label="Edit Title"
-                multiline
-                // disabled={this.state.merging}
-                rowsMax={10}
-                value={editValue}
-                onChange={(event) => setEditValue(event.target.value)}
-                className={classes.editField}
-            />
-            <div className={classes.editButtonWrapper} >
-                <IconButton
-                    onClick={handleSubmitEdit}
-                    aria-label="submit-edit"
-                    className={classes.submitButton}
-                >
-                    <DoneIcon />
-                </IconButton>
-                <IconButton
-                    onClick={() => setTitleEdit(false)}
-                    aria-label="cancel-edit"
-                    className={classes.cancelButton}
-                >
-                    <CloseIcon />
-                </IconButton>
-            </div>
-        </div>
-
-    );
+    const handleChange = (event) => {
+        setEditValue(event.target.value);
+    };
 
     return (
         <div className={classes.root}>
             {titleEdit ?
-                <Editing /> :
-                <NotEditing />
+                <div className={classes.wrapper}>
+                    <TextField
+                        id="edit-header-title"
+                        label="Edit Title"
+                        multiline
+                        // disabled={this.state.merging}
+                        rowsMax={10}
+                        value={editValue}
+                        onChange={handleChange}
+                        className={classes.editField}
+                        variant="outlined"
+                    />
+                    <div className={classes.editingButtonsWrapper} >
+                        <IconButton
+                            onClick={handleSubmitEdit}
+                            aria-label="submit-edit"
+                            className={classes.submitButton}
+                        >
+                            <DoneIcon />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => setTitleEdit(false)}
+                            aria-label="cancel-edit"
+                            className={classes.cancelButton}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </div>
+                </div> :
+                <div
+                    className={classes.highlightWrapper}
+                    onMouseEnter={() => setTitleHover(true)}
+                    onMouseLeave={() => setTitleHover(false)}
+                >
+                    <Typography variant="h4" className={classes.title} >{props.title}</Typography>
+                    {titleHover &&
+                        <div className={classes.editButtonWrapper} >
+                            <IconButton
+                                onClick={() => setTitleEdit(true)}
+                                aria-label="edit-title"
+                                color="secondary"
+                            >
+                                <EditIcon />
+                            </IconButton>
+                        </div>
+                    }
+                </div>
             }
         </div>
 
