@@ -38,7 +38,6 @@ class ArticlePage extends React.Component {
             )
         }
         // Render the article
-        // TODO: Eventually always display the like button, but if you aren't signed in we redirect to sign-in. (withAuthorization).
         return (
             <Container
                 component="main"
@@ -46,16 +45,16 @@ class ArticlePage extends React.Component {
                 spacing={2}
             >
                 <ArticleHeader article={this.state.article} />
-                {this.props.firebase.auth.currentUser &&
-                    <Grid container>
-                        <Grid item xs={6}>
-                            <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
-                        </Grid>
-                        <Grid item xs={6}>
-                            <ContributeButton inArticleButton articleID={this.state.article.id} />
-                        </Grid>
+
+                <Grid container>
+                    <Grid item xs>
+                        <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
                     </Grid>
-                }
+                    {/* <Grid item xs>
+                            <ContributeButton inArticleButton articleID={this.state.article.id} />
+                        </Grid> */}
+                </Grid>
+
                 {this.state.article.sections.map((section) =>
                     <Section key={section.id} section={section}></Section>
                 )}
