@@ -26,14 +26,18 @@ class LikeButton extends React.Component {
     }
 
     toggleLike() {
+        this.setState({
+            liked: !this.state.liked,
+            numLikes: (this.state.liked ? this.state.numLikes - 1 : this.state.numLikes + 1)
+        });
+
         toggleLikeByArticleID(this.props.firebase, this.props.article_id).then((res) => {
             if (res.error) {
                 console.log("Error toggling like!");
-            } else {
                 this.setState({
                     liked: !this.state.liked,
                     numLikes: (this.state.liked ? this.state.numLikes - 1 : this.state.numLikes + 1)
-                })
+                });
             }
         }).catch((err) => {
             console.error(err);
