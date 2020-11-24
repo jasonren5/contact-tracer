@@ -55,7 +55,7 @@ class EditArticlePage extends React.Component {
             )
         }
         // Render the article
-        // TODO: Make an add section component that is rendered before and after each section  instead of the add section button
+        // TODO: Is the first section 1 or 0?
         // TODO: Utilize hover effects on each of the section parts (make it just like the ArticleSection until hovered over)
         return (
             <Container
@@ -64,7 +64,11 @@ class EditArticlePage extends React.Component {
                 spacing={2}
             >
                 <EditArticleHeader article={this.state.article} />
-                <AddSectionField />
+                <AddSectionField
+                    article_id={this.state.article.id}
+                    addSectionToArticle={this.addSectionToArticle}
+                    order={0}
+                />
                 {this.state.article.sections.map((section) =>
                     <EditArticleSection
                         key={section.id + section.order}
