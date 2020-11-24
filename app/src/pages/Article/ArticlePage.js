@@ -38,7 +38,6 @@ class ArticlePage extends React.Component {
             )
         }
         // Render the article
-        // TODO: Eventually always display the like button, but if you aren't signed in we redirect to sign-in. (withAuthorization).
         return (
             <Container
                 component="main"
