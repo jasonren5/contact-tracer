@@ -43,6 +43,7 @@ export default function AddSectionField(props) {
         console.log(section);
     };
 
+    // TODO: Ability to add text or image section
     return (
         <div className={classes.container}>
             <IconButton
