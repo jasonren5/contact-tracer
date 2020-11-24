@@ -1,6 +1,6 @@
 import React from 'react';
 import EditArticleSection from "../../components/Articles/EditArticleSection";
-import ArticleHeader from "../../components/Articles/ArticleHeader";
+import EditArticleHeader from "../../components/Articles/EditArticleHeader";
 import { getFullArticle } from '../../utils/functions/articles';
 import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { Container } from '@material-ui/core';
@@ -63,7 +63,7 @@ class EditArticlePage extends React.Component {
                 maxWidth="md"
                 spacing={2}
             >
-                <ArticleHeader article={this.state.article} />
+                <EditArticleHeader article={this.state.article} />
                 {this.state.article.sections.map((section) =>
                     <EditArticleSection
                         key={section.id + section.order}
