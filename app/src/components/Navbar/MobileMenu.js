@@ -108,12 +108,6 @@ export default function ProfileButton(props) {
                 </ListItemIcon>
                 <ListItemText primary="Contribute" />
             </MenuItem>
-            <MenuItem onClick={props.openNewArticleModal}>
-                <ListItemIcon>
-                    <Add fontSize="small" />
-                </ListItemIcon>
-                <ListItemText primary="Create Article" />
-            </MenuItem>
             <MenuItem onClick={handleViewProfile}>
                 <ListItemIcon>
                     <Visibility fontSize="small" />

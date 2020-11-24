@@ -72,7 +72,6 @@ export default function Navbar() {
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
             <Button color="inherit" href="/browse/published" className={classes.navButton}>Browse</Button>
             <Button color="inherit" href="/browse/contribute" className={classes.navButton}>Contribute</Button>
-            <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
             <ProfileButton username={username} />
         </div >
     );
