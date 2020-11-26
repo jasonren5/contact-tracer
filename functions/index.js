@@ -851,7 +851,7 @@ exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(asy
         promises.push(updatePromise);
     })
 
-    return Promise.all(promises).then((results) => {
+    return Promise.all(promises).then(() => {
         return null;
     })
 });
