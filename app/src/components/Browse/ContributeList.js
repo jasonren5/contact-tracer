@@ -10,7 +10,7 @@ class ContributeList extends React.Component {
         super(props);
 
         this.state = {
-            articles: []
+            articles: null
         }
     }
 
@@ -24,9 +24,14 @@ class ContributeList extends React.Component {
     }
 
     render() {
+        if(!this.state.articles) {
+            return (
+                <PageLoading />
+            )
+        }
         if(this.state.articles.length <= 0) {
             return(
-                <PageLoading />
+                <p>No new articles to edit, check back in a few hours.</p>
             )
         }
         return(
