@@ -838,3 +838,20 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
     console.log(error);
 }); */
 })
+
+exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(async function() {
+    const db = admin.firestore();
+    var articles = await db.collection("articles").where('published',"==", false).get();
+
+    var promises = [];
+    articles.forEach((article) => {
+        const publishPromise = _publishArticleByID(db, article.id);
+        const updatePromise = db.collection('articles').doc(article.id).update({published: true});
+        promises.push(publishPromise);
+        promises.push(updatePromise);
+    })
+
+    return Promise.all(promises).then(() => {
+        return null;
+    })
+});
