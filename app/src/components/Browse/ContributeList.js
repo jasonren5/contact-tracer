@@ -16,9 +16,8 @@ class ContributeList extends React.Component {
 
     componentDidMount() {
         getAllUnpublishedArticles(this.props.firebase).then((articles) => {
-            const filteredArticles = articles.article_list.filter(article => !article.published)
             this.setState({
-                articles: filteredArticles
+                articles: articles.article_list
             })
         })
     }
