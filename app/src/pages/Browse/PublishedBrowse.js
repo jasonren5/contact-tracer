@@ -13,21 +13,21 @@ class PublishedBrowse extends React.Component {
         this.selectType = this.selectType.bind(this);
     }
 
-    selectType(type){
+    selectType(type) {
         this.setState({
             typeFilter: type
         })
     }
-
+    // TODO: Move search bar - have it actually query the database? (probally not because speed)
     render() {
-        return(
+        return (
             <Grid container justify="center">
                 <Grid container xs={6} justify="center">
                     <Typography variant="h3" component="h1" style={titleStyle}>
                         Browse Articles
                     </Typography>
-                    <BrowseHeader updateParent={this.selectType}/>
-                    <PublishedList typeFilter={this.state.typeFilter}/>
+                    <BrowseHeader updateParent={this.selectType} />
+                    <PublishedList typeFilter={this.state.typeFilter} />
                 </Grid>
             </Grid>
         )

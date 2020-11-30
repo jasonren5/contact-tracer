@@ -36,6 +36,7 @@ export default function AddSectionField(props) {
     const addSectionBelow = () => {
         let section = new ArticleSection(props.article_id, null, null, "text", "This is a new section, edit it to add content.", (props.order + 1), []);
         // TODO: Jason: Implement functions call to add section
+        // TODO: Adding a section should increment your contributions counter
         // This already exists so just reuse
         // addSection(firebase, section).then((section) => {
         //     console.log(section);
@@ -44,7 +45,7 @@ export default function AddSectionField(props) {
         console.log(section);
     };
 
-    // TODO: Ability to add text or image section
+    // TODO: Ability to add text or image section - drop down menu of types of section - default textd
     return (
         <div className={classes.container}>
             <IconButton

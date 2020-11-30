@@ -14,7 +14,6 @@ const useStyles = makeStyles((theme) => ({
 export default function HomePage() {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
     const classes = useStyles();
-
     return (
         <div className="home-page">
             <Container

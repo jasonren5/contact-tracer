@@ -39,6 +39,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // TODO: navbar flashing login and logout
+// TODO: Center Title
+// TODO: Turn browse into a search icon
 export default function Navbar() {
     const [newArticleIsOpen, setNewArticleIsOpen] = useState(false);
     const [username, setUsername] = useState();
