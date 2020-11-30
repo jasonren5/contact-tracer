@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
+// TODO: navbar flashing login and logout
 export default function Navbar() {
     const [newArticleIsOpen, setNewArticleIsOpen] = useState(false);
     const [username, setUsername] = useState();

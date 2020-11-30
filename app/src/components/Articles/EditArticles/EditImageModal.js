@@ -47,7 +47,7 @@ export default function CreateArticleModal(props) {
         });
 
         // TODO: Jason: Need to create firebase function to update image
-
+        // Apperently we have a endpoint for this
         // // Firebase functions call to createArticleWithTitleAndImage
         // createArticleWithTitleAndImage(firebase, newArticleInfo).then(response => {
         //     if (response && response.status === 200) {
