@@ -1,7 +1,13 @@
 import React from 'react';
 import { publishContribution, addSection } from "../../utils/functions/articles"
 import { withFirebase } from '../../utils/firebase';
+
 import { withStyles } from "@material-ui/core/styles";
+import { Typography, IconButton } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
+
 import { compose } from 'recompose';
 
 import ArticleSection from '../../classes/ArticleSection';
@@ -18,7 +24,9 @@ const styles = theme => ({
     },
     body: {
         textAlign: "left",
-        marginBottom: "1rem",
+        // marginBottom: "1rem",
+        padding: "1rem",
+        paddingTop: "2rem",
     },
     root: {
         zIndex: "-1"
@@ -29,10 +37,7 @@ const styles = theme => ({
     },
     highlightWrapper: {
         position: "relative",
-        marginTop: "1rem",
         padding: ".25rem",
-        // borderStyle: "dashed",
-        // border: "2px #37393b",
         borderRadius: "8px",
         transition: ".5s ease",
         zIndex: "200",
@@ -101,7 +106,8 @@ class EditSectionText extends React.Component {
             editing: !this.state.editing,
             merging: false,
             editValue: this.state.section.body,
-            mergeValue: ""
+            mergeValue: "",
+            sectionHover: false,
         });
     }
 
@@ -199,7 +205,18 @@ class EditSectionText extends React.Component {
                 onMouseEnter={this.toggleHover}
                 onMouseLeave={this.toggleHover}
             >
-                <Typography variant="h4" className={classes.title} >{props.title}</Typography>
+                <Typography variant="body1" className={classes.body} >{this.state.section.body}</Typography>
+                {this.state.sectionHover &&
+                    <div className={classes.editButtonWrapper} >
+                        <IconButton
+                            onClick={this.toggleEditing}
+                            aria-label="edit-section"
+                            color="secondary"
+                        >
+                            <EditIcon />
+                        </IconButton>
+                    </div>
+                }
             </div>
         )
     }

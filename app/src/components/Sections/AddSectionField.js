@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        margin: "1rem",
+        margin: ".5rem",
         borderStyle: "dashed",
         border: "2px #37393b",
         borderRadius: "8px",

@@ -33,6 +33,6 @@ class EditArticleSection extends React.Component {
 export default EditArticleSection;
 
 const sectionStyle = {
-    marginTop: 20,
-    marginBottom: 20
+    // marginTop: 10,
+    // marginBottom: 10
 }
