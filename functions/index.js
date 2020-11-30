@@ -820,7 +820,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
     const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
 
     // make fetch request using axios package
-    axios.get(url)
+    return axios.get(url)
         .then(function (response) {
             let data = response.data;
             if (data.status == "ok") {
@@ -828,17 +828,16 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
                 for (i = 0; i < articlesToCreate; i++) {
                     _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
                 }
-                //console.log("Successfully added daily articles");
+                return {
+                    message: "Successfully created articles"
+                }
             }
         });
-    /*
-    * Why does our linter not allow logging to console? It would be very helpful in situations like this.
-    .catch (function (error) {
-    console.log("Failed to add daily articles");
-    console.log(error);
-}); */
 })
 
+/*
+*   Failsafe in case the scheduled function fails and we need to 
+*/
 exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
     const articlesToCreate = 3;
 
@@ -847,7 +846,6 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
 
     axios.get(url)
         .then(function (response) {
-
             let data = response.data;
             if (data.status == "ok") {
                 let i;
