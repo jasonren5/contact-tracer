@@ -29,7 +29,6 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: "8px",
         transition: ".5s ease",
         zIndex: "200",
-        // TODO: Fix one way hover
         "&:hover": {
             background: "#8eacbb",
         },

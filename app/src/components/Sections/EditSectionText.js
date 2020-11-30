@@ -1,19 +1,67 @@
 import React from 'react';
 import { publishContribution, addSection } from "../../utils/functions/articles"
 import { withFirebase } from '../../utils/firebase';
+import { withStyles } from "@material-ui/core/styles";
+import { compose } from 'recompose';
 
 import ArticleSection from '../../classes/ArticleSection';
 import AddSectionField from './AddSectionField';
 
 import { TextField, Button, Card, CardContent, CardActions, CircularProgress } from '@material-ui/core';
 
-const textStyle = {
-    textAlign: "left"
-}
-
-const textInputStyle = {
-    width: "100%"
-}
+const styles = theme => ({
+    textStyle: {
+        textAlign: "left",
+    },
+    textInputStyle: {
+        width: "100%",
+    },
+    body: {
+        textAlign: "left",
+        marginBottom: "1rem",
+    },
+    root: {
+        zIndex: "-1"
+    },
+    editField: {
+        width: "100%",
+        height: "200%",
+    },
+    highlightWrapper: {
+        position: "relative",
+        marginTop: "1rem",
+        padding: ".25rem",
+        // borderStyle: "dashed",
+        // border: "2px #37393b",
+        borderRadius: "8px",
+        transition: ".5s ease",
+        zIndex: "200",
+        "&:hover": {
+            background: "#8eacbb",
+        },
+    },
+    wrapper: {
+        position: "relative",
+        margin: "1rem",
+        padding: ".5rem",
+    },
+    editButtonWrapper: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+    },
+    editingButtonsWrapper: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+    },
+    submitButton: {
+        color: theme.palette.success.main
+    },
+    cancelButton: {
+        color: theme.palette.error.main
+    },
+});
 
 class EditSectionText extends React.Component {
     constructor(props) {
@@ -26,12 +74,14 @@ class EditSectionText extends React.Component {
             editValue: props.section.body,
             mergeValue: "",
             publishingNewSection: false,
-            publishingChanges: false
+            publishingChanges: false,
+            sectionHover: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
         this.publishChanges = this.publishChanges.bind(this);
         this.addSectionBelow = this.addSectionBelow.bind(this);
+        this.toggleHover = this.toggleHover.bind(this);
     }
 
     handleChange(event) {
@@ -52,6 +102,12 @@ class EditSectionText extends React.Component {
             merging: false,
             editValue: this.state.section.body,
             mergeValue: ""
+        });
+    }
+
+    toggleHover() {
+        this.setState({
+            sectionHover: !this.state.sectionHover
         });
     }
 
@@ -94,6 +150,7 @@ class EditSectionText extends React.Component {
 
     renderEditing() {
         const isDisabled = (this.state.merging ? "disabled" : "");
+        const { classes } = this.props;
         return (
             <Card>
                 <CardContent>
@@ -105,7 +162,7 @@ class EditSectionText extends React.Component {
                         rowsMax={10}
                         value={this.state.editValue}
                         onChange={(event) => this.handleChange(event)}
-                        style={textInputStyle}
+                        className={classes.textInputStyle}
                     />
                     {this.state.merging && (
                         <TextField
@@ -115,7 +172,7 @@ class EditSectionText extends React.Component {
                             rowsMax={10}
                             value={this.state.mergeValue}
                             onChange={(event) => this.handleChange(event)}
-                            style={textInputStyle}
+                            className={classes.textInputStyle}
                         />
                     )}
                 </CardContent>
@@ -135,23 +192,15 @@ class EditSectionText extends React.Component {
     }
 
     renderNotEditing() {
+        const { classes } = this.props;
         return (
-            <Card>
-                <CardContent>
-                    <p style={textStyle}>{this.state.section.body}</p>
-                </CardContent>
-                <CardActions>
-                    <Button color="primary" aria-label="edit" component="span" onClick={this.toggleEditing}>
-                        Edit
-                    </Button>
-                    <Button color="primary" aria-label="edit" component="span" onClick={this.addSectionBelow}>
-                        {this.state.publishingNewSection
-                            ? <CircularProgress size={20} color="primary" />
-                            : 'Add Section'
-                        }
-                    </Button>
-                </CardActions>
-            </Card>
+            <div
+                className={classes.highlightWrapper}
+                onMouseEnter={this.toggleHover}
+                onMouseLeave={this.toggleHover}
+            >
+                <Typography variant="h4" className={classes.title} >{props.title}</Typography>
+            </div>
         )
     }
 
@@ -171,4 +220,4 @@ class EditSectionText extends React.Component {
     }
 }
 
-export default withFirebase(EditSectionText);
+export default compose(withFirebase, withStyles(styles, { withTheme: true }))(EditSectionText);
