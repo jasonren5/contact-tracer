@@ -76,8 +76,6 @@ export default function ArticleContainer(props) {
                 </CardContent>
                 <CardActions >
                     <ReadMoreButton articleID={props.article.id} />
-                    {firebase.auth.currentUser &&
-                        <ContributeButton articleID={props.article.id} />}
                 </CardActions>
             </Card>
         </Grid>

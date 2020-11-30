@@ -321,48 +321,44 @@ exports.getAllArticles = functions.https.onCall(() => {
 * Get all the articles, as well as a short summary. Summary is pulled from the first section, and the latest version. This is pacckaged with id, title, and imageURL
 */
 // TODO: Jason: Order the returned articles by date edited
-exports.getAllArticlesWithSummaries = functions.https.onCall(() => {
+exports.getAllArticlesWithSummaries = functions.https.onCall(async () => {
     const db = admin.firestore();
-    const articlesPromise = db.collection("articles").get();
+    const snapshot = await db.collection("articles").where("published", "==", false).get();
 
-    return articlesPromise.then(async (snapshot) => {
-        let resData = { "article_list": [] };
-        await Promise.all(snapshot.docs.map(async (article) => {
-            // Default the snippet to having no summary data
-            var snippet = "There is nothing written for this article yet. Be the first to contribute by editing!";
+    let resData = { "article_list": [] };
 
-            // See if there is section data 
-            const sectionQuery = await db.collection("articles").doc(article.id).collection("sections").where("type", "==", "text").orderBy("order", "asc").limit(1).get();
-            var section = sectionQuery.docs[0];
+    await Promise.all(snapshot.docs.map(async (article) => {
+        // Default the snippet to having no summary data
+        var snippet = "There is nothing written for this article yet. Be the first to contribute by editing!";
 
-            // If there is section data 
-            if (section !== undefined) {
-                // Get the most recent version, and retrieve body and save to snippet
-                const versionQuery = await db.collection("articles").doc(article.id).collection("sections").doc(section.id).collection("versions").orderBy("order", "desc").limit(1).get();
-                var latestVersion = versionQuery.docs[0];
-                snippet = latestVersion.data().body;
+        // See if there is section data 
+        const sectionQuery = await db.collection("articles").doc(article.id).collection("sections").where("type", "==", "text").orderBy("order", "asc").limit(1).get();
+        var section = sectionQuery.docs[0];
 
-                // If the snippet is over 30 characters, truncate it
-                if (snippet.length > 250) {
-                    snippet = snippet.substring(0, 249) + "...";
-                }
+        // If there is section data 
+        if (section !== undefined) {
+            // Get the most recent version, and retrieve body and save to snippet
+            const versionQuery = await db.collection("articles").doc(article.id).collection("sections").doc(section.id).collection("versions").orderBy("order", "desc").limit(1).get();
+            var latestVersion = versionQuery.docs[0];
+            snippet = (latestVersion.data().body ? latestVersion.data().body : "This is an empty article. Edit to add content.");
+
+            // If the snippet is over 30 characters, truncate it
+            if (snippet.length > 250) {
+                snippet = snippet.substring(0, 249) + "...";
             }
-            // Push the article information to the array
-            resData["article_list"].push({
-                "id": article.id,
-                "title": article.data().title,
-                "image_url": article.data().image_url,
-                "type": article.data().type,
-                "created": article.data().created,
-                "published": article.data().published,
-                "summary": snippet
-            });
-        }));
-        // Send the array of articles
-        return resData;
-    }).catch(error => {
-        return error;
-    });
+        }
+        // Push the article information to the array
+        resData["article_list"].push({
+            "id": article.id,
+            "title": article.data().title,
+            "image_url": article.data().image_url,
+            "type": article.data().type,
+            "created": article.data().created,
+            "published": article.data().published,
+            "summary": snippet
+        });
+    }));
+    return resData
 });
 
 /*
@@ -839,3 +835,20 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
     console.log(error);
 }); */
 })
+
+exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(async function () {
+    const db = admin.firestore();
+    var articles = await db.collection("articles").where('published', "==", false).get();
+
+    var promises = [];
+    articles.forEach((article) => {
+        const publishPromise = _publishArticleByID(db, article.id);
+        const updatePromise = db.collection('articles').doc(article.id).update({ published: true });
+        promises.push(publishPromise);
+        promises.push(updatePromise);
+    })
+
+    return Promise.all(promises).then(() => {
+        return null;
+    })
+});

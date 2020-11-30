@@ -24,23 +24,15 @@ async function getFullArticle(firebase, article_id) {
 async function getAllUnpublishedArticles(firebase) {
     var getAllArticles = firebase.functions.httpsCallable("getAllArticlesWithSummaries");
 
-    var articlesPromise = getAllArticles().then((response) => {
-        let data = response.data;
-        return data;
-    });
-
-    return articlesPromise;
+    var response = await getAllArticles()
+    return response.data;
 }
 
 async function getAllArticles(firebase) {
     var getAllArticles = firebase.functions.httpsCallable("getAllPublishedArticlesWithSummaries");
 
-    var articlesPromise = getAllArticles().then((response) => {
-        let data = response.data;
-        return data;
-    });
-
-    return articlesPromise;
+    var response = await getAllArticles()
+    return response.data;
 }
 
 async function publishContribution(firebase, section, newBody) {

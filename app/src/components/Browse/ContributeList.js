@@ -10,13 +10,12 @@ class ContributeList extends React.Component {
         super(props);
 
         this.state = {
-            articles: []
+            articles: null
         }
     }
 
     componentDidMount() {
         getAllUnpublishedArticles(this.props.firebase).then((articles) => {
-            console.log(articles);
             this.setState({
                 articles: articles.article_list
             })
@@ -24,9 +23,14 @@ class ContributeList extends React.Component {
     }
 
     render() {
+        if(!this.state.articles) {
+            return (
+                <PageLoading />
+            )
+        }
         if(this.state.articles.length <= 0) {
             return(
-                <PageLoading />
+                <p>No new articles to edit, check back in a few hours.</p>
             )
         }
         return(
