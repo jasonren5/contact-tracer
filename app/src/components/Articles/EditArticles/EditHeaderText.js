@@ -67,7 +67,7 @@ export default function EditHeaderText(props) {
     const [editValue, setEditValue] = useState(props.title);
 
     const handleSubmitEdit = () => {
-        // TODO: Firebase function to deal with updated title
+        // TODO: Jason: Firebase function to deal with an updated title
         console.log("submit edit");
     };
 

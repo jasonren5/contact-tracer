@@ -320,7 +320,7 @@ exports.getAllArticles = functions.https.onCall(() => {
 /*
 * Get all the articles, as well as a short summary. Summary is pulled from the first section, and the latest version. This is pacckaged with id, title, and imageURL
 */
-// TODO: Order the returned articles by date edited
+// TODO: Jason: Order the returned articles by date edited
 exports.getAllArticlesWithSummaries = functions.https.onCall(() => {
     const db = admin.firestore();
     const articlesPromise = db.collection("articles").get();
@@ -368,7 +368,7 @@ exports.getAllArticlesWithSummaries = functions.https.onCall(() => {
 /*
 * Get all the published articles, as well as a short summary. Summary is pulled from the first section, and the latest version.
 */
-// TODO: Order the returned articles by date edited
+// TODO: Jason: Order the returned articles by date edited
 exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
     const db = admin.firestore();
     const articlesPromise = db.collection("published_articles").get();
@@ -818,6 +818,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
     // get API key from firebase config
     const apiKey = functions.config().news_api.key;
     const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
+    // TODO: Jason: Make sure the API pulls from better sources. Try and focus on news outlets like the associated press
 
     // make fetch request using axios package
     axios.get(url)

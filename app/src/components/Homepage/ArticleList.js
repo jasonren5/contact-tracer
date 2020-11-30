@@ -49,7 +49,7 @@ export default function ArticleList(props) {
         var passedArticles = [];
 
         allArticles.forEach((article) => {
-            // TODO: We should do regex here instead
+            // TODO: Jason: We should do regex here instead
             if (article.title.toLowerCase().includes(searchTerm.toLowerCase()) || article.summary.toLowerCase().includes(searchTerm.toLowerCase())) {
                 article.searchTerm = searchTerm;
                 passedArticles.push(article);

@@ -1,5 +1,6 @@
 import React from 'react';
 import SectionImage from "../../Sections/SectionImage";
+import EditArticleImage from "./EditArticleImage";
 import EditSectionText from "../../Sections/EditSectionText";
 
 class EditArticleSection extends React.Component {
@@ -10,10 +11,9 @@ class EditArticleSection extends React.Component {
     renderCorrectSection() {
         switch (this.props.section.type) {
             case "text":
-                return (<EditSectionText section={this.props.section} addSectionToArticle={this.props.addSectionToArticle}></EditSectionText>);
+                return (<EditSectionText section={this.props.section} addSectionToArticle={this.props.addSectionToArticle} />);
             case "image":
-                // TODO: Utilize the new EditArticleImage component
-                return (<SectionImage section={this.props.section}></SectionImage>);
+                return (<EditArticleImage image_url={this.props.section.body} alt_text={this.props.section.alt_text} />)
             default:
                 console.log("error loading section");
                 return (<div></div>)

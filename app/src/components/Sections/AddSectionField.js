@@ -35,7 +35,7 @@ export default function AddSectionField(props) {
 
     const addSectionBelow = () => {
         let section = new ArticleSection(props.article_id, null, null, "text", "This is a new section, edit it to add content.", (props.order + 1), []);
-        // TODO: Implement functions call to add section
+        // TODO: Jason: Implement functions call to add section
         // addSection(firebase, section).then((section) => {
         //     console.log(section);
         //     props.addSectionToArticle(section);
