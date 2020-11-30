@@ -19,7 +19,9 @@ export default function EditArticleHeader(props) {
             <EditHeaderText
                 title={props.article.title}
             />
-            <EditArticleImage image_url={props.article.image_url} alt_text={props.article.alt_text} />
+            {props.article.image_url &&
+                <EditArticleImage image_url={props.article.image_url} alt_text={props.article.alt_text} />
+            }
         </div>
     );
 }
