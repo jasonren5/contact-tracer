@@ -26,7 +26,6 @@ const styles = theme => ({
         textAlign: "left",
         // marginBottom: "1rem",
         padding: "1rem",
-        paddingTop: "2rem",
     },
     root: {
         zIndex: "-1"
@@ -40,9 +39,11 @@ const styles = theme => ({
         padding: ".25rem",
         borderRadius: "8px",
         transition: ".5s ease",
+
         zIndex: "200",
         "&:hover": {
             background: "#8eacbb",
+            paddingTop: "1.5rem",
         },
     },
     wrapper: {
