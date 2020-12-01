@@ -5,6 +5,7 @@ import { withFirebase } from '../../utils/firebase';
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { CSSTransition } from 'react-transition-group';
 
 import { compose } from 'recompose';
@@ -50,6 +51,11 @@ const styles = theme => ({
     editButtonWrapper: {
         position: "absolute",
         top: 0,
+        right: 30,
+    },
+    removeButtonWrapper: {
+        position: "absolute",
+        top: 0,
         right: 0,
     },
     submitButton: {
@@ -78,6 +84,7 @@ class EditSectionText extends React.Component {
         this.toggleEditing = this.toggleEditing.bind(this);
         this.publishChanges = this.publishChanges.bind(this);
         this.addSectionBelow = this.addSectionBelow.bind(this);
+        this.handleRemoveSection = this.handleRemoveSection.bind(this);
 
         this.hoverOn = this.hoverOn.bind(this);
         this.hoverOff = this.hoverOff.bind(this);
@@ -115,6 +122,11 @@ class EditSectionText extends React.Component {
         this.setState({
             sectionHover: false
         });
+    }
+
+    handleRemoveSection() {
+        // TODO: Jason: Create remove section firebase function
+        console.log("remove section");
     }
 
     publishChanges() {
@@ -219,6 +231,22 @@ class EditSectionText extends React.Component {
                 onMouseLeave={this.hoverOff}
             >
                 <Typography variant="body1" className={classes.body} >{this.state.section.body}</Typography>
+                <CSSTransition
+                    in={this.state.sectionHover}
+                    classNames="alert"
+                    timeout={200}
+                    unmountOnExit
+                >
+                    <div className={classes.removeButtonWrapper}>
+                        <IconButton
+                            onClick={this.handleRemoveSection}
+                            aria-label="remove-section"
+                            color="secondary"
+                        >
+                            <DeleteForeverIcon />
+                        </IconButton>
+                    </div>
+                </CSSTransition>
                 <CSSTransition
                     in={this.state.sectionHover}
                     classNames="alert"
