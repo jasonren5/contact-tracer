@@ -34,7 +34,6 @@ class ProfileHistory extends React.Component {
             )
         }
         if (this.state.error) {
-            // TODO Handle Errors Better
             return (
                 <ErrorAlert error={"Error loading history, please try again."} />
             )

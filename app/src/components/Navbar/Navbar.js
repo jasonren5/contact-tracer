@@ -57,7 +57,6 @@ export default function Navbar() {
 
     const handleSignOut = () => {
         firebase.doSignOut();
-        history.push('/');
     }
 
     const openNewArticleModal = () => {
@@ -71,7 +70,8 @@ export default function Navbar() {
     const LoggedInButtons = () => (
         <div className="loggedInButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-            <Button color="inherit" onClick={openNewArticleModal} className={classes.navButton}>Create Blank Article</Button>
+            <Button color="inherit" href="/browse/published" className={classes.navButton}>Browse</Button>
+            <Button color="inherit" href="/browse/contribute" className={classes.navButton}>Contribute</Button>
             <ProfileButton username={username} />
         </div >
     );
@@ -79,12 +79,11 @@ export default function Navbar() {
     const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
+            <Button color="inherit" href="/browse/published" className={classes.navButton}>Browse</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
             <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
         </div>
     );
-
-    // TODO: Need to make the navbar more mobile friendly
     return (
         <div className={classes.root}>
             <AppBar position="static">

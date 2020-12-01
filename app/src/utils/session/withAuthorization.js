@@ -5,13 +5,24 @@ import { compose } from 'recompose';
 import AuthUserContext from './context';
 import { withFirebase } from '../firebase';
 
+import ForceSignInModal from '../../components/Auth/ForceSignInModal';
+
 const withAuthorization = condition => Component => {
     class WithAuthorization extends React.Component {
+        constructor(props) {
+            super(props);
+            this.state = {
+                openModal: false,
+            }
+            this.handleCloseModal = this.handleCloseModal.bind(this);
+        }
         componentDidMount() {
             this.listener = this.props.firebase.auth.onAuthStateChanged(
                 authUser => {
                     if (!condition(authUser)) {
-                        this.props.history.push('/signin');
+                        this.setState({
+                            openModal: true
+                        });
                     }
                 },
             );
@@ -21,11 +32,24 @@ const withAuthorization = condition => Component => {
             this.listener();
         }
 
+        handleCloseModal() {
+            this.setState({
+                openModal: false
+            });
+        }
+
         render() {
             return (
                 <AuthUserContext.Consumer>
                     {authUser =>
-                        condition(authUser) ? <Component {...this.props} user={authUser} /> : null
+                        condition(authUser) ?
+                            <Component {...this.props} user={authUser} />
+                            :
+                            <ForceSignInModal
+                                isOpen={this.state.openModal}
+                                accessPage
+                                closeModal={this.handleCloseModal}
+                            />
                     }
                 </AuthUserContext.Consumer>
             );

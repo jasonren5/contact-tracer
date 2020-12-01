@@ -17,8 +17,6 @@ import { PasswordForgetLink } from '../PasswordForget'
 
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
 
-
-
 const INITIAL_STATE = {
     email: "",
     password: "",
@@ -44,7 +42,13 @@ function SignInForm() {
         const { email, password } = state;
         firebase.doSignInWithEmailAndPassword(email, password)
             .then(() => {
-                history.push('/');
+                // TODO: this should not redirect to a previous auth page. Not easy to do.
+                if (history.length <= 2) {
+                    history.push('/');
+                }
+                else {
+                    history.goBack();
+                }
             })
             .catch(error => {
                 setState({ error });
