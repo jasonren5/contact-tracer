@@ -39,7 +39,7 @@ export default function AddSectionField(props) {
     const firebase = useContext(FirebaseContext);
     const [publishingNewSection, setPublishingNewSection] = useState(false);
 
-    const addSectionBelow = () => {
+    const addTextSectionBelow = () => {
         let section = new ArticleSection(props.article_id, null, null, "text", "This is a new section, edit it to add content.", (props.order + 1), []);
         setPublishingNewSection(true);
         // TODO: Adding a section should increment your contributions counter
@@ -60,7 +60,7 @@ export default function AddSectionField(props) {
                     className={classes.button}
                     aria-label="add-section"
                     color="secondary"
-                    onClick={addSectionBelow}
+                    onClick={addTextSectionBelow}
                 >
                     <AddBoxIcon fontSize="large" />
                 </IconButton>

@@ -131,6 +131,7 @@ class EditSectionText extends React.Component {
 
     publishChanges() {
         this.setState({ publishingChanges: true });
+        // TODO: Jakob: Are these two lines below still used??
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
         publishContribution(this.props.firebase, this.state.section, this.state.editValue).then((response) => {
@@ -167,7 +168,6 @@ class EditSectionText extends React.Component {
     }
 
     renderEditing() {
-        const isDisabled = (this.state.merging ? "disabled" : "");
         const { classes } = this.props;
         return (
             <div className={classes.wrapper}>

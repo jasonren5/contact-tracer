@@ -57,6 +57,12 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+const INITAL_MERGE_STATE = {
+    merging: false,
+    mergeSection: null,
+    mergeValue: "",
+}
+
 // TODO: Deal with merge conflicts
 export default function EditHeaderText(props) {
     const theme = useTheme();
@@ -65,6 +71,7 @@ export default function EditHeaderText(props) {
     const [titleHover, setTitleHover] = useState(false);
     const [titleEdit, setTitleEdit] = useState(false);
     const [editValue, setEditValue] = useState(props.title);
+    const [mergeState, setMergeState] = useState({ ...INITAL_MERGE_STATE })
 
     const handleSubmitEdit = () => {
         // TODO: Jason: Firebase function to deal with an updated title
@@ -72,7 +79,21 @@ export default function EditHeaderText(props) {
     };
 
     const handleChange = (event) => {
-        setEditValue(event.target.value);
+        if (mergeState.merging) {
+            setMergeState(prevState => ({
+                ...prevState,
+                mergeValue: event.target.value
+            }));
+        }
+        else {
+            setEditValue(event.target.value);
+        }
+
+    };
+
+    const handleToggleEditing = value => {
+        setTitleEdit(value);
+        setMergeState({ ...INITAL_MERGE_STATE });
     };
 
     return (
@@ -84,12 +105,23 @@ export default function EditHeaderText(props) {
                             id="edit-header-title"
                             label="Edit Title"
                             multiline
-                            // disabled={this.state.merging}
+                            disabled={mergeState.merging}
                             rowsMax={10}
                             value={editValue}
-                            onChange={handleChange}
+                            onChange={(event) => handleChange(event)}
                             className={classes.editField}
                         />
+                        {mergeState.merging && (
+                            <TextField
+                                id="title_merge"
+                                label="Merge Changes"
+                                multiline
+                                rowsMax={10}
+                                value={mergeState.mergeValue}
+                                onChange={(event) => handleChange(event)}
+                                className={classes.editField}
+                            />
+                        )}
                     </CardContent>
                     <CardActions>
                         <Button
@@ -102,7 +134,7 @@ export default function EditHeaderText(props) {
                         </Button>
                         <Button
                             component="span"
-                            onClick={() => setTitleEdit(false)}
+                            onClick={() => handleToggleEditing(false)}
                             aria-label="cancel-edit"
                             className={classes.cancelButton}
                         >
@@ -125,7 +157,7 @@ export default function EditHeaderText(props) {
                     >
                         <div className={classes.editButtonWrapper} >
                             <IconButton
-                                onClick={() => setTitleEdit(true)}
+                                onClick={() => handleToggleEditing(true)}
                                 aria-label="edit-title"
                                 color="secondary"
                             >
