@@ -5,6 +5,8 @@ import EditIcon from '@material-ui/icons/Edit';
 
 import EditImageModal from './EditImageModal';
 
+import { CSSTransition } from 'react-transition-group';
+
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
@@ -52,17 +54,24 @@ export default function EditArticleImage(props) {
                 onMouseLeave={() => setImageHover(false)}
             >
                 <img src={props.image_url} alt={props.alt_text} className={classes.image} />
-                {imageHover &&
-                    <div className={classes.editButton} >
-                        <IconButton
-                            onClick={openEditImageModal}
-                            aria-label="edit-title"
-                            color="secondary"
-                        >
-                            <EditIcon />
-                        </IconButton>
-                    </div>
-                }
+                <CSSTransition
+                    in={imageHover}
+                    classNames="fade"
+                    timeout={200}
+                    unmountOnExit
+                >
+                    {
+                        <div className={classes.editButton} >
+                            <IconButton
+                                onClick={openEditImageModal}
+                                aria-label="edit-title"
+                                color="secondary"
+                            >
+                                <EditIcon />
+                            </IconButton>
+                        </div>
+                    }
+                </CSSTransition>
             </div>
             <EditImageModal isOpen={imageEdit} closeModal={closeEditImageModal} />
         </div>

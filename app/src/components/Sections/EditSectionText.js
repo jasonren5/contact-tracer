@@ -2,18 +2,69 @@ import React from 'react';
 import { publishContribution, addSection } from "../../utils/functions/articles"
 import { withFirebase } from '../../utils/firebase';
 
+import { withStyles } from "@material-ui/core/styles";
+import { Typography, IconButton } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import { CSSTransition } from 'react-transition-group';
+
+import { compose } from 'recompose';
+
 import ArticleSection from '../../classes/ArticleSection';
 import AddSectionField from './AddSectionField';
 
-import { TextField, Button, Card, CardContent, CardActions, CircularProgress } from '@material-ui/core';
+import {
+    TextField,
+    Button,
+    Card,
+    CardContent,
+    CardActions,
+    CircularProgress
+} from '@material-ui/core';
 
-const textStyle = {
-    textAlign: "left"
-}
-
-const textInputStyle = {
-    width: "100%"
-}
+const styles = theme => ({
+    body: {
+        textAlign: "left",
+        padding: "1rem",
+    },
+    editField: {
+        width: "100%",
+        height: "200%",
+    },
+    highlightWrapper: {
+        position: "relative",
+        padding: ".25rem",
+        borderRadius: "8px",
+        transition: ".5s ease",
+        paddingTop: "1.5rem",
+        zIndex: "200",
+        "&:hover": {
+            background: "#8eacbb",
+            // paddingTop: "1.5rem",
+        },
+    },
+    wrapper: {
+        position: "relative",
+        margin: "1rem",
+        padding: ".5rem",
+    },
+    editButtonWrapper: {
+        position: "absolute",
+        top: 0,
+        right: 30,
+    },
+    removeButtonWrapper: {
+        position: "absolute",
+        top: 0,
+        right: 0,
+    },
+    submitButton: {
+        color: theme.palette.success.main
+    },
+    cancelButton: {
+        color: theme.palette.error.main
+    },
+});
 
 class EditSectionText extends React.Component {
     constructor(props) {
@@ -26,12 +77,17 @@ class EditSectionText extends React.Component {
             editValue: props.section.body,
             mergeValue: "",
             publishingNewSection: false,
-            publishingChanges: false
+            publishingChanges: false,
+            sectionHover: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
         this.publishChanges = this.publishChanges.bind(this);
         this.addSectionBelow = this.addSectionBelow.bind(this);
+        this.handleRemoveSection = this.handleRemoveSection.bind(this);
+
+        this.hoverOn = this.hoverOn.bind(this);
+        this.hoverOff = this.hoverOff.bind(this);
     }
 
     handleChange(event) {
@@ -51,8 +107,26 @@ class EditSectionText extends React.Component {
             editing: !this.state.editing,
             merging: false,
             editValue: this.state.section.body,
-            mergeValue: ""
+            mergeValue: "",
+            sectionHover: false,
         });
+    }
+
+    hoverOn() {
+        this.setState({
+            sectionHover: true
+        });
+    }
+
+    hoverOff() {
+        this.setState({
+            sectionHover: false
+        });
+    }
+
+    handleRemoveSection() {
+        // TODO: Jason: Create remove section firebase function
+        console.log("remove section");
     }
 
     publishChanges() {
@@ -94,64 +168,102 @@ class EditSectionText extends React.Component {
 
     renderEditing() {
         const isDisabled = (this.state.merging ? "disabled" : "");
+        const { classes } = this.props;
         return (
-            <Card>
-                <CardContent>
-                    <TextField
-                        id="open_editor"
-                        label="Edit Section"
-                        multiline
-                        disabled={this.state.merging}
-                        rowsMax={10}
-                        value={this.state.editValue}
-                        onChange={(event) => this.handleChange(event)}
-                        style={textInputStyle}
-                    />
-                    {this.state.merging && (
+            <div className={classes.wrapper}>
+                <Card>
+                    <CardContent>
                         <TextField
                             id="open_editor"
-                            label="Merge Changes"
+                            label="Edit Section"
                             multiline
+                            disabled={this.state.merging}
                             rowsMax={10}
-                            value={this.state.mergeValue}
+                            value={this.state.editValue}
                             onChange={(event) => this.handleChange(event)}
-                            style={textInputStyle}
+                            className={classes.editField}
                         />
-                    )}
-                </CardContent>
-                <CardActions>
-                    <Button color="primary" aria-label="upload picture" component="span" onClick={this.toggleEditing}>
-                        Cancel
+                        {this.state.merging && (
+                            <TextField
+                                id="open_editor"
+                                label="Merge Changes"
+                                multiline
+                                rowsMax={10}
+                                value={this.state.mergeValue}
+                                onChange={(event) => this.handleChange(event)}
+                                className={classes.editField}
+                            />
+                        )}
+                    </CardContent>
+                    <CardActions>
+                        <Button
+                            className={classes.submitButton}
+                            aria-label="submit edit"
+                            component="span"
+                            onClick={this.publishChanges}
+                        >
+                            {this.state.publishingChanges
+                                ? <CircularProgress size={20} color="primary" />
+                                : 'Submit Changes'
+                            }
+                        </Button>
+                        <Button
+                            className={classes.cancelButton}
+                            aria-label="cancel edit"
+                            component="span"
+                            onClick={this.toggleEditing}
+                            disabled={this.state.publishingChanges}
+                        >
+                            Cancel
                     </Button>
-                    <Button color="primary" aria-label="upload picture" component="span" onClick={this.publishChanges}>
-                        {this.state.publishingChanges
-                            ? <CircularProgress size={20} color="primary" />
-                            : 'Publish Changes'
-                        }
-                    </Button>
-                </CardActions>
-            </Card>
+                    </CardActions>
+                </Card>
+            </div>
         )
     }
 
     renderNotEditing() {
+        const { classes } = this.props;
         return (
-            <Card>
-                <CardContent>
-                    <p style={textStyle}>{this.state.section.body}</p>
-                </CardContent>
-                <CardActions>
-                    <Button color="primary" aria-label="edit" component="span" onClick={this.toggleEditing}>
-                        Edit
-                    </Button>
-                    <Button color="primary" aria-label="edit" component="span" onClick={this.addSectionBelow}>
-                        {this.state.publishingNewSection
-                            ? <CircularProgress size={20} color="primary" />
-                            : 'Add Section'
-                        }
-                    </Button>
-                </CardActions>
-            </Card>
+            <div
+                className={classes.highlightWrapper}
+                onMouseEnter={this.hoverOn}
+                onMouseLeave={this.hoverOff}
+            >
+                <Typography variant="body1" className={classes.body} >{this.state.section.body}</Typography>
+                <CSSTransition
+                    in={this.state.sectionHover}
+                    classNames="alert"
+                    timeout={200}
+                    unmountOnExit
+                >
+                    <div className={classes.removeButtonWrapper}>
+                        <IconButton
+                            onClick={this.handleRemoveSection}
+                            aria-label="remove-section"
+                            color="secondary"
+                        >
+                            <DeleteForeverIcon />
+                        </IconButton>
+                    </div>
+                </CSSTransition>
+                <CSSTransition
+                    in={this.state.sectionHover}
+                    classNames="alert"
+                    timeout={200}
+                    unmountOnExit
+                >
+                    <div className={classes.editButtonWrapper} >
+                        <IconButton
+                            onClick={this.toggleEditing}
+                            aria-label="edit-section"
+                            color="secondary"
+                        >
+                            <EditIcon />
+                        </IconButton>
+                    </div>
+                </CSSTransition>
+            </div>
         )
     }
 
@@ -171,4 +283,4 @@ class EditSectionText extends React.Component {
     }
 }
 
-export default withFirebase(EditSectionText);
+export default compose(withFirebase, withStyles(styles, { withTheme: true }))(EditSectionText);

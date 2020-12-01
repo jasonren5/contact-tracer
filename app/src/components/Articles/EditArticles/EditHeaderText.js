@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 
-import { Typography, TextField, IconButton } from '@material-ui/core';
+import {
+    Typography,
+    TextField,
+    Button,
+    IconButton,
+    CardActions,
+    Card,
+    CardContent
+} from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import EditIcon from '@material-ui/icons/Edit';
-import DoneIcon from '@material-ui/icons/Done';
-import CloseIcon from '@material-ui/icons/Close';
+
+import { CSSTransition } from 'react-transition-group';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -24,18 +32,15 @@ const useStyles = makeStyles((theme) => ({
         position: "relative",
         marginTop: "1rem",
         padding: ".25rem",
-        // borderStyle: "dashed",
-        // border: "2px #37393b",
         borderRadius: "8px",
         transition: ".5s ease",
         zIndex: "200",
-        // TODO: Fix one way hover
         "&:hover": {
             background: "#8eacbb",
         },
     },
     wrapper: {
-        position: "relative",
+        // position: "relative",
         margin: "1rem",
         padding: ".5rem",
     },
@@ -43,11 +48,6 @@ const useStyles = makeStyles((theme) => ({
         position: "absolute",
         top: 0,
         right: 0,
-    },
-    editingButtonsWrapper: {
-        position: "absolute",
-        top: 10,
-        right: 10,
     },
     submitButton: {
         color: theme.palette.success.main
@@ -78,42 +78,51 @@ export default function EditHeaderText(props) {
     return (
         <div className={classes.root}>
             {titleEdit ?
-                <div className={classes.wrapper}>
-                    <TextField
-                        id="edit-header-title"
-                        label="Edit Title"
-                        multiline
-                        // disabled={this.state.merging}
-                        rowsMax={10}
-                        value={editValue}
-                        onChange={handleChange}
-                        className={classes.editField}
-                        variant="outlined"
-                    />
-                    <div className={classes.editingButtonsWrapper} >
-                        <IconButton
+                <Card className={classes.wrapper}>
+                    <CardContent>
+                        <TextField
+                            id="edit-header-title"
+                            label="Edit Title"
+                            multiline
+                            // disabled={this.state.merging}
+                            rowsMax={10}
+                            value={editValue}
+                            onChange={handleChange}
+                            className={classes.editField}
+                        />
+                    </CardContent>
+                    <CardActions>
+                        <Button
+                            component="span"
                             onClick={handleSubmitEdit}
                             aria-label="submit-edit"
                             className={classes.submitButton}
                         >
-                            <DoneIcon />
-                        </IconButton>
-                        <IconButton
+                            Submit Changes
+                        </Button>
+                        <Button
+                            component="span"
                             onClick={() => setTitleEdit(false)}
                             aria-label="cancel-edit"
                             className={classes.cancelButton}
                         >
-                            <CloseIcon />
-                        </IconButton>
-                    </div>
-                </div> :
+                            Cancel
+                        </Button>
+                    </CardActions>
+                </Card>
+                :
                 <div
                     className={classes.highlightWrapper}
                     onMouseEnter={() => setTitleHover(true)}
                     onMouseLeave={() => setTitleHover(false)}
                 >
                     <Typography variant="h4" className={classes.title} >{props.title}</Typography>
-                    {titleHover &&
+                    <CSSTransition
+                        in={titleHover}
+                        classNames="fade"
+                        timeout={200}
+                        unmountOnExit
+                    >
                         <div className={classes.editButtonWrapper} >
                             <IconButton
                                 onClick={() => setTitleEdit(true)}
@@ -123,7 +132,7 @@ export default function EditHeaderText(props) {
                                 <EditIcon />
                             </IconButton>
                         </div>
-                    }
+                    </CSSTransition>
                 </div>
             }
         </div>
