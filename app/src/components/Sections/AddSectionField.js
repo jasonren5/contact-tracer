@@ -1,12 +1,13 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 
 import { FirebaseContext } from '../../utils/firebase';
 import ArticleSection from '../../classes/ArticleSection';
 import { addSection } from '../../utils/functions/articles';
 
-import { IconButton } from '@material-ui/core';
+import { IconButton, CircularProgress } from '@material-ui/core';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { makeStyles } from '@material-ui/core/styles';
+
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -25,37 +26,45 @@ const useStyles = makeStyles((theme) => ({
     },
     button: {
         padding: "0px",
-    }
+    },
+    loadingAnimation: {
+        margin: "100px",
+        padding: "1000px",
+    },
 }));
 
 
 export default function AddSectionField(props) {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
+    const [publishingNewSection, setPublishingNewSection] = useState(false);
 
     const addSectionBelow = () => {
         let section = new ArticleSection(props.article_id, null, null, "text", "This is a new section, edit it to add content.", (props.order + 1), []);
-        // TODO: Jason: Implement functions call to add section
+        setPublishingNewSection(true);
         // TODO: Adding a section should increment your contributions counter
         // This already exists so just reuse
-        // addSection(firebase, section).then((section) => {
-        //     console.log(section);
-        //     props.addSectionToArticle(section);
-        // });
-        console.log(section);
+        addSection(firebase, section).then((section) => {
+            setPublishingNewSection(false);
+            props.addSectionToArticle(section);
+        });
     };
 
     // TODO: Ability to add text or image section - drop down menu of types of section - default textd
     return (
         <div className={classes.container}>
-            <IconButton
-                className={classes.button}
-                aria-label="add-section"
-                color="secondary"
-                onClick={addSectionBelow}
-            >
-                <AddBoxIcon fontSize="large" />
-            </IconButton>
+            {publishingNewSection ?
+                <CircularProgress classes={classes.loadingAnimation} size={30} color="primary" />
+                :
+                <IconButton
+                    className={classes.button}
+                    aria-label="add-section"
+                    color="secondary"
+                    onClick={addSectionBelow}
+                >
+                    <AddBoxIcon fontSize="large" />
+                </IconButton>
+            }
         </div>
     );
 }

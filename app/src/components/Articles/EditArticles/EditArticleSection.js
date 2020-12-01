@@ -1,5 +1,4 @@
 import React from 'react';
-import SectionImage from "../../Sections/SectionImage";
 import EditArticleImage from "./EditArticleImage";
 import EditSectionText from "../../Sections/EditSectionText";
 
