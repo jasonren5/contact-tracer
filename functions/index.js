@@ -859,14 +859,14 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
         });
 });
 
-exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(async function() {
+exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(async function () {
     const db = admin.firestore();
-    var articles = await db.collection("articles").where('published',"==", false).get();
+    var articles = await db.collection("articles").where('published', "==", false).get();
 
     var promises = [];
     articles.forEach((article) => {
         const publishPromise = _publishArticleByID(db, article.id);
-        const updatePromise = db.collection('articles').doc(article.id).update({published: true});
+        const updatePromise = db.collection('articles').doc(article.id).update({ published: true });
         promises.push(publishPromise);
         promises.push(updatePromise);
     })
