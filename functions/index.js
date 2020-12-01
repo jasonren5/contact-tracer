@@ -813,7 +813,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
 
     // get API key from firebase config
     const apiKey = functions.config().news_api.key;
-    const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=the-washington-post,associated-press&apiKey=" + apiKey;
 
     // make fetch request using axios package
     return axios.get(url)
@@ -821,11 +821,20 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
             let data = response.data;
             if (data.status == "ok") {
                 let i;
+                let numCreated = 0;
                 for (i = 0; i < articlesToCreate; i++) {
-                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                    if (data.articles[i] != null) {
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                        numCreated++;
+                    }
                 }
                 return {
-                    message: "Successfully created articles"
+                    message: "Successfully created " + numCreated + " articles"
+                }
+            } else {
+                return {
+                    message: "Failed to add articles -- NewsAPI request failed",
+                    data: data
                 }
             }
         });
@@ -839,7 +848,7 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
     const articlesToCreate = 3;
 
     const apiKey = functions.config().news_api.key;
-    const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=the-washington-post,associated-press&apiKey=" + apiKey;
 
     axios.get(url)
         .then(function (response) {
@@ -847,7 +856,9 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
             if (data.status == "ok") {
                 let i;
                 for (i = 0; i < articlesToCreate; i++) {
-                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                    if (data.articles[i] != null) {
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                    }
                 }
             }
             res.status(200).send({
@@ -859,14 +870,14 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
         });
 });
 
-exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(async function() {
+exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(async function () {
     const db = admin.firestore();
-    var articles = await db.collection("articles").where('published',"==", false).get();
+    var articles = await db.collection("articles").where('published', "==", false).get();
 
     var promises = [];
     articles.forEach((article) => {
         const publishPromise = _publishArticleByID(db, article.id);
-        const updatePromise = db.collection('articles').doc(article.id).update({published: true});
+        const updatePromise = db.collection('articles').doc(article.id).update({ published: true });
         promises.push(publishPromise);
         promises.push(updatePromise);
     })
