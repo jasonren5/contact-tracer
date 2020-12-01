@@ -14,21 +14,19 @@ import { compose } from 'recompose';
 import ArticleSection from '../../classes/ArticleSection';
 import AddSectionField from './AddSectionField';
 
-import { TextField, Button, Card, CardContent, CardActions, CircularProgress } from '@material-ui/core';
+import {
+    TextField,
+    Button,
+    Card,
+    CardContent,
+    CardActions,
+    CircularProgress
+} from '@material-ui/core';
 
 const styles = theme => ({
-    textStyle: {
-        textAlign: "left",
-    },
-    textInputStyle: {
-        width: "100%",
-    },
     body: {
         textAlign: "left",
         padding: "1rem",
-    },
-    root: {
-        zIndex: "-1"
     },
     editField: {
         width: "100%",
@@ -56,11 +54,6 @@ const styles = theme => ({
         top: 0,
         right: 0,
     },
-    editingButtonsWrapper: {
-        position: "absolute",
-        top: 10,
-        right: 10,
-    },
     submitButton: {
         color: theme.palette.success.main
     },
@@ -87,7 +80,9 @@ class EditSectionText extends React.Component {
         this.toggleEditing = this.toggleEditing.bind(this);
         this.publishChanges = this.publishChanges.bind(this);
         this.addSectionBelow = this.addSectionBelow.bind(this);
-        this.toggleHover = this.toggleHover.bind(this);
+
+        this.hoverOn = this.hoverOn.bind(this);
+        this.hoverOff = this.hoverOff.bind(this);
     }
 
     handleChange(event) {
@@ -112,9 +107,15 @@ class EditSectionText extends React.Component {
         });
     }
 
-    toggleHover() {
+    hoverOn() {
         this.setState({
-            sectionHover: !this.state.sectionHover
+            sectionHover: true
+        });
+    }
+
+    hoverOff() {
+        this.setState({
+            sectionHover: false
         });
     }
 
@@ -159,42 +160,55 @@ class EditSectionText extends React.Component {
         const isDisabled = (this.state.merging ? "disabled" : "");
         const { classes } = this.props;
         return (
-            <Card>
-                <CardContent>
-                    <TextField
-                        id="open_editor"
-                        label="Edit Section"
-                        multiline
-                        disabled={this.state.merging}
-                        rowsMax={10}
-                        value={this.state.editValue}
-                        onChange={(event) => this.handleChange(event)}
-                        className={classes.textInputStyle}
-                    />
-                    {this.state.merging && (
+            <div className={classes.wrapper}>
+                <Card>
+                    <CardContent>
                         <TextField
                             id="open_editor"
-                            label="Merge Changes"
+                            label="Edit Section"
                             multiline
+                            disabled={this.state.merging}
                             rowsMax={10}
-                            value={this.state.mergeValue}
+                            value={this.state.editValue}
                             onChange={(event) => this.handleChange(event)}
-                            className={classes.textInputStyle}
+                            className={classes.editField}
                         />
-                    )}
-                </CardContent>
-                <CardActions>
-                    <Button color="primary" aria-label="upload picture" component="span" onClick={this.toggleEditing}>
-                        Cancel
+                        {this.state.merging && (
+                            <TextField
+                                id="open_editor"
+                                label="Merge Changes"
+                                multiline
+                                rowsMax={10}
+                                value={this.state.mergeValue}
+                                onChange={(event) => this.handleChange(event)}
+                                className={classes.editField}
+                            />
+                        )}
+                    </CardContent>
+                    <CardActions>
+                        <Button
+                            className={classes.submitButton}
+                            aria-label="submit edit"
+                            component="span"
+                            onClick={this.publishChanges}
+                        >
+                            {this.state.publishingChanges
+                                ? <CircularProgress size={20} color="primary" />
+                                : 'Submit Changes'
+                            }
+                        </Button>
+                        <Button
+                            className={classes.cancelButton}
+                            aria-label="cancel edit"
+                            component="span"
+                            onClick={this.toggleEditing}
+                            disabled={this.state.publishingChanges}
+                        >
+                            Cancel
                     </Button>
-                    <Button color="primary" aria-label="upload picture" component="span" onClick={this.publishChanges}>
-                        {this.state.publishingChanges
-                            ? <CircularProgress size={20} color="primary" />
-                            : 'Publish Changes'
-                        }
-                    </Button>
-                </CardActions>
-            </Card>
+                    </CardActions>
+                </Card>
+            </div>
         )
     }
 
@@ -203,8 +217,8 @@ class EditSectionText extends React.Component {
         return (
             <div
                 className={classes.highlightWrapper}
-                onMouseEnter={this.toggleHover}
-                onMouseLeave={this.toggleHover}
+                onMouseEnter={this.hoverOn}
+                onMouseLeave={this.hoverOff}
             >
                 <Typography variant="body1" className={classes.body} >{this.state.section.body}</Typography>
                 <CSSTransition
