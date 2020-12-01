@@ -813,7 +813,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
 
     // get API key from firebase config
     const apiKey = functions.config().news_api.key;
-    const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=the-washington-post,associated-press&apiKey=" + apiKey;
 
     // make fetch request using axios package
     return axios.get(url)
