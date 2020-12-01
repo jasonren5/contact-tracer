@@ -5,8 +5,6 @@ import { withFirebase } from '../../utils/firebase';
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import DoneIcon from '@material-ui/icons/Done';
-import CloseIcon from '@material-ui/icons/Close';
 import { CSSTransition } from 'react-transition-group';
 
 import { compose } from 'recompose';
