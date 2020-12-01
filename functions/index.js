@@ -839,7 +839,7 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
     const articlesToCreate = 3;
 
     const apiKey = functions.config().news_api.key;
-    const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=the-washington-post,associated-press&apiKey=" + apiKey;
 
     axios.get(url)
         .then(function (response) {
