@@ -7,6 +7,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 
+import { CSSTransition } from 'react-transition-group';
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -24,8 +26,6 @@ const useStyles = makeStyles((theme) => ({
         position: "relative",
         marginTop: "1rem",
         padding: ".25rem",
-        // borderStyle: "dashed",
-        // border: "2px #37393b",
         borderRadius: "8px",
         transition: ".5s ease",
         zIndex: "200",
@@ -112,7 +112,12 @@ export default function EditHeaderText(props) {
                     onMouseLeave={() => setTitleHover(false)}
                 >
                     <Typography variant="h4" className={classes.title} >{props.title}</Typography>
-                    {titleHover &&
+                    <CSSTransition
+                        in={titleHover}
+                        classNames="fade"
+                        timeout={200}
+                        unmountOnExit
+                    >
                         <div className={classes.editButtonWrapper} >
                             <IconButton
                                 onClick={() => setTitleEdit(true)}
@@ -122,7 +127,7 @@ export default function EditHeaderText(props) {
                                 <EditIcon />
                             </IconButton>
                         </div>
-                    }
+                    </CSSTransition>
                 </div>
             }
         </div>

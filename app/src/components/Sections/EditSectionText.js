@@ -7,6 +7,7 @@ import { Typography, IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
+import { CSSTransition } from 'react-transition-group';
 
 import { compose } from 'recompose';
 
@@ -24,7 +25,6 @@ const styles = theme => ({
     },
     body: {
         textAlign: "left",
-        // marginBottom: "1rem",
         padding: "1rem",
     },
     root: {
@@ -39,11 +39,11 @@ const styles = theme => ({
         padding: ".25rem",
         borderRadius: "8px",
         transition: ".5s ease",
-
+        paddingTop: "1.5rem",
         zIndex: "200",
         "&:hover": {
             background: "#8eacbb",
-            paddingTop: "1.5rem",
+            // paddingTop: "1.5rem",
         },
     },
     wrapper: {
@@ -207,7 +207,12 @@ class EditSectionText extends React.Component {
                 onMouseLeave={this.toggleHover}
             >
                 <Typography variant="body1" className={classes.body} >{this.state.section.body}</Typography>
-                {this.state.sectionHover &&
+                <CSSTransition
+                    in={this.state.sectionHover}
+                    classNames="alert"
+                    timeout={200}
+                    unmountOnExit
+                >
                     <div className={classes.editButtonWrapper} >
                         <IconButton
                             onClick={this.toggleEditing}
@@ -217,7 +222,7 @@ class EditSectionText extends React.Component {
                             <EditIcon />
                         </IconButton>
                     </div>
-                }
+                </CSSTransition>
             </div>
         )
     }
