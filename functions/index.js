@@ -821,11 +821,20 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
             let data = response.data;
             if (data.status == "ok") {
                 let i;
+                let numCreated = 0;
                 for (i = 0; i < articlesToCreate; i++) {
-                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                    if (data.articles[i] != null) {
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                        numCreated++;
+                    }
                 }
                 return {
-                    message: "Successfully created articles"
+                    message: "Successfully created " + numCreated + " articles"
+                }
+            } else {
+                return {
+                    message: "Failed to add articles -- NewsAPI request failed",
+                    data: data
                 }
             }
         });
@@ -847,7 +856,9 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
             if (data.status == "ok") {
                 let i;
                 for (i = 0; i < articlesToCreate; i++) {
-                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                    if (data.articles[i] != null) {
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                    }
                 }
             }
             res.status(200).send({
