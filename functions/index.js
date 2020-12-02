@@ -876,7 +876,7 @@ exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(asy
 
 // Function to create user and a corresponding database entry
 
-exports.createUser = functions.https.onCall((data, context) => {
+exports.createUser = functions.https.onCall((data) => {
     const userPromise = admin.auth().createUser({
         email: data.email,
         emailVerified: false,
@@ -885,7 +885,6 @@ exports.createUser = functions.https.onCall((data, context) => {
         disabled: false
     });
     const documentPromise = userPromise.then((user) =>  {
-        console.log(data);
         const userData = {
             displayName: user.displayName,
             name: data.name,
@@ -896,7 +895,7 @@ exports.createUser = functions.https.onCall((data, context) => {
             viewed_articles:[],
             admin: false
         };
-        return admin.firestore().collection('users').doc(user.uid).set(userData).then((doc) => {return user;}).catch(async (err) => {
+        return admin.firestore().collection('users').doc(user.uid).set(userData).then(() => {return user;}).catch(async (err) => {
             await admin.auth().deleteUser(user.uid);
             return {
                 error: err
