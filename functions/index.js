@@ -54,19 +54,6 @@ exports.getUserByUsername = functions.https.onRequest((req, res) => {
     });
 });
 
-// On auth creation, adds a document to the users collection with the same ID as the auth ID.
-// Defaults username to the auth email and sets number of contributions to 0.
-// exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
-//     const db = admin.firestore();
-//     const uid = user.uid;
-//     functions.logger.info("Adding user to firestore with uid: '" + uid + "'", { structuredData: true });
-
-//     db.collection("users").doc(uid).set({
-//         username: user.email,
-//         number_of_contributions: 0
-//     });
-// });
-
 // Get a full article by id
 exports.getFullArticleByID = functions.https.onCall((data) => {
     const db = admin.firestore();
