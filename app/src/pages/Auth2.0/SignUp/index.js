@@ -39,10 +39,11 @@ function SignUpForm() {
     const handleSubmit = event => {
         event.preventDefault();
 
-        const { email, password } = state;
+        const { firstName, lastName, email, password } = state;
+        const fullName = firstName + " " + lastName;
 
         if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-            firebase.doCreateUserWithEmailAndPassword(email, password)
+            firebase.doCreateUserWithEmailAndPassword(email, password, fullName)
                 .then(authUser => {
                     history.push('/');
                 })
