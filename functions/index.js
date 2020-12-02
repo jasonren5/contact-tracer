@@ -56,16 +56,16 @@ exports.getUserByUsername = functions.https.onRequest((req, res) => {
 
 // On auth creation, adds a document to the users collection with the same ID as the auth ID.
 // Defaults username to the auth email and sets number of contributions to 0.
-exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
-    const db = admin.firestore();
-    const uid = user.uid;
-    functions.logger.info("Adding user to firestore with uid: '" + uid + "'", { structuredData: true });
+// exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
+//     const db = admin.firestore();
+//     const uid = user.uid;
+//     functions.logger.info("Adding user to firestore with uid: '" + uid + "'", { structuredData: true });
 
-    db.collection("users").doc(uid).set({
-        username: user.email,
-        number_of_contributions: 0
-    });
-});
+//     db.collection("users").doc(uid).set({
+//         username: user.email,
+//         number_of_contributions: 0
+//     });
+// });
 
 // Get a full article by id
 exports.getFullArticleByID = functions.https.onCall((data) => {
@@ -885,5 +885,42 @@ exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(asy
     return Promise.all(promises).then(() => {
         return null;
     })
+});
+
+// Function to create user and a corresponding database entry
+
+exports.createUser = functions.https.onCall((data, context) => {
+    const userPromise = admin.auth().createUser({
+        email: data.email,
+        emailVerified: false,
+        password: data.password,
+        displayName: data.displayName,
+        disabled: false
+    });
+    const documentPromise = userPromise.then((user) =>  {
+        console.log(data);
+        const userData = {
+            displayName: user.displayName,
+            name: data.name,
+            username: user.email,
+            number_of_contributions: 0,
+            expertises: [],
+            liked_articles: [],
+            viewed_articles:[],
+            admin: false
+        };
+        return admin.firestore().collection('users').doc(user.uid).set(userData).then((doc) => {return user;}).catch(async (err) => {
+            await admin.auth().deleteUser(user.uid);
+            return {
+                error: err
+            }
+        });
+    }).catch((err) => {
+        return {
+            error: err
+        }
+    });
+
+    return documentPromise;
 });
 
