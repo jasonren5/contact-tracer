@@ -117,6 +117,17 @@ async function getPublishedArticleByID(firebase, article_id) {
     return article;
 }
 
+async function editArticleTitle(firebase, article_id, title) {
+    let editArticleTitle = firebase.functions.httpsCallable("editArticleTitle");
+
+    const response = await editArticleTitle({
+        article_id: article_id,
+        title: title
+    });
+
+    return response;
+}
+
 export {
     getFullArticle,
     getAllArticles,
