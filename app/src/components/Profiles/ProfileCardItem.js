@@ -61,49 +61,6 @@ class ProfileCardItem extends React.Component {
         })
     }
 
-    renderStatic() {
-        const icon = this.getIcon()
-        return (
-            <div>
-                {icon && 
-                    <IconButton disabled>
-                        {icon}
-                    </IconButton>
-                }
-                <Typography variant="body1" component="span">
-                    {this.state.fieldValue}
-                </Typography>
-                <IconButton aria-label="edit" color="primary" onClick={() => this.toggleEditing()}>
-                    <EditIcon />
-                </IconButton>
-            </div>
-        )
-    }
-
-    renderEditing() {
-        const icon = this.getIcon()
-        return (
-            <div>
-                {icon && 
-                    <IconButton disabled>
-                        {icon}
-                    </IconButton>
-                }
-                <TextField
-                    label={this.props.fieldKey}
-                    value={this.state.value}
-                    onChange={(event) => this.handleInput(event)}
-                />
-                <IconButton aria-label="back" color="default" onClick={() => this.toggleEditing()}>
-                    <ClearIcon />
-                </IconButton>
-                <IconButton aria-label="publish" color="primary">
-                    <SendIcon />
-                </IconButton>
-            </div>
-        )
-    }
-
     renderIcon() {
         const icon = this.getIcon()
         return (
