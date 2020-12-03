@@ -137,5 +137,6 @@ export {
     createArticleWithTitleAndImage,
     toggleLikeByArticleID,
     getPublishedArticleByID,
-    getAllUnpublishedArticles
+    getAllUnpublishedArticles,
+    editArticleTitle
 };
