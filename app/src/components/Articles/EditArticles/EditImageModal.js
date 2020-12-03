@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 
 import {
-    createArticleWithTitleAndImage
+    publishContribution
 } from '../../../utils/functions/articles';
-import { FirebaseContext } from '../../../utils/firebase';
+import Firebase, { FirebaseContext } from '../../../utils/firebase';
 
 import {
     Button,
@@ -12,19 +12,52 @@ import {
     DialogActions,
     DialogContent,
     DialogContentText,
-    DialogTitle
+    DialogTitle,
+    CircularProgress
 } from '@material-ui/core';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
+
+const useStyles = makeStyles((theme) => ({
+    submitButton: {
+        color: theme.palette.success.main
+    },
+    cancelButton: {
+        color: theme.palette.error.main
+    },
+}));
 
 const INITIAL_STATE = {
-    imageURL: "",
+    editValue: "",
+    publishingChanges: false,
+    merging: false,
+    mergeValue: "",
+    section: null,
+    mergeSection: null
 };
 
 export default function CreateArticleModal(props) {
+    const theme = useTheme();
+    const classes = useStyles(theme);
+
     const [state, setState] = useState({
         ...INITIAL_STATE
     });
 
     const firebase = useContext(FirebaseContext);
+
+    useEffect(() => {
+        setState(prevState => ({
+            ...prevState,
+            section: props.section
+        }));
+    }, []);
+
+    useEffect(() => {
+        setState(prevState => ({
+            ...prevState,
+            editValue: "",
+        }));
+    }, [props.isOpen]);
 
     const handleChange = event => {
         const { id, value } = event.target;
@@ -36,30 +69,33 @@ export default function CreateArticleModal(props) {
     };
 
     const handleSubmitModal = () => {
-        // Get input information from state
-        const newArticleInfo = {
-            image_url: state.imageURL
-        };
+        setState(prevState => ({
+            ...prevState,
+            publishingChanges: true
+        }));
 
-        // Clear state (clear modal inputs)
-        setState({
-            ...INITIAL_STATE
-        });
-
-        // TODO: Jason: Need to create firebase function to update image
-        // Apperently we have a endpoint for this
-        // // Firebase functions call to createArticleWithTitleAndImage
-        // createArticleWithTitleAndImage(firebase, newArticleInfo).then(response => {
-        //     if (response && response.status === 200) {
-        //          props.closeModal();
-        //     }
-        // });
-
+        publishContribution(firebase, state.section, state.editValue, state.merging).then((response) => {
+            // handle merge conflict
+            if (response.conflict) {
+                var localSection = state.section;
+                localSection.version_id = response.section.version_id;
+                setState(prevState => ({
+                    ...prevState,
+                    mergeValue: response.section.body,
+                    merging: true,
+                    section: localSection,
+                    publishingChanges: false,
+                }));
+                return;
+            }
+            else {
+                props.updateImage(response.section)
+            }
+        })
     };
 
-
     //eslint-disable-next-line
-    const isInvalid = state.imageURL === '' || (state.imageURL && !/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png)/gi.test(state.imageURL));
+    const isInvalid = state.editValue === '' || (state.editValue && !/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png)/gi.test(state.editValue));
 
     // TODO: Allow for direct uploads of images
 
@@ -73,21 +109,37 @@ export default function CreateArticleModal(props) {
                 <TextField
                     autoFocus
                     margin="dense"
-                    id="imageURL"
+                    id="editValue"
                     type="url"
                     onChange={handleChange}
                     label="Image URL"
                     fullWidth
+                    disabled={state.merging}
                     required
                 />
+                {state.merging &&
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="mergeValue"
+                        type="url"
+                        onChange={handleChange}
+                        label="Merge Changes"
+                        fullWidth
+                        required
+                    />
+                }
             </DialogContent>
             <DialogActions>
-                <Button onClick={props.closeModal} color="primary">
+                <Button onClick={handleSubmitModal} className={classes.submitButton} disabled={isInvalid}>
+                    {state.publishingChanges
+                        ? <CircularProgress size={20} color="primary" />
+                        : 'Submit Changes'
+                    }
+                </Button>
+                <Button onClick={props.closeModal} className={classes.cancelButton}>
                     Cancel
-          </Button>
-                <Button onClick={handleSubmitModal} color="primary" disabled={isInvalid}>
-                    Create
-          </Button>
+                 </Button>
             </DialogActions>
         </Dialog>
     );

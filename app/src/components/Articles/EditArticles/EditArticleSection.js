@@ -12,7 +12,7 @@ class EditArticleSection extends React.Component {
             case "text":
                 return (<EditSectionText section={this.props.section} addSectionToArticle={this.props.addSectionToArticle} />);
             case "image":
-                return (<EditArticleImage image_url={this.props.section.body} alt_text={this.props.section.alt_text} />)
+                return (<EditArticleImage section={this.props.section} />)
             default:
                 console.log("error loading section");
                 return (<div></div>)

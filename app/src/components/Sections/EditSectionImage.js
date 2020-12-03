@@ -37,6 +37,7 @@ export default function EditSectionImage(props) {
     const classes = useStyles();
     const [imageHover, setImageHover] = useState(false);
     const [imageEdit, setImageEdit] = useState(false);
+    const [section, setSection] = useState(props.section);
 
     const openEditImageModal = () => {
         setImageEdit(true);
@@ -46,34 +47,41 @@ export default function EditSectionImage(props) {
         setImageEdit(false);
     };
 
+    const handleUpdateImage = section => {
+        setSection(section);
+        closeEditImageModal();
+    }
+
     return (
         <div className={classes.root}>
-            <div
-                className={classes.wrapper}
-                onMouseEnter={() => setImageHover(true)}
-                onMouseLeave={() => setImageHover(false)}
-            >
-                <img src={props.image_url} alt={props.alt_text} className={classes.image} />
-                <CSSTransition
-                    in={imageHover}
-                    classNames="fade"
-                    timeout={200}
-                    unmountOnExit
+            {section &&
+                <div
+                    className={classes.wrapper}
+                    onMouseOver={() => setImageHover(true)}
+                    onMouseOut={() => setImageHover(false)}
                 >
-                    {
-                        <div className={classes.editButton} >
-                            <IconButton
-                                onClick={openEditImageModal}
-                                aria-label="edit-title"
-                                color="secondary"
-                            >
-                                <EditIcon />
-                            </IconButton>
-                        </div>
-                    }
-                </CSSTransition>
-            </div>
-            <EditImageModal isOpen={imageEdit} closeModal={closeEditImageModal} />
+                    <img src={section.body} alt={section.alt_text} className={classes.image} />
+                    <CSSTransition
+                        in={imageHover}
+                        classNames="fade"
+                        timeout={200}
+                        unmountOnExit
+                    >
+                        {
+                            <div className={classes.editButton} >
+                                <IconButton
+                                    onClick={openEditImageModal}
+                                    aria-label="edit-title"
+                                    color="secondary"
+                                >
+                                    <EditIcon />
+                                </IconButton>
+                            </div>
+                        }
+                    </CSSTransition>
+                </div>
+            }
+            <EditImageModal isOpen={imageEdit} closeModal={closeEditImageModal} updateImage={handleUpdateImage} section={props.section} />
         </div>
     );
 }
