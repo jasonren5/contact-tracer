@@ -140,7 +140,8 @@ class EditSectionText extends React.Component {
         // TODO: Jakob: Are these two lines below still used??
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
-        publishContribution(this.props.firebase, this.state.section, this.state.editValue).then((response) => {
+
+        publishContribution(this.props.firebase, this.state.section, newBody, this.state.merging).then((response) => {
             // handle merge conflict
             if (response.conflict) {
                 var localSection = this.state.section;

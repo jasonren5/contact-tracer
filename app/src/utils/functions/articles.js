@@ -35,14 +35,15 @@ async function getAllArticles(firebase) {
     return response.data;
 }
 
-async function publishContribution(firebase, section, newBody) {
+async function publishContribution(firebase, section, newBody, merging) {
     var addVersionToSection = firebase.functions.httpsCallable("addVersionToSection");
 
     let requestData = {
         article_id: section.article_id,
         section_id: section.id,
         previous_version_id: section.version_id,
-        body: newBody
+        body: newBody,
+        merging: merging
     };
 
     var response = await addVersionToSection(requestData);

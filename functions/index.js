@@ -144,6 +144,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
     const article_id = data.article_id;
     const section_id = data.section_id;
     const previous_version_id = data.previous_version_id;
+    const merging = data.merging;
 
     const versionsPromise = db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").orderBy('order', 'desc').get();
 
@@ -151,7 +152,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
         let latestVersion = versions.docs[0];
         let latestVersionData = versions.docs[0].data();
 
-        if (latestVersion.id !== previous_version_id && previous_version_id) {
+        if (latestVersion.id !== previous_version_id && previous_version_id && !merging) {
             // executes if the previous_verson_id is not null and also different then the most recent version in the database
             let resData = {
                 conflict: true,
@@ -212,6 +213,13 @@ exports.addSectionAtIndex = functions.https.onCall((data, context) => {
     const article_id = data.section.article_id;
 
     const increment = admin.firestore.FieldValue.increment(1);
+
+    const user_id = (context.auth ? context.auth.uid : null);
+
+    // if there is a signed in user, increment thier contribution count
+    if (user_id) {
+        incrementContributions(user_id);
+    }
 
     var reorderPromise = db.collection("articles").doc(article_id).collection("sections").where("order", ">=", index).get().then((sections) => {
         const batch = db.batch();
