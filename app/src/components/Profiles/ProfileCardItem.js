@@ -1,5 +1,5 @@
 import React from 'react'
-import {Typography, TextField} from '@material-ui/core'
+import {Typography, TextField, Grid} from '@material-ui/core'
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -81,7 +81,69 @@ class ProfileCardItem extends React.Component {
     }
 
     renderIcon() {
-        
+        const icon = this.getIcon()
+        return (
+            <Grid item xs={3}>
+                {icon && 
+                    <IconButton disabled>
+                        {icon}
+                    </IconButton>
+                }
+            </Grid>
+        )
+    }
+
+    renderText() {
+        return (
+            <Grid item xs={6}>
+                {this.state.editing 
+                    ? (
+                        <TextField
+                            label={this.props.fieldKey}
+                            value={this.state.value}
+                            onChange={(event) => this.handleInput(event)}
+                            multiline={this.props.multiline}
+                        />
+                    )
+                    : (
+                        <Typography variant="body1" component="span">
+                            {this.state.fieldValue}
+                        </Typography>
+                    )
+                }
+            </Grid>
+        )
+    }
+
+    renderButtons() {
+        if(!this.props.private) {
+            return (
+                <Grid item xs={3} />
+            )
+        }
+        return (
+            <Grid item xs={3}>
+                {this.state.editing 
+                    ? (
+                        <div>
+                            <IconButton aria-label="back" color="default" onClick={() => this.toggleEditing()}>
+                                <ClearIcon />
+                            </IconButton>
+                            <IconButton aria-label="publish" color="primary">
+                                <SendIcon />
+                            </IconButton>
+                        </div>
+                    )
+                    : (
+                        <div>
+                            <IconButton aria-label="edit" color="primary" onClick={() => this.toggleEditing()}>
+                                <EditIcon />
+                            </IconButton>
+                        </div>
+                    )
+                }
+            </Grid>
+        )
     }
 
     getIcon() {
@@ -100,10 +162,16 @@ class ProfileCardItem extends React.Component {
     render() {
         return ( 
             <div style={itemStyles}>
-                {this.state.editing 
-                    ? this.renderEditing()
-                    : this.renderStatic()
-                }
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                >
+                    {this.renderIcon()}
+                    {this.renderText()}
+                    {this.renderButtons()}
+                </Grid>
             </div>
         )
     }
