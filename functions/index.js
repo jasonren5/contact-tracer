@@ -860,3 +860,42 @@ exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(asy
         return null;
     })
 });
+
+/*
+*   Basic functionality for editing a title of an article in the articles collection by article ID
+*
+*/
+exports.editArticleTitle = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+    let article_id = data.article_id;
+    let newTitle = data.title;
+
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+
+    if (!newTitle) {
+        return {
+            error: 400,
+            message: "new title cannot be null"
+        }
+    }
+
+    const articleRef = db.collection("articles").doc(article_id);
+    const doc = articleRef.get();
+
+    // check if doc exists before updating
+    if (doc.exists) {
+        return articleRef.update({
+            title: newTitle
+        });
+    } else {
+        return {
+            error: 500,
+            message: "cannot find existing document"
+        }
+    }
+});
