@@ -1,7 +1,9 @@
-import React from 'react'
-import {Typography, TextField, Grid} from '@material-ui/core'
-import Button from '@material-ui/core/Button';
+import React from 'react';
+import { withFirebase } from '../../utils/firebase';
+import { updateUserField } from '../../utils/functions/users';
+import {Typography, TextField, Grid} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import Link from '@material-ui/core/Link';
 
 import SendIcon from '@material-ui/icons/Send';
 import ClearIcon from '@material-ui/icons/Clear';
@@ -23,6 +25,7 @@ class ProfileCardItem extends React.Component {
         
         this.handleInput = this.handleInput.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
+        this.updateUser = this.updateUser.bind(this);
     }
 
     handleInput(event) {
@@ -34,6 +37,27 @@ class ProfileCardItem extends React.Component {
     toggleEditing() {
         this.setState({
             editing: !this.state.editing
+        })
+    }
+
+    updateUser() {
+        const oldValue = this.state.fieldValue;
+        this.setState({
+            editing: false,
+            fieldValue: this.state.value
+        })
+        updateUserField(this.props.firebase, this.props.fieldKey, this.state.value).then((res) => {
+            if (res.error) {
+                this.setState({
+                    fieldValue: oldValue,
+                    value: oldValue
+                })
+            }
+        }).catch(() => {
+            this.setState({
+                fieldValue: oldValue,
+                value: oldValue
+            })
         })
     }
 
@@ -107,7 +131,7 @@ class ProfileCardItem extends React.Component {
                     )
                     : (
                         <Typography variant="body1" component="span">
-                            {this.state.fieldValue}
+                            {this.getLink()}
                         </Typography>
                     )
                 }
@@ -129,7 +153,7 @@ class ProfileCardItem extends React.Component {
                             <IconButton aria-label="back" color="default" onClick={() => this.toggleEditing()}>
                                 <ClearIcon />
                             </IconButton>
-                            <IconButton aria-label="publish" color="primary">
+                            <IconButton aria-label="publish" color="primary" onClick={() => this.updateUser()}>
                                 <SendIcon />
                             </IconButton>
                         </div>
@@ -159,6 +183,21 @@ class ProfileCardItem extends React.Component {
         }
     }
 
+    getLink() {
+        switch(this.props.fieldKey) {
+            case "twitter":
+                const url = "https://twitter.com/" + this.state.fieldValue;
+                //return (<a href={url}> {this.state.fieldValue} </a>);
+                return (<Link href={url}>{this.state.fieldValue}</Link>)
+            case "linkedin":
+                const name = (this.props.user.name ? this.props.user.name : "Profile Link")
+                // return (<a href={this.state.fieldValue}> {name} </a>);
+                return (<Link href={this.state.fieldValue}>{name}</Link>)
+            default:
+                return (<span>{this.state.fieldValue}</span>);
+        }
+    }
+
     render() {
         return ( 
             <div style={itemStyles}>
@@ -177,7 +216,7 @@ class ProfileCardItem extends React.Component {
     }
 }
 
-export default ProfileCardItem;
+export default withFirebase(ProfileCardItem);
 
 const itemStyles = {
     marginTop: 10,
