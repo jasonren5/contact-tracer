@@ -6,6 +6,7 @@ const axios = require('axios');
 
 // Needed to interface with firebase firestore
 const admin = require('firebase-admin');
+const { user } = require('firebase-functions/lib/providers/auth');
 require('firebase-functions/lib/providers/auth');
 admin.initializeApp();
 
@@ -910,3 +911,17 @@ exports.createUser = functions.https.onCall((data) => {
     return documentPromise;
 });
 
+exports.updateUserField = functions.https.onCall((data, context) => {
+    if(!context.auth) {
+        return null;
+    }
+
+    var userData = {};
+    userData[data.field] = data.value
+
+    return admin.firestore().collection('users').doc(context.auth.uid).update(userData).catch((err) => {
+        return {
+            error: err
+        }
+    })
+});
