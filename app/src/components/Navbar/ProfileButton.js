@@ -78,19 +78,19 @@ export default function ProfileButton(props) {
             >
                 <MenuItem disabled>
                     <ListItemIcon>
-                        <Person fontSize="small" />
+                        <Person fontSize="medium" />
                     </ListItemIcon>
                     <ListItemText primary={props.username} />
                 </MenuItem>
                 <MenuItem onClick={handleViewProfile}>
                     <ListItemIcon>
-                        <Visibility fontSize="small" />
+                        <Visibility fontSize="medium" />
                     </ListItemIcon>
                     <ListItemText primary="View Profile" />
                 </MenuItem>
                 <MenuItem onClick={handleSignOut} href="/">
                     <ListItemIcon>
-                        <ExitToApp fontSize="small" />
+                        <ExitToApp fontSize="medium" />
                     </ListItemIcon>
                     <ListItemText primary="Sign Out" />
                 </MenuItem>
