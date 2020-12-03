@@ -28,8 +28,7 @@ const useStyles = makeStyles((theme) => ({
         padding: "0px",
     },
     loadingAnimation: {
-        margin: "100px",
-        padding: "1000px",
+        margin: "10px"
     },
 }));
 
@@ -54,7 +53,7 @@ export default function AddSectionField(props) {
     return (
         <div className={classes.container}>
             {publishingNewSection ?
-                <CircularProgress classes={classes.loadingAnimation} size={30} color="primary" />
+                <CircularProgress className={classes.loadingAnimation} size={30} color="primary" />
                 :
                 <IconButton
                     className={classes.button}

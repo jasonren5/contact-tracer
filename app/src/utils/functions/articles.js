@@ -73,8 +73,6 @@ async function addSection(firebase, section) {
 
     var response = await addSectionAtIndex(requestData);
 
-    console.log(response);
-
     var newSection = section;
     newSection.id = response.data.section_id;
     newSection.version_id = response.data.version_id;

@@ -51,7 +51,7 @@ const styles = theme => ({
     editButtonWrapper: {
         position: "absolute",
         top: 0,
-        right: 30,
+        right: 40,
     },
     removeButtonWrapper: {
         position: "absolute",
@@ -78,7 +78,8 @@ class EditSectionText extends React.Component {
             mergeValue: "",
             publishingNewSection: false,
             publishingChanges: false,
-            sectionHover: false
+            sectionHover: false,
+            publishingDelete: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
@@ -126,7 +127,12 @@ class EditSectionText extends React.Component {
 
     handleRemoveSection() {
         // TODO:This should just send an update to publish changes where the changes are empty
-        console.log("remove section");
+        this.setState({
+            publishingDelete: true,
+            editValue: "",
+        }, function () {
+            this.publishChanges();
+        });
     }
 
     publishChanges() {
@@ -144,8 +150,10 @@ class EditSectionText extends React.Component {
                     mergeValue: response.section.body,
                     merging: true,
                     section: localSection,
-                    publishingChanges: false
-                })
+                    publishingChanges: false,
+                    editing: true,
+                    publishingDelete: false,
+                });
                 return;
             }
             this.setState({
@@ -153,8 +161,9 @@ class EditSectionText extends React.Component {
                 section: response.section,
                 mergeSection: null,
                 editValue: response.section.body,
-                publishingChanges: false
-            })
+                publishingChanges: false,
+                publishingDelete: false
+            });
         })
     }
 
@@ -227,8 +236,8 @@ class EditSectionText extends React.Component {
         return (
             <div
                 className={classes.highlightWrapper}
-                onMouseEnter={this.hoverOn}
-                onMouseLeave={this.hoverOff}
+                onMouseOver={this.hoverOn}
+                onMouseOut={this.hoverOff}
             >
                 <Typography variant="body1" className={classes.body} >{this.state.section.body}</Typography>
                 <CSSTransition
@@ -243,7 +252,11 @@ class EditSectionText extends React.Component {
                             aria-label="remove-section"
                             color="secondary"
                         >
-                            <DeleteForeverIcon />
+                            {
+                                this.state.publishingDelete ?
+                                    <CircularProgress size={20} color="primary" />
+                                    : <DeleteForeverIcon />
+                            }
                         </IconButton>
                     </div>
                 </CSSTransition>
@@ -266,7 +279,6 @@ class EditSectionText extends React.Component {
             </div>
         )
     }
-    // TODO: Only render if it isn't empty/blank 
     render() {
         return (
             <div className="Edit Article Section">
