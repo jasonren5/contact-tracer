@@ -157,14 +157,16 @@ class EditSectionText extends React.Component {
                 });
                 return;
             }
-            this.setState({
-                editing: false,
-                section: response.section,
-                mergeSection: null,
-                editValue: response.section.body,
-                publishingChanges: false,
-                publishingDelete: false
-            });
+            else {
+                this.setState({
+                    editing: false,
+                    section: response.section,
+                    mergeSection: null,
+                    editValue: response.section.body,
+                    publishingChanges: false,
+                    publishingDelete: false
+                });
+            }
         })
     }
 

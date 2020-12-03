@@ -144,8 +144,8 @@ export default function EditHeaderText(props) {
                 :
                 <div
                     className={classes.highlightWrapper}
-                    onMouseEnter={() => setTitleHover(true)}
-                    onMouseLeave={() => setTitleHover(false)}
+                    onMouseOver={() => setTitleHover(true)}
+                    onMouseOut={() => setTitleHover(false)}
                 >
                     <Typography variant="h4" className={classes.title} >{props.title}</Typography>
                     <CSSTransition
