@@ -3,7 +3,7 @@ import { IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 
-import EditImageModal from './EditImageModal';
+import EditImageModal from '../Articles/EditArticles/EditImageModal';
 
 import { CSSTransition } from 'react-transition-group';
 
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function EditArticleImage(props) {
+export default function EditSectionImage(props) {
     const classes = useStyles();
     const [imageHover, setImageHover] = useState(false);
     const [imageEdit, setImageEdit] = useState(false);

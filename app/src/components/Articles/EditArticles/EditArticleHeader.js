@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import EditHeaderText from './EditHeaderText';
-import EditArticleImage from './EditArticleImage';
+import EditArticleImage from '../../Sections/EditSectionImage';
 
 const useStyles = makeStyles((theme) => ({
     image: {

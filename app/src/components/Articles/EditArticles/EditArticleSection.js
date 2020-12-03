@@ -1,5 +1,5 @@
 import React from 'react';
-import EditArticleImage from "./EditArticleImage";
+import EditArticleImage from "../../Sections/EditSectionImage";
 import EditSectionText from "../../Sections/EditSectionText";
 
 class EditArticleSection extends React.Component {
