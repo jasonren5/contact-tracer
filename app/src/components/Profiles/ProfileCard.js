@@ -61,12 +61,12 @@ class ProfileCard extends React.Component {
 
                     <Divider />
 
-                    <ProfileCardItem fieldKey="bio" fieldValue={bio} multiline={true} private={true}/>
+                    <ProfileCardItem user={user_data} fieldKey="bio" fieldValue={bio} multiline={true} private={this.props.private}/>
 
                     <Divider />
-                    <ProfileCardItem fieldKey="username" fieldValue={user_data.username} multiline={false} private={false}/>
-                    <ProfileCardItem fieldKey="twitter" fieldValue={twitter} multiline={false} private={true}/>
-                    <ProfileCardItem fieldKey="linkedin" fieldValue={linkedin} multiline={false} private={true}/>
+                    <ProfileCardItem user={user_data} fieldKey="username" fieldValue={user_data.username} multiline={false} private={false}/>
+                    <ProfileCardItem user={user_data} fieldKey="twitter" fieldValue={twitter} multiline={false} private={this.props.private}/>
+                    <ProfileCardItem user={user_data} fieldKey="linkedin" fieldValue={linkedin} multiline={false} private={this.props.private}/>
 
                 </Paper>
             </Grid>
