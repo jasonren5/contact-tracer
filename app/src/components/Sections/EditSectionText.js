@@ -270,14 +270,20 @@ class EditSectionText extends React.Component {
     render() {
         return (
             <div className="Edit Article Section">
-                {this.state.editing
-                    ? this.renderEditing()
-                    : this.renderNotEditing()
+                {this.state.section.body &&
+                    <div className="Render if Not Empty">
+                        {
+                            this.state.editing
+                                ? this.renderEditing()
+                                : this.renderNotEditing()
+                        }
+                        < AddSectionField
+                            article_id={this.state.section.article_id}
+                            addSectionToArticle={this.props.addSectionToArticle}
+                            order={this.state.section.order}
+                        />
+                    </div>
                 }
-                <AddSectionField
-                    article_id={this.state.section.article_id}
-                    addSectionToArticle={this.props.addSectionToArticle}
-                    order={this.state.section.order} />
             </div>
         )
     }

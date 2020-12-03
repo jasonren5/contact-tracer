@@ -22,7 +22,7 @@ class EditArticleSection extends React.Component {
     render() {
         return (
             <div style={sectionStyle}>
-                {this.renderCorrectSection()}
+                {this.props.section.body && this.renderCorrectSection()}
             </div>
         )
 
