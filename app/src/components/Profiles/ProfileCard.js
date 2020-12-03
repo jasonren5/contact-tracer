@@ -51,6 +51,8 @@ class ProfileCard extends React.Component {
         }
         const user_data = this.state.user_data;
         const bio = (user_data.bio ? user_data.bio : "This user hasn't added a bio yet.")
+        const twitter = (user_data.twitter ? user_data.twitter : "Twitter not added.")
+        const linkedin = (user_data.linkedin ? user_data.linkedin : "LinkedIn not added.")
         return (
             <Grid item xs={4}>
                 <Paper style={cardStyles}>
@@ -59,11 +61,13 @@ class ProfileCard extends React.Component {
 
                     <Divider />
 
-                    <ProfileCardItem fieldKey="bio" fieldValue={bio} />
+                    <ProfileCardItem fieldKey="bio" fieldValue={bio} multiline={true} private={true}/>
 
                     <Divider />
-                    <ProfileCardItem fieldKey="username" fieldValue={user_data.username} />
-                    
+                    <ProfileCardItem fieldKey="username" fieldValue={user_data.username} multiline={false} private={false}/>
+                    <ProfileCardItem fieldKey="twitter" fieldValue={twitter} multiline={false} private={true}/>
+                    <ProfileCardItem fieldKey="linkedin" fieldValue={linkedin} multiline={false} private={true}/>
+
                 </Paper>
             </Grid>
         )
