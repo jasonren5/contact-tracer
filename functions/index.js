@@ -910,3 +910,17 @@ exports.createUser = functions.https.onCall((data) => {
     return documentPromise;
 });
 
+exports.updateUserField = functions.https.onCall((data, context) => {
+    if(!context.auth) {
+        return null;
+    }
+
+    var userData = {};
+    userData[data.field] = data.value
+
+    return admin.firestore().collection('users').doc(context.auth.uid).update(userData).catch((err) => {
+        return {
+            error: err
+        }
+    })
+});

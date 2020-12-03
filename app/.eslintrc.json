@@ -24,6 +24,7 @@
         "no-extra-semi": ["warn"],
         "react/jsx-key": ["warn"],
         "react/no-unescaped-entities": ["warn"],
-        "react/display-name": ["warn"]
+        "react/display-name": ["warn"],
+        "no-case-declarations": [0]
     }
 }
