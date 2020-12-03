@@ -63,7 +63,6 @@ const INITAL_MERGE_STATE = {
     mergeValue: "",
 }
 
-// TODO: Deal with merge conflicts
 export default function EditHeaderText(props) {
     const theme = useTheme();
     const classes = useStyles(theme);

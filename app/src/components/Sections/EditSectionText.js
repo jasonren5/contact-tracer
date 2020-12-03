@@ -125,7 +125,7 @@ class EditSectionText extends React.Component {
     }
 
     handleRemoveSection() {
-        // TODO: Jason: Create remove section firebase function
+        // TODO:This should just send an update to publish changes where the changes are empty
         console.log("remove section");
     }
 
@@ -266,7 +266,7 @@ class EditSectionText extends React.Component {
             </div>
         )
     }
-
+    // TODO: Only render if it isn't empty/blank 
     render() {
         return (
             <div className="Edit Article Section">
