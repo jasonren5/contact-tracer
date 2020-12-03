@@ -57,6 +57,7 @@ class EditArticlePage extends React.Component {
         // Render the article
         // TODO: Once this is done, we don't need create article with a blank section
         // TODO: If a section is empty, delete it
+        // TODO: ArticleHeader should become legacy once we do an image overhaul
         return (
             <Container
                 component="main"

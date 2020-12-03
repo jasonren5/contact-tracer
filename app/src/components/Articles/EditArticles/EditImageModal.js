@@ -89,6 +89,13 @@ export default function CreateArticleModal(props) {
                 return;
             }
             else {
+                setState(prevState => ({
+                    ...prevState,
+                    merging: false,
+                    editValue: "",
+                    section: response.section,
+                    publishingChanges: false,
+                }));
                 props.updateImage(response.section)
             }
         })
