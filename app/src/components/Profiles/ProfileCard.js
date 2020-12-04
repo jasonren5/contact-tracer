@@ -3,6 +3,7 @@ import { Grid, Divider, Paper } from "@material-ui/core";
 import { getPublicProfileData } from '../../utils/functions/users';
 import { withFirebase } from '../../utils/firebase';
 import PageLoading from '../../components/Loading/PageLoading';
+import ProfileCardItem from './ProfileCardItem';
 
 const cardStyles = {
     margin: 25,
@@ -31,6 +32,9 @@ class ProfileCard extends React.Component {
         if (!this.state.user_data.username) {
             return "Anonymous User"
         }
+        if (this.state.user_data.name) {
+            return this.state.user_data.name;
+        }
         const email = this.state.user_data.username;
         var splitEmail = email.split("@")
         return splitEmail[0];
@@ -46,13 +50,24 @@ class ProfileCard extends React.Component {
             )
         }
         const user_data = this.state.user_data;
+        const bio = (user_data.bio ? user_data.bio : "This user hasn't added a bio yet.")
+        const twitter = (user_data.twitter ? user_data.twitter : "Twitter not added.")
+        const linkedin = (user_data.linkedin ? user_data.linkedin : "LinkedIn not added.")
         return (
             <Grid item xs={4}>
                 <Paper style={cardStyles}>
                     <h1>{this.getUsername()}</h1>
                     <p><strong>{user_data.number_of_contributions}</strong> Contributions</p>
+
                     <Divider />
-                    <p>{user_data.username}</p>
+
+                    <ProfileCardItem user={user_data} fieldKey="bio" fieldValue={bio} multiline={true} private={this.props.private}/>
+
+                    <Divider />
+                    <ProfileCardItem user={user_data} fieldKey="username" fieldValue={user_data.username} multiline={false} private={false}/>
+                    <ProfileCardItem user={user_data} fieldKey="twitter" fieldValue={twitter} multiline={false} private={this.props.private}/>
+                    <ProfileCardItem user={user_data} fieldKey="linkedin" fieldValue={linkedin} multiline={false} private={this.props.private}/>
+
                 </Paper>
             </Grid>
         )

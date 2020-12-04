@@ -54,19 +54,6 @@ exports.getUserByUsername = functions.https.onRequest((req, res) => {
     });
 });
 
-// On auth creation, adds a document to the users collection with the same ID as the auth ID.
-// Defaults username to the auth email and sets number of contributions to 0.
-exports.createUserOnAuthCreation = functions.auth.user().onCreate((user) => {
-    const db = admin.firestore();
-    const uid = user.uid;
-    functions.logger.info("Adding user to firestore with uid: '" + uid + "'", { structuredData: true });
-
-    db.collection("users").doc(uid).set({
-        username: user.email,
-        number_of_contributions: 0
-    });
-});
-
 // Get a full article by id
 exports.getFullArticleByID = functions.https.onCall((data) => {
     const db = admin.firestore();
@@ -821,27 +808,61 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
 
     // get API key from firebase config
     const apiKey = functions.config().news_api.key;
-    const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=the-washington-post,associated-press&apiKey=" + apiKey;
 
     // make fetch request using axios package
+    return axios.get(url)
+        .then(function (response) {
+            let data = response.data;
+            if (data.status == "ok") {
+                let i;
+                let numCreated = 0;
+                for (i = 0; i < articlesToCreate; i++) {
+                    if (data.articles[i] != null) {
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                        numCreated++;
+                    }
+                }
+                return {
+                    message: "Successfully created " + numCreated + " articles"
+                }
+            } else {
+                return {
+                    message: "Failed to add articles -- NewsAPI request failed",
+                    data: data
+                }
+            }
+        });
+})
+
+/*
+*   Failsafe in case the scheduled function fails and we need to 
+*/
+exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
+    const articlesToCreate = 3;
+
+    const apiKey = functions.config().news_api.key;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=the-washington-post,associated-press&apiKey=" + apiKey;
+
     axios.get(url)
         .then(function (response) {
             let data = response.data;
             if (data.status == "ok") {
                 let i;
                 for (i = 0; i < articlesToCreate; i++) {
-                    _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                    if (data.articles[i] != null) {
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                    }
                 }
-                //console.log("Successfully added daily articles");
             }
+            res.status(200).send({
+                message: "ok"
+            });
+        })
+        .catch(function (error) {
+            res.send(error);
         });
-    /*
-    * Why does our linter not allow logging to console? It would be very helpful in situations like this.
-    .catch (function (error) {
-    console.log("Failed to add daily articles");
-    console.log(error);
-}); */
-})
+});
 
 exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(async function () {
     const db = admin.firestore();
@@ -903,4 +924,53 @@ exports.editArticleTitle = functions.https.onCall(async (data) => {
             message: "cannot find existing document"
         }
     }
+// Function to create user and a corresponding database entry
+
+exports.createUser = functions.https.onCall((data) => {
+    const userPromise = admin.auth().createUser({
+        email: data.email,
+        emailVerified: false,
+        password: data.password,
+        displayName: data.displayName,
+        disabled: false
+    });
+    const documentPromise = userPromise.then((user) =>  {
+        const userData = {
+            displayName: user.displayName,
+            name: data.name,
+            username: user.email,
+            number_of_contributions: 0,
+            expertises: [],
+            liked_articles: [],
+            viewed_articles:[],
+            admin: false
+        };
+        return admin.firestore().collection('users').doc(user.uid).set(userData).then(() => {return user;}).catch(async (err) => {
+            await admin.auth().deleteUser(user.uid);
+            return {
+                error: err
+            }
+        });
+    }).catch((err) => {
+        return {
+            error: err
+        }
+    });
+
+    return documentPromise;
+});
+
+exports.updateUserField = functions.https.onCall((data, context) => {
+    if(!context.auth) {
+        return null;
+    }
+
+    var userData = {};
+    userData[data.field] = data.value
+
+    return admin.firestore().collection('users').doc(context.auth.uid).update(userData).catch((err) => {
+        return {
+            error: err
+        }
+    })
 });

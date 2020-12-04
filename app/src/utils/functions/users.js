@@ -51,4 +51,15 @@ async function getUserContributionHistory(firebase, user_id) {
     return null;
 }
 
-export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory };
+async function updateUserField(firebase, field, value) {
+    var updateUser = firebase.functions.httpsCallable("updateUserField");
+
+    const data = {
+        field: field,
+        value: value
+    }
+
+    return updateUser(data)
+}
+
+export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField };

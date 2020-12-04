@@ -17,7 +17,23 @@ class Firebase {
     }
 
     // Firebase Auth API
-    doCreateUserWithEmailAndPassword = (email, password) => this.auth.createUserWithEmailAndPassword(email, password);
+    doCreateUserWithEmailAndPassword = (email, password, name) => {
+        var createUser = this.functions.httpsCallable("createUser");
+        const displayName = name.replace(" ", "");
+        const data = {
+            email: email,
+            password: password,
+            name: name,
+            displayName: displayName
+        }
+
+        return createUser(data).then((res) => {
+            if(res.data.error) {
+                return Promise.reject(new Error("Error signing up, please try again."));
+            }
+            return this.doSignInWithEmailAndPassword(email, password);
+        })
+    }
     doSignInWithEmailAndPassword = (email, password) => this.auth.signInWithEmailAndPassword(email, password);
 
     doSignOut = () => this.auth.signOut();
