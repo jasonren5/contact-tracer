@@ -78,6 +78,7 @@ export default function EditHeaderText(props) {
     const [editValue, setEditValue] = useState(props.title);
     const [mergeState, setMergeState] = useState({ ...INITAL_MERGE_STATE })
     const [publishingChanges, setPublishingChanges] = useState(false);
+    const [titleValue, setTitleValue] = useState(props.title);
 
     const firebase = useContext(FirebaseContext);
 
@@ -87,6 +88,9 @@ export default function EditHeaderText(props) {
         editArticleTitle(firebase, props.article_id, editValue).then((response) => {
             console.log(response);
             setPublishingChanges(false);
+            if (response.title) {
+                setTitleValue(response.title);
+            }
             handleToggleEditing();
         })
     };
@@ -164,7 +168,7 @@ export default function EditHeaderText(props) {
                     onMouseOver={() => setTitleHover(true)}
                     onMouseOut={() => setTitleHover(false)}
                 >
-                    <Typography variant="h4" className={classes.title} >{props.title}</Typography>
+                    <Typography variant="h4" className={classes.title} >{titleValue}</Typography>
                     <CSSTransition
                         in={titleHover}
                         classNames="fade"
