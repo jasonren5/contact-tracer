@@ -13,12 +13,10 @@ const useStyles = makeStyles((theme) => ({
         flexGrow: 1,
     },
     image: {
-        // width: "100%",
         borderRadius: "8px",
         transition: ".5s ease",
-        // maxHeight: "800px",
-        maxHeight: "100%",
         maxWidth: "100%",
+        maxHeight: "700px",
     },
     wrapper: {
         position: "relative",
@@ -28,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
                 opacity: "0.3",
             }
         },
-        maxHeight: "800px",
     },
     editButton: {
         position: "absolute",
