@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 import { FirebaseContext } from '../../utils/firebase';
 import ArticleSection from '../../classes/ArticleSection';
 import { addSection } from '../../utils/functions/articles';
-import CreateImageModal from '../Articles/CreateImageModal';
+import CreateSectionModal from './CreateSectionModal';
 
 import {
     IconButton,
@@ -49,22 +49,21 @@ export default function AddSectionField(props) {
     const firebase = useContext(FirebaseContext);
     const [publishingNewSection, setPublishingNewSection] = useState(false);
     const [addImage, setAddImage] = useState(false);
+    const [addText, setAddText] = useState(false);
 
-    const addTextSectionBelow = () => {
-        let section = new ArticleSection(props.article_id, null, null, "text", "This is a new section, edit it to add content.", (props.order + 1), []);
-        setPublishingNewSection(true);
+    const addTextSectionBelow = (bodyText) => {
+        let section = new ArticleSection(props.article_id, null, null, "text", bodyText, (props.order + 1), []);
+
         addSection(firebase, section).then((section) => {
-            setPublishingNewSection(false);
-            handleClose();
             props.addSectionToArticle(section);
+            setAddText(false);
         });
     };
 
     const addImageSectionBelow = (imageURL) => {
         let section = new ArticleSection(props.article_id, null, null, "image", imageURL, (props.order + 1), []);
-        // setPublishingNewSection(true);
+
         addSection(firebase, section).then((section) => {
-            // setPublishingNewSection(false);
             props.addSectionToArticle(section);
             setAddImage(false);
         });
@@ -80,14 +79,24 @@ export default function AddSectionField(props) {
         setAnchorEl(null);
     };
 
-    const openEditImageModal = () => {
+    const openAddImageModal = () => {
         handleClose();
         setAddImage(true);
     };
 
-    const closeEditImageModal = () => {
+    const closeAddImageModal = () => {
         setAddImage(false);
     };
+
+    const openAddTextModal = () => {
+        handleClose();
+        setAddText(true);
+    };
+
+    const closeAddTextModal = () => {
+        setAddText(false);
+    };
+
 
     return (
         <div className={classes.container}>
@@ -116,7 +125,7 @@ export default function AddSectionField(props) {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                 >
-                    <MenuItem disabled={publishingNewSection} onClick={addTextSectionBelow}>
+                    <MenuItem disabled={publishingNewSection} onClick={openAddTextModal}>
                         {publishingNewSection ?
                             <CircularProgress className={classes.loadingAnimation} size={20} color="primary" />
                             :
@@ -126,7 +135,7 @@ export default function AddSectionField(props) {
                         }
                         <ListItemText primary="Text" />
                     </MenuItem>
-                    <MenuItem disabled={publishingNewSection} onClick={openEditImageModal}>
+                    <MenuItem disabled={publishingNewSection} onClick={openAddImageModal}>
                         <ListItemIcon>
                             <PhotoCameraIcon />
                         </ListItemIcon>
@@ -135,7 +144,18 @@ export default function AddSectionField(props) {
                 </Menu>
             </div>
 
-            <CreateImageModal isOpen={addImage} closeModal={closeEditImageModal} handleSubmitModal={addImageSectionBelow} />
+            <CreateSectionModal
+                type="image"
+                isOpen={addImage}
+                closeModal={closeAddImageModal}
+                handleSubmitModal={addImageSectionBelow}
+            />
+            <CreateSectionModal
+                type="text"
+                isOpen={addText}
+                closeModal={closeAddTextModal}
+                handleSubmitModal={addTextSectionBelow}
+            />
         </div>
     );
 }
