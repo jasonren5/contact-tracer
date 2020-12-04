@@ -52,7 +52,10 @@ export default function CreateImageModal(props) {
     };
 
     const handleSubmit = () => {
-        console.log("here2");
+        setState(prevState => ({
+            ...prevState,
+            publishingChanges: true,
+        }));
         props.handleSubmitModal(state.editValue)
     };
 

@@ -68,7 +68,6 @@ export default function AddSectionField(props) {
             props.addSectionToArticle(section);
             setAddImage(false);
         });
-        console.log("here");
     };
 
     const [anchorEl, setAnchorEl] = React.useState(null);

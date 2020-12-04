@@ -139,7 +139,14 @@ export default function EditSectionImage(props) {
                     />
                 </div>
             }
-            <EditImageModal isOpen={imageEdit} closeModal={closeEditImageModal} updateImage={handleUpdateImage} section={section} />
+            <EditImageModal
+                isOpen={imageEdit}
+                closeModal={closeEditImageModal}
+                updateImage={handleUpdateImage}
+                section={section}
+                deleteImage={handleDeleteSection}
+                publishingDelete={publishingDelete}
+            />
         </div>
     );
 }

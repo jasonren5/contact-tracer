@@ -22,6 +22,9 @@ const useStyles = makeStyles((theme) => ({
         color: theme.palette.success.main
     },
     cancelButton: {
+        color: theme.palette.primary.main
+    },
+    removeButton: {
         color: theme.palette.error.main
     },
 }));
@@ -90,6 +93,7 @@ export default function EditImageModal(props) {
                 return;
             }
             else {
+                props.updateImage(response.section);
                 setState(prevState => ({
                     ...prevState,
                     merging: false,
@@ -97,7 +101,6 @@ export default function EditImageModal(props) {
                     section: response.section,
                     publishingChanges: false,
                 }));
-                props.updateImage(response.section)
             }
         })
     };
@@ -140,10 +143,16 @@ export default function EditImageModal(props) {
                 }
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSubmitModal} className={classes.submitButton} disabled={isInvalid}>
+                <Button onClick={handleSubmitModal} className={classes.submitButton} disabled={isInvalid || props.publishingDelete}>
                     {state.publishingChanges
                         ? <CircularProgress size={20} color="primary" />
                         : 'Submit Changes'
+                    }
+                </Button>
+                <Button onClick={props.deleteImage} className={classes.removeButton} disabled={state.publishingChanges}>
+                    {props.publishingDelete
+                        ? <CircularProgress size={20} className={classes.removeButton} />
+                        : 'Delete Image'
                     }
                 </Button>
                 <Button onClick={props.closeModal} className={classes.cancelButton}>
