@@ -884,13 +884,19 @@ exports.editArticleTitle = functions.https.onCall(async (data) => {
     }
 
     const articleRef = db.collection("articles").doc(article_id);
-    const doc = articleRef.get();
+    const doc = await articleRef.get();
 
     // check if doc exists before updating
     if (doc.exists) {
-        return articleRef.update({
+        await articleRef.update({
             title: newTitle
         });
+
+        return {
+            status: 200,
+            message: "Successfully updated title of document",
+            new_title: newTitle
+        }
     } else {
         return {
             error: 500,
