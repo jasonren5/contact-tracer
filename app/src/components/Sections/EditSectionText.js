@@ -254,6 +254,7 @@ class EditSectionText extends React.Component {
                             onClick={this.handleRemoveSection}
                             aria-label="remove-section"
                             color="secondary"
+                            disabled={this.state.publishingDelete || this.state.publishingChanges}
                         >
                             {
                                 this.state.publishingDelete ?
@@ -274,6 +275,7 @@ class EditSectionText extends React.Component {
                             onClick={this.toggleEditing}
                             aria-label="edit-section"
                             color="secondary"
+                            disabled={this.state.publishingDelete || this.state.publishingChanges}
                         >
                             <EditIcon />
                         </IconButton>

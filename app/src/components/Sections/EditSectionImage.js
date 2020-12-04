@@ -1,7 +1,13 @@
-import React, { useState } from 'react';
-import { IconButton } from '@material-ui/core';
+import React, { useState, useContext } from 'react';
+import { FirebaseContext } from '../../utils/firebase';
+import {
+    publishContribution
+} from '../../utils/functions/articles';
+
+import { IconButton, CircularProgress } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import EditImageModal from '../Articles/EditArticles/EditImageModal';
 
@@ -30,6 +36,12 @@ const useStyles = makeStyles((theme) => ({
     editButton: {
         position: "absolute",
         top: 20,
+        right: 60,
+        opacity: "1.0",
+    },
+    removeButton: {
+        position: "absolute",
+        top: 20,
         right: 20,
         opacity: "1.0",
     },
@@ -37,9 +49,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function EditSectionImage(props) {
     const classes = useStyles();
+
     const [imageHover, setImageHover] = useState(false);
     const [imageEdit, setImageEdit] = useState(false);
     const [section, setSection] = useState(props.section);
+    const [publishingDelete, setPublishingDelete] = useState(false);
+
+    const firebase = useContext(FirebaseContext);
 
     const openEditImageModal = () => {
         setImageEdit(true);
@@ -54,9 +70,18 @@ export default function EditSectionImage(props) {
         closeEditImageModal();
     }
 
+    const handleDeleteSection = () => {
+        setPublishingDelete(true);
+        publishContribution(firebase, section, "", true).then((response) => {
+            setSection(response.section);
+            closeEditImageModal();
+            setPublishingDelete(false);
+        });
+    }
+
     return (
         <div className={classes.root}>
-            {section &&
+            {section.body &&
                 <div className="Render if Not Empty">
                     <div
                         className={classes.wrapper}
@@ -76,12 +101,36 @@ export default function EditSectionImage(props) {
                                         onClick={openEditImageModal}
                                         aria-label="edit-title"
                                         color="secondary"
+                                        disabled={publishingDelete}
                                     >
                                         <EditIcon />
                                     </IconButton>
                                 </div>
                             }
                         </CSSTransition>
+                        <CSSTransition
+                            in={imageHover}
+                            classNames="fade"
+                            timeout={200}
+                            unmountOnExit
+                        >
+                            {
+                                <div className={classes.removeButton} >
+                                    <IconButton
+                                        onClick={handleDeleteSection}
+                                        aria-label="edit-title"
+                                        color="secondary"
+                                        disabled={publishingDelete}
+                                    >
+                                        {publishingDelete ?
+                                            <CircularProgress size={20} color="primary" /> :
+                                            <DeleteForeverIcon />
+                                        }
+                                    </IconButton>
+                                </div>
+                            }
+                        </CSSTransition>
+
                     </div>
                     < AddSectionField
                         article_id={section.article_id}
@@ -90,7 +139,7 @@ export default function EditSectionImage(props) {
                     />
                 </div>
             }
-            <EditImageModal isOpen={imageEdit} closeModal={closeEditImageModal} updateImage={handleUpdateImage} section={props.section} />
+            <EditImageModal isOpen={imageEdit} closeModal={closeEditImageModal} updateImage={handleUpdateImage} section={section} />
         </div>
     );
 }
