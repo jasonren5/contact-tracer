@@ -88,9 +88,7 @@ export default function EditHeaderText(props) {
         editArticleTitle(firebase, props.article_id, editValue).then((response) => {
             console.log(response);
             setPublishingChanges(false);
-            if (response.title) {
-                setTitleValue(response.title);
-            }
+            setTitleValue(response.data.new_title);
             handleToggleEditing();
         })
     };
