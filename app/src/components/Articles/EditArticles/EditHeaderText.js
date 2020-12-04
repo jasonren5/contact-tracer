@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import {
     Typography,
@@ -7,13 +7,19 @@ import {
     IconButton,
     CardActions,
     Card,
-    CardContent
+    CardContent,
+    CircularProgress
 } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 import EditIcon from '@material-ui/icons/Edit';
 
 import { CSSTransition } from 'react-transition-group';
+
+import {
+    editArticleTitle
+} from '../../../utils/functions/articles';
+import { FirebaseContext } from '../../../utils/firebase';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -71,10 +77,18 @@ export default function EditHeaderText(props) {
     const [titleEdit, setTitleEdit] = useState(false);
     const [editValue, setEditValue] = useState(props.title);
     const [mergeState, setMergeState] = useState({ ...INITAL_MERGE_STATE })
+    const [publishingChanges, setPublishingChanges] = useState(false);
+
+    const firebase = useContext(FirebaseContext);
 
     const handleSubmitEdit = () => {
-        // TODO: Jason: Firebase function to deal with an updated title
-        console.log("submit edit");
+        console.log(props.article_id);
+        setPublishingChanges(true);
+        editArticleTitle(firebase, props.article_id, editValue).then((response) => {
+            console.log(response);
+            setPublishingChanges(false);
+            handleToggleEditing();
+        })
     };
 
     const handleChange = (event) => {
@@ -129,7 +143,10 @@ export default function EditHeaderText(props) {
                             aria-label="submit-edit"
                             className={classes.submitButton}
                         >
-                            Submit Changes
+                            {publishingChanges
+                                ? <CircularProgress size={20} color="primary" />
+                                : 'Submit Changes'
+                            }
                         </Button>
                         <Button
                             component="span"

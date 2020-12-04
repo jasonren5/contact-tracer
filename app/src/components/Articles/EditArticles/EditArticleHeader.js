@@ -24,6 +24,7 @@ export default function EditArticleHeader(props) {
         <div className="Edit Article Header">
             <EditHeaderText
                 title={props.article.title}
+                article_id={props.article.id}
             />
             {props.article.image_url &&
                 <SectionImage section={fakeSection} classes={classes.image} />
