@@ -136,7 +136,6 @@ class EditSectionText extends React.Component {
 
     publishChanges() {
         this.setState({ publishingChanges: true });
-        // TODO: Jakob: Are these two lines below still used??
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
 

@@ -83,10 +83,8 @@ export default function EditHeaderText(props) {
     const firebase = useContext(FirebaseContext);
 
     const handleSubmitEdit = () => {
-        console.log(props.article_id);
         setPublishingChanges(true);
         editArticleTitle(firebase, props.article_id, editValue).then((response) => {
-            console.log(response);
             setPublishingChanges(false);
             setTitleValue(response.data.new_title);
             handleToggleEditing();
