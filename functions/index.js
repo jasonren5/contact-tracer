@@ -924,8 +924,9 @@ exports.editArticleTitle = functions.https.onCall(async (data) => {
             message: "cannot find existing document"
         }
     }
-// Function to create user and a corresponding database entry
+});
 
+// Function to create user and a corresponding database entry
 exports.createUser = functions.https.onCall((data) => {
     const userPromise = admin.auth().createUser({
         email: data.email,
@@ -934,7 +935,7 @@ exports.createUser = functions.https.onCall((data) => {
         displayName: data.displayName,
         disabled: false
     });
-    const documentPromise = userPromise.then((user) =>  {
+    const documentPromise = userPromise.then((user) => {
         const userData = {
             displayName: user.displayName,
             name: data.name,
@@ -942,10 +943,10 @@ exports.createUser = functions.https.onCall((data) => {
             number_of_contributions: 0,
             expertises: [],
             liked_articles: [],
-            viewed_articles:[],
+            viewed_articles: [],
             admin: false
         };
-        return admin.firestore().collection('users').doc(user.uid).set(userData).then(() => {return user;}).catch(async (err) => {
+        return admin.firestore().collection('users').doc(user.uid).set(userData).then(() => { return user; }).catch(async (err) => {
             await admin.auth().deleteUser(user.uid);
             return {
                 error: err
@@ -961,7 +962,7 @@ exports.createUser = functions.https.onCall((data) => {
 });
 
 exports.updateUserField = functions.https.onCall((data, context) => {
-    if(!context.auth) {
+    if (!context.auth) {
         return null;
     }
 
