@@ -32,8 +32,8 @@ const useStyles = makeStyles((theme) => ({
     },
     editButton: {
         position: "absolute",
-        top: 0,
-        right: 0,
+        top: 20,
+        right: 20,
         opacity: "1.0",
     },
 }));
