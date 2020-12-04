@@ -64,8 +64,6 @@ export default function CreateArticleModal(props) {
 
     const isInvalid = state.articleTitle === '';
 
-    // TODO: Allow for direct uploads of images
-
     return (
         <Dialog open={props.isOpen} onClose={props.closeModal} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Create New Article</DialogTitle>

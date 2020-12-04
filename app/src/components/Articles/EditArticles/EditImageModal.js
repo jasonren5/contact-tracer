@@ -109,8 +109,6 @@ export default function EditImageModal(props) {
     const isInvalid = state.editValue === '' || (state.editValue && !/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|gif|png)/gi.test(state.editValue));
 
     // TODO: Allow for direct uploads of images
-    // TODO: Remove image
-
     return (
         <Dialog open={props.isOpen} onClose={props.closeModal} aria-labelledby="form-dialog-title">
             <DialogTitle id="form-dialog-title">Edit Image</DialogTitle>

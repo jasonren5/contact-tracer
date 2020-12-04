@@ -126,7 +126,6 @@ class EditSectionText extends React.Component {
     }
 
     handleRemoveSection() {
-        // TODO:This should just send an update to publish changes where the changes are empty
         this.setState({
             publishingDelete: true,
             editValue: "",

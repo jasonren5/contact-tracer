@@ -822,7 +822,6 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
     // get API key from firebase config
     const apiKey = functions.config().news_api.key;
     const url = "https://newsapi.org/v2/top-headlines?language=en&apiKey=" + apiKey;
-    // TODO: Jason: Make sure the API pulls from better sources. Try and focus on news outlets like the associated press
 
     // make fetch request using axios package
     axios.get(url)
