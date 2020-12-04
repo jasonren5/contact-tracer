@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
     image: {
         width: "100%",
+        borderRadius: "8px",
     },
     title: {
         margin: "1rem",

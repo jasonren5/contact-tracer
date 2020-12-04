@@ -49,7 +49,6 @@ export default function ArticleList(props) {
         var passedArticles = [];
 
         allArticles.forEach((article) => {
-            // TODO: We should do regex here instead
             if (article.title.toLowerCase().includes(searchTerm.toLowerCase()) || article.summary.toLowerCase().includes(searchTerm.toLowerCase())) {
                 article.searchTerm = searchTerm;
                 passedArticles.push(article);
@@ -57,7 +56,7 @@ export default function ArticleList(props) {
         });
         setDisplayArticles(passedArticles);
     }, [searchTerm]);
-
+    // TODO: Remove search bar when we move it to browse
     return (
         <div className={classes.root}>
             <SearchBar

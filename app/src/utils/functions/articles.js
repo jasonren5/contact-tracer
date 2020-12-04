@@ -35,14 +35,15 @@ async function getAllArticles(firebase) {
     return response.data;
 }
 
-async function publishContribution(firebase, section, newBody) {
+async function publishContribution(firebase, section, newBody, merging) {
     var addVersionToSection = firebase.functions.httpsCallable("addVersionToSection");
 
     let requestData = {
         article_id: section.article_id,
         section_id: section.id,
         previous_version_id: section.version_id,
-        body: newBody
+        body: newBody,
+        merging: merging
     };
 
     var response = await addVersionToSection(requestData);
@@ -72,8 +73,6 @@ async function addSection(firebase, section) {
     }
 
     var response = await addSectionAtIndex(requestData);
-
-    console.log(response);
 
     var newSection = section;
     newSection.id = response.data.section_id;
@@ -118,6 +117,17 @@ async function getPublishedArticleByID(firebase, article_id) {
     return article;
 }
 
+async function editArticleTitle(firebase, article_id, title) {
+    let editArticleTitle = firebase.functions.httpsCallable("editArticleTitle");
+
+    const response = await editArticleTitle({
+        article_id: article_id,
+        title: title
+    });
+
+    return response;
+}
+
 export {
     getFullArticle,
     getAllArticles,
@@ -127,5 +137,6 @@ export {
     createArticleWithTitleAndImage,
     toggleLikeByArticleID,
     getPublishedArticleByID,
-    getAllUnpublishedArticles
+    getAllUnpublishedArticles,
+    editArticleTitle
 };

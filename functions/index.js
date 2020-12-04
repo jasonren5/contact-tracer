@@ -131,6 +131,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
     const article_id = data.article_id;
     const section_id = data.section_id;
     const previous_version_id = data.previous_version_id;
+    const merging = data.merging;
 
     const versionsPromise = db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").orderBy('order', 'desc').get();
 
@@ -138,7 +139,7 @@ exports.addVersionToSection = functions.https.onCall((data, context) => {
         let latestVersion = versions.docs[0];
         let latestVersionData = versions.docs[0].data();
 
-        if (latestVersion.id !== previous_version_id && previous_version_id) {
+        if (latestVersion.id !== previous_version_id && previous_version_id && !merging) {
             // executes if the previous_verson_id is not null and also different then the most recent version in the database
             let resData = {
                 conflict: true,
@@ -199,6 +200,13 @@ exports.addSectionAtIndex = functions.https.onCall((data, context) => {
     const article_id = data.section.article_id;
 
     const increment = admin.firestore.FieldValue.increment(1);
+
+    const user_id = (context.auth ? context.auth.uid : null);
+
+    // if there is a signed in user, increment thier contribution count
+    if (user_id) {
+        incrementContributions(user_id);
+    }
 
     var reorderPromise = db.collection("articles").doc(article_id).collection("sections").where("order", ">=", index).get().then((sections) => {
         const batch = db.batch();
@@ -307,7 +315,7 @@ exports.getAllArticles = functions.https.onCall(() => {
 /*
 * Get all the articles, as well as a short summary. Summary is pulled from the first section, and the latest version. This is pacckaged with id, title, and imageURL
 */
-// TODO: Order the returned articles by date edited
+// TODO: Jason: Order the returned articles by date edited
 exports.getAllArticlesWithSummaries = functions.https.onCall(async () => {
     const db = admin.firestore();
     const snapshot = await db.collection("articles").where("published", "==", false).get();
@@ -351,7 +359,7 @@ exports.getAllArticlesWithSummaries = functions.https.onCall(async () => {
 /*
 * Get all the published articles, as well as a short summary. Summary is pulled from the first section, and the latest version.
 */
-// TODO: Order the returned articles by date edited
+// TODO: Jason: Order the returned articles by date edited
 exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
     const db = admin.firestore();
     const articlesPromise = db.collection("published_articles").get();
@@ -827,7 +835,6 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
         });
 })
 
-
 /*
 *   Failsafe in case the scheduled function fails and we need to 
 */
@@ -874,6 +881,49 @@ exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(asy
     })
 });
 
+/*
+*   Basic functionality for editing a title of an article in the articles collection by article ID
+*
+*/
+exports.editArticleTitle = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+    let article_id = data.article_id;
+    let newTitle = data.title;
+
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+
+    if (!newTitle) {
+        return {
+            error: 400,
+            message: "new title cannot be null"
+        }
+    }
+
+    const articleRef = db.collection("articles").doc(article_id);
+    const doc = await articleRef.get();
+
+    // check if doc exists before updating
+    if (doc.exists) {
+        await articleRef.update({
+            title: newTitle
+        });
+
+        return {
+            status: 200,
+            message: "Successfully updated title of document",
+            new_title: newTitle
+        }
+    } else {
+        return {
+            error: 500,
+            message: "cannot find existing document"
+        }
+    }
 // Function to create user and a corresponding database entry
 
 exports.createUser = functions.https.onCall((data) => {

@@ -6,7 +6,7 @@ import App from './App';
 import { ThemeProvider } from '@material-ui/styles';
 import theme from './utils/material-ui/theme';
 import * as serviceWorker from './serviceWorker';
-
+// TODO: for final release, get rid of strict mode
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>

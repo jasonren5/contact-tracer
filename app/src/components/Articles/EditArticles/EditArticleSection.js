@@ -1,6 +1,6 @@
 import React from 'react';
-import SectionImage from "../Sections/SectionImage";
-import EditSectionText from "../Sections/EditSectionText";
+import EditArticleImage from "../../Sections/EditSectionImage";
+import EditSectionText from "../../Sections/EditSectionText";
 
 class EditArticleSection extends React.Component {
     constructor(props) {
@@ -10,9 +10,9 @@ class EditArticleSection extends React.Component {
     renderCorrectSection() {
         switch (this.props.section.type) {
             case "text":
-                return (<EditSectionText section={this.props.section} addSectionToArticle={this.props.addSectionToArticle}></EditSectionText>);
+                return (<EditSectionText section={this.props.section} addSectionToArticle={this.props.addSectionToArticle} />);
             case "image":
-                return (<SectionImage section={this.props.section}></SectionImage>);
+                return (<EditArticleImage section={this.props.section} addSectionToArticle={this.props.addSectionToArticle} />)
             default:
                 console.log("error loading section");
                 return (<div></div>)
@@ -22,7 +22,7 @@ class EditArticleSection extends React.Component {
     render() {
         return (
             <div style={sectionStyle}>
-                {this.renderCorrectSection()}
+                {this.props.section.body && this.renderCorrectSection()}
             </div>
         )
 
@@ -32,6 +32,6 @@ class EditArticleSection extends React.Component {
 export default EditArticleSection;
 
 const sectionStyle = {
-    marginTop: 20,
-    marginBottom: 20
+    // marginTop: 10,
+    // marginBottom: 10
 }

@@ -1,6 +1,7 @@
 import React from 'react';
-import EditArticleSection from "../../components/Articles/EditArticleSection";
-import ArticleHeader from "../../components/Articles/ArticleHeader";
+import EditArticleSection from "../../components/Articles/EditArticles/EditArticleSection";
+import EditArticleHeader from "../../components/Articles/EditArticles/EditArticleHeader";
+import AddSectionField from "../../components/Sections/AddSectionField";
 import { getFullArticle } from '../../utils/functions/articles';
 import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { Container } from '@material-ui/core';
@@ -24,20 +25,20 @@ class EditArticlePage extends React.Component {
             });
         }).catch((err) => {
             console.log(err);
-            window.location.href = ('/article-not-found');
+            // window.location.href = ('/article-not-found');
         })
     }
 
     addSectionToArticle(section) {
         var article = this.state.article;
 
-        console.log(article.sections.join());
+        // console.log(article.sections.join());
         for (let i = section.order; i < article.sections.length; i++) {
             article.sections[i].order += 1;
         }
 
         article.sections.splice(section.order, 0, section);
-        console.log(article.sections.join());
+        // console.log(article.sections.join());
 
         this.setState({
             article: article
@@ -54,16 +55,19 @@ class EditArticlePage extends React.Component {
             )
         }
         // Render the article
-        // TODO: Create an EditArticleHeader
-        // TODO: Make an add section component that is rendered before and after each section  instead of the add section button
-        // TODO: Utilize hover effects on each of the section parts (make it just like the ArticleSection until hovered over)
+        // TODO: ArticleHeader should become legacy once we do an image overhaul
         return (
             <Container
                 component="main"
                 maxWidth="md"
                 spacing={2}
             >
-                <ArticleHeader article={this.state.article} />
+                <EditArticleHeader article={this.state.article} />
+                <AddSectionField
+                    article_id={this.state.article.id}
+                    addSectionToArticle={this.addSectionToArticle}
+                    order={-1}
+                />
                 {this.state.article.sections.map((section) =>
                     <EditArticleSection
                         key={section.id + section.order}

@@ -38,9 +38,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-
+// TODO: navbar flashing login and logout
+// TODO: Center Title
+// TODO: Turn browse into a search icon
 export default function Navbar() {
-    const [newArticleIsOpen, setnewArticleIsOpen] = useState(false);
+    const [newArticleIsOpen, setNewArticleIsOpen] = useState(false);
     const [username, setUsername] = useState();
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
@@ -60,11 +62,11 @@ export default function Navbar() {
     }
 
     const openNewArticleModal = () => {
-        setnewArticleIsOpen(true);
+        setNewArticleIsOpen(true);
     };
 
     const closeNewArticleModal = () => {
-        setnewArticleIsOpen(false);
+        setNewArticleIsOpen(false);
     };
 
     const LoggedInButtons = () => (

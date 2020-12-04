@@ -1,21 +1,20 @@
-import React from 'react'
+import React from 'react';
 
-class SectionText extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+import { Typography } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-    render() {
-        return (
-            <div>
-                <p style={textStyle}>{this.props.section.body}</p>
-            </div>
-        )
-    }
-}
+const useStyles = makeStyles((theme) => ({
+    body: {
+        textAlign: "left",
+        marginBottom: "1rem",
+    },
+}));
 
-export default SectionText;
-
-const textStyle = {
-    textAlign: "left"
+export default function SectionText(props) {
+    const classes = useStyles();
+    return (
+        <div className="Section Text">
+            <Typography variant="body1" className={classes.body}>{props.section.body}</Typography>
+        </div>
+    );
 }
