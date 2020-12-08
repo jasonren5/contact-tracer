@@ -13,7 +13,7 @@ import {
 import { Home } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-import CreateArticleModal from './CreateArticleModal';
+import CreateArticleModal from '../Modals/CreateArticleModal';
 import ProfileButton from './ProfileButton';
 import MobileMenu from './MobileMenu';
 import { useMediaQuery } from 'react-responsive';

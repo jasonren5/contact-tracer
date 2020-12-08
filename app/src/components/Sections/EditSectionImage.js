@@ -4,12 +4,12 @@ import {
     publishContribution
 } from '../../utils/functions/articles';
 
-import { IconButton, CircularProgress } from '@material-ui/core';
+import { IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
-import EditImageModal from '../Articles/EditArticles/EditImageModal';
+import EditImageModal from '../Modals/EditImageModal';
 import ConfirmModal from '../Modals/ConfirmModal';
 
 import { CSSTransition } from 'react-transition-group';

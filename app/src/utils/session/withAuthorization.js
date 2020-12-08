@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import AuthUserContext from './context';
 import { withFirebase } from '../firebase';
 
-import ForceSignInModal from '../../components/Auth/ForceSignInModal';
+import ForceSignInModal from '../../components/Modals/ForceSignInModal';
 
 const withAuthorization = condition => Component => {
     class WithAuthorization extends React.Component {

@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 
 import {
     publishContribution
-} from '../../../utils/functions/articles';
-import { FirebaseContext } from '../../../utils/firebase';
+} from '../../utils/functions/articles';
+import { FirebaseContext } from '../../utils/firebase';
 
 import {
     Button,
