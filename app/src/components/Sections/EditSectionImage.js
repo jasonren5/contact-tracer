@@ -10,6 +10,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 
 import EditImageModal from '../Articles/EditArticles/EditImageModal';
+import ConfirmModal from '../Modals/ConfirmModal';
 
 import { CSSTransition } from 'react-transition-group';
 import AddSectionField from './AddSectionField';
@@ -54,6 +55,7 @@ export default function EditSectionImage(props) {
     const [imageEdit, setImageEdit] = useState(false);
     const [section, setSection] = useState(props.section);
     const [publishingDelete, setPublishingDelete] = useState(false);
+    const [confirmDelete, setConfirmDelete] = useState(false);
 
     const firebase = useContext(FirebaseContext);
 
@@ -75,8 +77,17 @@ export default function EditSectionImage(props) {
         publishContribution(firebase, section, "", true).then((response) => {
             setSection(response.section);
             closeEditImageModal();
+            closeConfirmModal();
             setPublishingDelete(false);
         });
+    }
+
+    const openConfirmModal = () => {
+        setConfirmDelete(true);
+    }
+
+    const closeConfirmModal = () => {
+        setConfirmDelete(false);
     }
 
     return (
@@ -117,15 +128,12 @@ export default function EditSectionImage(props) {
                             {
                                 <div className={classes.removeButton} >
                                     <IconButton
-                                        onClick={handleDeleteSection}
+                                        onClick={openConfirmModal}
                                         aria-label="edit-title"
                                         color="secondary"
                                         disabled={publishingDelete}
                                     >
-                                        {publishingDelete ?
-                                            <CircularProgress size={20} color="primary" /> :
-                                            <DeleteForeverIcon />
-                                        }
+                                        <DeleteForeverIcon />
                                     </IconButton>
                                 </div>
                             }
@@ -146,6 +154,13 @@ export default function EditSectionImage(props) {
                 section={section}
                 deleteImage={handleDeleteSection}
                 publishingDelete={publishingDelete}
+            />
+            <ConfirmModal
+                open={confirmDelete}
+                closeModal={closeConfirmModal}
+                handleConfirm={handleDeleteSection}
+                confirmAction={"Remove Image Section"}
+                publishingConfirm={publishingDelete}
             />
         </div>
     );

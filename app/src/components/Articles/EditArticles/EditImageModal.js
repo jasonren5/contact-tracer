@@ -151,7 +151,7 @@ export default function EditImageModal(props) {
                         : 'Submit Changes'
                     }
                 </Button>
-                <Button
+                {/* <Button
                     onClick={props.deleteImage}
                     className={classes.removeButton}
                     disabled={state.publishingChanges}
@@ -160,8 +160,8 @@ export default function EditImageModal(props) {
                         ? <CircularProgress size={20} className={classes.removeButton} />
                         : 'Delete Image'
                     }
-                </Button>
-                <Button onClick={props.closeModal} className={classes.cancelButton}>
+                </Button> */}
+                <Button onClick={props.closeModal} className={classes.removeButton}>
                     Cancel
                  </Button>
             </DialogActions>

@@ -297,7 +297,7 @@ class EditSectionText extends React.Component {
                     open={this.state.removeModal}
                     closeModal={this.handleCloseRemoveModal}
                     handleConfirm={this.handleRemoveSection}
-                    confirmAction={"Remove Section"}
+                    confirmAction={"Remove Text Section"}
                     publishingConfirm={this.state.publishingDelete}
                 />
             </div>
