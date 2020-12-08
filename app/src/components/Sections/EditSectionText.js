@@ -7,6 +7,7 @@ import { Typography, IconButton } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import { CSSTransition } from 'react-transition-group';
+import ConfirmModal from '../Modals/ConfirmModal';
 
 import { compose } from 'recompose';
 
@@ -80,12 +81,15 @@ class EditSectionText extends React.Component {
             publishingChanges: false,
             sectionHover: false,
             publishingDelete: false,
+            removeModal: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
         this.publishChanges = this.publishChanges.bind(this);
         this.addSectionBelow = this.addSectionBelow.bind(this);
         this.handleRemoveSection = this.handleRemoveSection.bind(this);
+        this.handleCloseRemoveModal = this.handleCloseRemoveModal.bind(this);
+        this.handleOpenRemoveModal = this.handleOpenRemoveModal.bind(this);
 
         this.hoverOn = this.hoverOn.bind(this);
         this.hoverOff = this.hoverOff.bind(this);
@@ -134,6 +138,18 @@ class EditSectionText extends React.Component {
         });
     }
 
+    handleCloseRemoveModal() {
+        this.setState({
+            removeModal: false,
+        });
+    }
+
+    handleOpenRemoveModal() {
+        this.setState({
+            removeModal: true,
+        });
+    }
+
     publishChanges() {
         this.setState({ publishingChanges: true });
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
@@ -152,6 +168,7 @@ class EditSectionText extends React.Component {
                     publishingChanges: false,
                     editing: true,
                     publishingDelete: false,
+                    removeModal: false,
                 });
                 return;
             }
@@ -162,7 +179,8 @@ class EditSectionText extends React.Component {
                     mergeSection: null,
                     editValue: response.section.body,
                     publishingChanges: false,
-                    publishingDelete: false
+                    publishingDelete: false,
+                    removeModal: false,
                 });
             }
         })
@@ -249,16 +267,12 @@ class EditSectionText extends React.Component {
                 >
                     <div className={classes.removeButtonWrapper}>
                         <IconButton
-                            onClick={this.handleRemoveSection}
+                            onClick={this.handleOpenRemoveModal}
                             aria-label="remove-section"
                             color="secondary"
                             disabled={this.state.publishingDelete || this.state.publishingChanges}
                         >
-                            {
-                                this.state.publishingDelete ?
-                                    <CircularProgress size={20} color="primary" />
-                                    : <DeleteForeverIcon />
-                            }
+                            <DeleteForeverIcon />
                         </IconButton>
                     </div>
                 </CSSTransition>
@@ -279,6 +293,13 @@ class EditSectionText extends React.Component {
                         </IconButton>
                     </div>
                 </CSSTransition>
+                <ConfirmModal
+                    open={this.state.removeModal}
+                    closeModal={this.handleCloseRemoveModal}
+                    handleConfirm={this.handleRemoveSection}
+                    confirmAction={"Remove Section"}
+                    publishingConfirm={this.state.publishingDelete}
+                />
             </div>
         )
     }

@@ -13,15 +13,18 @@ import {
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
-    submitButton: {
-        color: theme.palette.success.main
+    successButton: {
+        color: theme.palette.success.main,
+    },
+    errorButton: {
+        color: theme.palette.error.main,
     },
     cancelButton: {
-        color: theme.palette.primary.main
+        color: theme.palette.primary.main,
     },
 }));
 
-export default function AlertDialog() {
+export default function AlertDialog(props) {
     const theme = useTheme();
     const classes = useStyles(theme);
 
@@ -36,7 +39,7 @@ export default function AlertDialog() {
                 <DialogTitle id="alert-dialog-title">{props.confirmAction}?</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to {props.confirmAction}? This action is irreversible, so please take care before confirming.
+                        Are you sure you want to {props.confirmAction.toLowerCase()}? This action is irreversible, so please take care before confirming.
                      </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -44,9 +47,10 @@ export default function AlertDialog() {
                         onClick={props.handleConfirm}
                         autoFocus
                         disabled={props.publishingConfirm}
+                        className={classes.errorButton}
                     >
                         {props.publishingConfirm
-                            ? <CircularProgress size={20} className={classes.removeButton} />
+                            ? <CircularProgress size={20} color="primary" />
                             : props.confirmAction}
 
                     </Button>
