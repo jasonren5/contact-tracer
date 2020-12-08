@@ -2,8 +2,8 @@ import React, { useState, useContext, useEffect } from 'react';
 
 import {
     publishContribution
-} from '../../../utils/functions/articles';
-import { FirebaseContext } from '../../../utils/firebase';
+} from '../../utils/functions/articles';
+import { FirebaseContext } from '../../utils/firebase';
 
 import {
     Button,
@@ -141,19 +141,27 @@ export default function EditImageModal(props) {
                 }
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSubmitModal} className={classes.submitButton} disabled={isInvalid || props.publishingDelete}>
+                <Button
+                    onClick={handleSubmitModal}
+                    className={classes.submitButton}
+                    disabled={isInvalid || props.publishingDelete}
+                >
                     {state.publishingChanges
                         ? <CircularProgress size={20} color="primary" />
                         : 'Submit Changes'
                     }
                 </Button>
-                <Button onClick={props.deleteImage} className={classes.removeButton} disabled={state.publishingChanges}>
+                {/* <Button
+                    onClick={props.deleteImage}
+                    className={classes.removeButton}
+                    disabled={state.publishingChanges}
+                >
                     {props.publishingDelete
                         ? <CircularProgress size={20} className={classes.removeButton} />
                         : 'Delete Image'
                     }
-                </Button>
-                <Button onClick={props.closeModal} className={classes.cancelButton}>
+                </Button> */}
+                <Button onClick={props.closeModal} className={classes.removeButton}>
                     Cancel
                  </Button>
             </DialogActions>

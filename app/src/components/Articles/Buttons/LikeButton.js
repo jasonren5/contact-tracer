@@ -4,7 +4,7 @@ import { toggleLikeByArticleID } from '../../../utils/functions/articles';
 import { withFirebase } from '../../../utils/firebase';
 import { withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import ForceSignInModal from '../../Auth/ForceSignInModal';
+import ForceSignInModal from '../../Modals/ForceSignInModal';
 
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteBorderIcon from '@material-ui/icons/FavoriteBorder';

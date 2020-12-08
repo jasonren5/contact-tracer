@@ -3,7 +3,7 @@ import React, { useContext, useState } from 'react'
 import { FirebaseContext } from '../../utils/firebase';
 import ArticleSection from '../../classes/ArticleSection';
 import { addSection } from '../../utils/functions/articles';
-import CreateSectionModal from './CreateSectionModal';
+import CreateSectionModal from '../Modals/CreateSectionModal';
 
 import {
     IconButton,
