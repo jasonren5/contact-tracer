@@ -16,8 +16,8 @@ import {
     Add,
     Home,
     LockOpen,
-    FindInPage,
-    Create
+    Create,
+    Search
 } from '@material-ui/icons';
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -63,18 +63,20 @@ export default function ProfileButton(props) {
     }
 
     const handleSignIn = () => {
+        handleClose();
         firebase.doSignOut();
         history.push('/signin');
     }
 
     const handleSignUp = () => {
+        handleClose();
         firebase.doSignOut();
         history.push('/signup');
     }
 
     const handleBrowsePublished = () => {
         handleClose();
-        history.push('/browse/published');
+        history.push('/search');
     }
 
     const handleBrowseContribute = () => {
@@ -98,9 +100,9 @@ export default function ProfileButton(props) {
             </MenuItem>
             <MenuItem onClick={handleBrowsePublished}>
                 <ListItemIcon>
-                    <FindInPage fontSize="small" />
+                    <Search fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary="Browse" />
+                <ListItemText primary="Search" />
             </MenuItem>
             <MenuItem onClick={handleBrowseContribute}>
                 <ListItemIcon>
@@ -133,9 +135,9 @@ export default function ProfileButton(props) {
             </MenuItem>
             <MenuItem onClick={handleBrowsePublished}>
                 <ListItemIcon>
-                    <FindInPage fontSize="small" />
+                    <Search fontSize="small" />
                 </ListItemIcon>
-                <ListItemText primary="Browse" />
+                <ListItemText primary="Search" />
             </MenuItem>
             <MenuItem onClick={handleSignIn}>
                 <ListItemIcon>

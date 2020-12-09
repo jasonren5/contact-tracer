@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function PublishedBrowse() {
+export default function SearchArticles() {
     const [typeFilter, setTypeFilter] = useState("all");
     const classes = useStyles();
     const [searchTerm, setSearchTerm] = useState("");
@@ -39,7 +39,7 @@ export default function PublishedBrowse() {
                 component="h1"
                 className={classes.title}
             >
-                Browse Articles
+                Search Articles
             </Typography>
             <SearchBar
                 value={searchTerm}

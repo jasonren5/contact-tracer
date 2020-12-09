@@ -73,7 +73,7 @@ export default function Navbar() {
         <div className="loggedInButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
             <Button color="inherit" href="/browse/contribute" className={classes.navButton}>Contribute</Button>
-            <IconButton color="inherit" href="/browse/published">
+            <IconButton color="inherit" href="/search">
                 <Search style={{ color: "#fff" }} fontSize="large" />
             </IconButton>
             <ProfileButton username={username} />
@@ -83,7 +83,7 @@ export default function Navbar() {
     const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-            <IconButton color="inherit" href="/browse/published" className={classes.navButton}>
+            <IconButton color="inherit" href="/search" className={classes.navButton}>
                 <Search style={{ color: "#fff" }} fontSize="large" />
             </IconButton>
             <SignInMenu />
