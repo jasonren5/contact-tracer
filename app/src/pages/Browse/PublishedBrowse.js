@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import BrowseHeader from '../../components/Browse/BrowseHeader'
 import PublishedList from '../../components/Browse/PublishedList'
 
-import { Grid, Typography, Container } from "@material-ui/core";
+import { Typography, Container } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
 import { makeStyles } from '@material-ui/core/styles';
 import { useMediaQuery } from 'react-responsive';
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     searchBar: {
         margin: '0 auto',
         marginBottom: '1rem',
-        // maxWidth: 800
+        maxWidth: 800
     },
 }));
 
@@ -37,8 +37,6 @@ export default function PublishedBrowse() {
             <Typography variant="h3" component="h1" className={classes.title}>
                 Browse Articles
             </Typography>
-
-            <BrowseHeader updateParent={setTypeFilter} />
             <SearchBar
                 value={searchTerm}
                 onChange={(newValue) => setSearchTerm(newValue)}
@@ -47,6 +45,8 @@ export default function PublishedBrowse() {
                 placeholder={"Search for Article"}
                 cancelOnEscape
             />
+            <BrowseHeader updateParent={setTypeFilter} />
+
             <PublishedList typeFilter={typeFilter} />
         </Container>
 
