@@ -81,7 +81,7 @@ export default function ArticleList(props) {
             >
                 {allArticles.length > 0 ?
                     displayArticles.map(article => {
-                        return <ArticleContainer key={article.id} article={article} mediaQuery={props.mediaQuery} />;
+                        return <ArticleContainer key={article.id} article={article} maxWidth={props.maxWidth} mediaQuery={props.mediaQuery} />;
                     })
                     :
                     <PageLoading />

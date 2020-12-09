@@ -3,7 +3,8 @@ import PageLoading from '../Loading/PageLoading'
 import ContributeThumbnail from '../Browse/ContributeThumbnail'
 import { withFirebase } from '../../utils/firebase'
 import { getAllUnpublishedArticles } from '../../utils/functions/articles'
-import { Grid } from "@material-ui/core";
+import { Grid, Card, Typography } from "@material-ui/core";
+import ArticleContainer from '../Homepage/ArticleContainer';
 
 class ContributeList extends React.Component {
     constructor(props) {
@@ -30,13 +31,28 @@ class ContributeList extends React.Component {
         }
         if (this.state.articles.length <= 0) {
             return (
-                <p>No new articles to edit, check back in a few hours.</p>
+                <Card fontWeight="fontWeightBold" style={cardStyle}>
+                    <Typography variant="h5">No new articles to edit, check back in a few hours!</Typography>
+                </Card>
             )
         }
         return (
-            <Grid container item xs={6} spacing={3} direction="column">
+            <Grid
+                container
+                direction={this.props.mediaQuery ? "column" : "row"}
+                justify="center"
+                alignItems="center"
+                spacing={4}
+            >
                 {this.state.articles.map((article, index) =>
-                    <ContributeThumbnail key={article.id + index} article={article} />
+
+                    <ArticleContainer
+                        key={article.id + index}
+                        contribute
+                        article={article}
+                        mediaQuery={this.props.mediaQuery}
+                        maxWidth={this.props.maxWidth}
+                    />
                 )}
             </Grid>
         )
@@ -44,3 +60,8 @@ class ContributeList extends React.Component {
 }
 
 export default withFirebase(ContributeList);
+
+const cardStyle = {
+    marginTop: 30,
+    marginBottom: 20
+}

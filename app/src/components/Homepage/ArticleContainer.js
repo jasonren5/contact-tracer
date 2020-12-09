@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { ReadMoreButton } from '../Articles/Buttons';
+import { ContributeButton } from '../Articles/Buttons';
 
 import {
     Card,
@@ -23,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         // alignItems: 'center',
-        height: "400px",
+        height: "415px",
     },
     details: {
         display: 'flex',
@@ -44,19 +45,22 @@ const useStyles = makeStyles((theme) => ({
     },
     cardActions: {
         position: "absolute",
-        height: "765px",
+        height: "780px",
     }
 }));
 
 export default function ArticleContainer(props) {
     // Note: edit links are temporary, just need a way for the profs to access it in the mvp
     const articleURL = "/article/" + props.article.id;
+    const editArticleURL = "/contribute/" + props.article.id;
     const classes = useStyles();
 
     const highlightTerm = props.article.searchTerm ? props.article.searchTerm : "";
+    const maxSizeGrid = props.maxWidth === "lg" ? 4 : 3;
+    const gridSize = props.mediaQuery ? "auto" : maxSizeGrid;
 
     return (
-        <Grid item xs={props.mediaQuery ? "auto" : 4}>
+        <Grid item xs={gridSize}>
             <Card className={classes.card}>
                 <CardMedia
                     className={classes.image}
@@ -64,7 +68,7 @@ export default function ArticleContainer(props) {
                     title={props.article.title}
                 />
                 <CardContent>
-                    <Link href={articleURL} color={"primary"}>
+                    <Link href={props.contribute ? editArticleURL : articleURL} color={"primary"}>
                         <Typography component="h5" variant="h5" gutterBottom>
                             <Highlight search={highlightTerm}>
                                 {props.article.title}
@@ -78,7 +82,11 @@ export default function ArticleContainer(props) {
                     </Typography>
                 </CardContent>
                 <CardActions className={classes.cardActions}>
-                    <ReadMoreButton articleID={props.article.id} />
+                    {props.contribute ?
+                        <ContributeButton articleID={props.article.id} />
+                        :
+                        <ReadMoreButton articleID={props.article.id} />
+                    }
                 </CardActions>
             </Card>
         </Grid>

@@ -1,33 +1,37 @@
 import React from 'react';
 import ContributeList from '../../components/Browse/ContributeList'
-import { Grid, Typography } from "@material-ui/core";
 
-class ContributeBrowse extends React.Component {
-    constructor(props) {
-        super(props);
+import { Typography, Container } from "@material-ui/core";
+import { makeStyles } from '@material-ui/core/styles';
+import { useMediaQuery } from 'react-responsive';
 
-        this.state = {
-            articles: []
-        }
-    }
+const useStyles = makeStyles(() => ({
+    title: {
+        marginTop: 30,
+        marginBottom: 20,
+    },
+    body: {
+        marginTop: '1%',
+    },
+}));
 
-    render() {
-        return (
-            <div>
-                <Typography variant="h3" component="h1" style={titleStyle}>
-                    Contribute to Articles
+export default function ContributeBrowse() {
+    const classes = useStyles();
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
+
+    return (
+        <Container
+            className={classes.body}
+            maxWidth={isTabletOrMobile ? 'xs' : "lg"}
+        >
+            <Typography variant="h3" component="h1" className={classes.title}>
+                Contribute to Articles
                 </Typography>
-                <Grid container direction="row" justify="center">
-                    <ContributeList />
-                </Grid>
-            </div>
-        )
-    }
-}
+            <ContributeList
+                mediaQuery={isTabletOrMobile}
+                maxWidth={isTabletOrMobile ? 'xs' : "lg"}
+            />
+        </Container>
+    );
 
-export default ContributeBrowse;
-
-const titleStyle = {
-    marginTop: 30,
-    marginBottom: 20
 }

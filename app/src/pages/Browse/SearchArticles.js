@@ -54,6 +54,7 @@ export default function SearchArticles() {
                 typeFilter={typeFilter}
                 searchTerm={searchTerm}
                 mediaQuery={isTabletOrMobile}
+                maxWidth={isTabletOrMobile ? 'xs' : "lg"}
             />
         </Container>
 
