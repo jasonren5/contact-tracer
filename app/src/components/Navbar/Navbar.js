@@ -10,11 +10,12 @@ import {
     Button,
     Link,
 } from '@material-ui/core';
-import { Home } from '@material-ui/icons';
+import { Home, Search } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import CreateArticleModal from '../Modals/CreateArticleModal';
 import ProfileButton from './ProfileButton';
+import SignInMenu from './SignInMenu';
 import MobileMenu from './MobileMenu';
 import { useMediaQuery } from 'react-responsive';
 
@@ -38,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// TODO: navbar flashing login and logout
-// TODO: Center Title
+// low-pri: navbar flashing login and logout - not easy to fix
+// low-pri: Center Title - not easy to do while also staying mobile friendly
 // TODO: Turn browse into a search icon
 export default function Navbar() {
     const [newArticleIsOpen, setNewArticleIsOpen] = useState(false);
@@ -72,8 +73,10 @@ export default function Navbar() {
     const LoggedInButtons = () => (
         <div className="loggedInButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-            <Button color="inherit" href="/browse/published" className={classes.navButton}>Browse</Button>
             <Button color="inherit" href="/browse/contribute" className={classes.navButton}>Contribute</Button>
+            <IconButton color="inherit" href="/browse/published">
+                <Search style={{ color: "#fff" }} fontSize="large" />
+            </IconButton>
             <ProfileButton username={username} />
         </div >
     );
@@ -81,9 +84,10 @@ export default function Navbar() {
     const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-            <Button color="inherit" href="/browse/published" className={classes.navButton}>Browse</Button>
-            <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
-            <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
+            <IconButton color="inherit" href="/browse/published" className={classes.navButton}>
+                <Search style={{ color: "#fff" }} fontSize="large" />
+            </IconButton>
+            <SignInMenu />
         </div>
     );
     return (
