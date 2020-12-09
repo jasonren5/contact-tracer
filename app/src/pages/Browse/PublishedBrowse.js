@@ -1,8 +1,7 @@
 import React from 'react';
 import BrowseHeader from '../../components/Browse/BrowseHeader'
 import PublishedList from '../../components/Browse/PublishedList'
-import { Grid } from "@material-ui/core";
-import Typography from '@material-ui/core/Typography';
+import { Grid, Typography } from "@material-ui/core";
 
 class PublishedBrowse extends React.Component {
     constructor(props) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import ContributeList from '../../components/Browse/ContributeList'
-import { Grid } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 
 class ContributeBrowse extends React.Component {
     constructor(props) {
@@ -12,9 +12,11 @@ class ContributeBrowse extends React.Component {
     }
 
     render() {
-        return(
+        return (
             <div>
-                <h1>Contribute to Articles</h1>
+                <Typography variant="h3" component="h1" style={titleStyle}>
+                    Contribute to Articles
+                </Typography>
                 <Grid container direction="row" justify="center">
                     <ContributeList />
                 </Grid>
@@ -24,3 +26,8 @@ class ContributeBrowse extends React.Component {
 }
 
 export default ContributeBrowse;
+
+const titleStyle = {
+    marginTop: 30,
+    marginBottom: 20
+}

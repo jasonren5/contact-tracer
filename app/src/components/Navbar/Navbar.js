@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) => ({
 
 // low-pri: navbar flashing login and logout - not easy to fix
 // low-pri: Center Title - not easy to do while also staying mobile friendly
-// TODO: Turn browse into a search icon
 export default function Navbar() {
     const [newArticleIsOpen, setNewArticleIsOpen] = useState(false);
     const [username, setUsername] = useState();
