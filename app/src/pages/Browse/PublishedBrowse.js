@@ -47,7 +47,7 @@ export default function PublishedBrowse() {
             />
             <BrowseHeader updateParent={setTypeFilter} />
 
-            <PublishedList typeFilter={typeFilter} />
+            <PublishedList typeFilter={typeFilter} searchTerm={searchTerm} />
         </Container>
 
     );

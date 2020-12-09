@@ -34,7 +34,9 @@ class PublishedList extends React.Component {
         articles.forEach((article) => {
             const includeThis = article.type === typeFilter;
             if (includeAll || includeThis) {
-                filteredArticles.push(article);
+                if (this.props.searchTerm === "" || article.title.toLowerCase().includes(this.props.searchTerm.toLowerCase()) || article.summary.toLowerCase().includes(this.props.searchTerm.toLowerCase())) {
+                    filteredArticles.push(article);
+                }
             }
         })
 
