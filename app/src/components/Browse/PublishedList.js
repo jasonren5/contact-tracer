@@ -3,7 +3,7 @@ import PageLoading from '../Loading/PageLoading'
 import PublishedThumbnail from '../Browse/PublishedThumbnail'
 import { withFirebase } from '../../utils/firebase'
 import { getAllArticles } from '../../utils/functions/articles'
-import { Grid } from "@material-ui/core";
+import { Grid, Card, Typography } from "@material-ui/core";
 
 class PublishedList extends React.Component {
     constructor(props) {
@@ -51,10 +51,22 @@ class PublishedList extends React.Component {
             )
         }
         return (
-            <Grid container spacing={3} direction="column">
-                {filteredArticles.map((article, index) =>
-                    <PublishedThumbnail key={article.id + index} article={article} />
-                )}
+            <Grid
+                container
+                spacing={4}
+                justify="center"
+                alignItems="center"
+                direction={this.props.mediaQuery ? "column" : "row"}
+            >
+                {filteredArticles.length > 0 ?
+                    filteredArticles.map((article, index) =>
+                        <PublishedThumbnail key={article.id + index} article={article} />
+                    )
+                    :
+                    <Card fontWeight="fontWeightBold" >
+                        <Typography variant="h5" >No articles found with that keyword/filter!</Typography>
+                    </Card>
+                }
             </Grid>
         )
     }

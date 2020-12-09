@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import BrowseHeader from '../../components/Browse/BrowseHeader'
-import PublishedList from '../../components/Browse/PublishedList'
+import BrowseHeader from '../../components/Browse/BrowseHeader';
+import ArticleList from '../../components/Homepage/ArticleList';
 
 import { Typography, Container } from "@material-ui/core";
 import SearchBar from "material-ui-search-bar";
@@ -34,7 +34,11 @@ export default function PublishedBrowse() {
             className={classes.body}
             maxWidth={isTabletOrMobile ? 'xs' : "lg"}
         >
-            <Typography variant="h3" component="h1" className={classes.title}>
+            <Typography
+                variant="h3"
+                component="h1"
+                className={classes.title}
+            >
                 Browse Articles
             </Typography>
             <SearchBar
@@ -46,8 +50,11 @@ export default function PublishedBrowse() {
                 cancelOnEscape
             />
             <BrowseHeader updateParent={setTypeFilter} />
-
-            <PublishedList typeFilter={typeFilter} searchTerm={searchTerm} />
+            <ArticleList
+                typeFilter={typeFilter}
+                searchTerm={searchTerm}
+                mediaQuery={isTabletOrMobile}
+            />
         </Container>
 
     );
