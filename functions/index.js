@@ -291,7 +291,7 @@ exports.createSection = functions.https.onRequest((req, res) => {
 */
 exports.getAllArticles = functions.https.onCall(() => {
     const db = admin.firestore();
-    const articlesPromise = db.collection("articles").get();
+    const articlesPromise = db.collection("articles").orderBy("created", "desc").get();
 
     return articlesPromise.then(snapshot => {
         let resData = { "article_list": [] };
@@ -315,10 +315,9 @@ exports.getAllArticles = functions.https.onCall(() => {
 /*
 * Get all the articles, as well as a short summary. Summary is pulled from the first section, and the latest version. This is pacckaged with id, title, and imageURL
 */
-// TODO: Jason: Order the returned articles by date edited
 exports.getAllArticlesWithSummaries = functions.https.onCall(async () => {
     const db = admin.firestore();
-    const snapshot = await db.collection("articles").where("published", "==", false).get();
+    const snapshot = await db.collection("articles").where("published", "==", false).orderBy("created", "desc").get();
 
     let resData = { "article_list": [] };
 
@@ -353,16 +352,16 @@ exports.getAllArticlesWithSummaries = functions.https.onCall(async () => {
             "summary": snippet
         });
     }));
-    return resData
+    return resData;
 });
 
 /*
 * Get all the published articles, as well as a short summary. Summary is pulled from the first section, and the latest version.
 */
-// TODO: Jason: Order the returned articles by date edited
+
 exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
     const db = admin.firestore();
-    const articlesPromise = db.collection("published_articles").get();
+    const articlesPromise = db.collection("published_articles").orderBy('updated', 'desc').get();
 
     return articlesPromise.then(async (articles) => {
         let resData = { "article_list": [] };
@@ -808,7 +807,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
 
     // get API key from firebase config
     const apiKey = functions.config().news_api.key;
-    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=the-washington-post,associated-press&apiKey=" + apiKey;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=google-news&apiKey=" + apiKey;
 
     // make fetch request using axios package
     return axios.get(url)
@@ -842,7 +841,7 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
     const articlesToCreate = 3;
 
     const apiKey = functions.config().news_api.key;
-    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=the-washington-post,associated-press&apiKey=" + apiKey;
+    const url = "https://newsapi.org/v2/top-headlines?language=en&sources=google-news&apiKey=" + apiKey;
 
     axios.get(url)
         .then(function (response) {
@@ -917,6 +916,47 @@ exports.editArticleTitle = functions.https.onCall(async (data) => {
             status: 200,
             message: "Successfully updated title of document",
             new_title: newTitle
+        }
+    } else {
+        return {
+            error: 500,
+            message: "cannot find existing document"
+        }
+    }
+});
+
+exports.editArticleHeaderImage = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+    let article_id = data.article_id;
+    let newImage = data.image_url;
+
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+
+    if (!newImage) {
+        return {
+            error: 400,
+            message: "new image cannot be null"
+        }
+    }
+
+    const articleRef = db.collection("articles").doc(article_id);
+    const doc = await articleRef.get();
+
+    // check if doc exists before updating
+    if (doc.exists) {
+        await articleRef.update({
+            image_url: newImage
+        });
+
+        return {
+            status: 200,
+            message: "Successfully updated image of document",
+            new_image: newImage
         }
     } else {
         return {

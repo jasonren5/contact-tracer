@@ -28,7 +28,6 @@ export default function SearchArticles() {
     const [searchTerm, setSearchTerm] = useState("");
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
-    // TODO: Move search bar - have it actually query the database? (probally not because speed)
     return (
         <Container
             className={classes.body}

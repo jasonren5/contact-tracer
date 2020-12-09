@@ -128,6 +128,17 @@ async function editArticleTitle(firebase, article_id, title) {
     return response;
 }
 
+async function editArticleImage(firebase, article_id, image_url) {
+    let editArticleTitle = firebase.functions.httpsCallable("editArticleHeaderImage");
+
+    const response = await editArticleTitle({
+        article_id: article_id,
+        image_url: image_url
+    });
+
+    return response;
+}
+
 export {
     getFullArticle,
     getAllArticles,
@@ -138,5 +149,6 @@ export {
     toggleLikeByArticleID,
     getPublishedArticleByID,
     getAllUnpublishedArticles,
-    editArticleTitle
+    editArticleTitle,
+    editArticleImage
 };

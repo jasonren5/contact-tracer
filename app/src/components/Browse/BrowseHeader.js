@@ -15,12 +15,12 @@ class BrowseHeader extends React.Component {
     }
 
     handleTabSelection(event, newValue) {
-        this.setState({selectedValue: newValue});
+        this.setState({ selectedValue: newValue });
         this.props.updateParent(newValue);
     }
 
     render() {
-        return(
+        return (
             <Paper square style={paperStyle}>
                 <Tabs
                     value={this.state.selectedValue}
@@ -29,10 +29,10 @@ class BrowseHeader extends React.Component {
                     onChange={this.handleTabSelection}
                     aria-label="Select profile section."
                 >
-                    <Tab label="All" value="all"/>
-                    <Tab label="Politics" value="politics"/>
-                    <Tab label="Finance" value="finance"/>
-                    <Tab label="Technology" value="technology"/>
+                    <Tab label="All" value="all" />
+                    <Tab label="Politics" value="politics" />
+                    <Tab label="Finance" value="finance" />
+                    <Tab label="Technology" value="technology" />
                 </Tabs>
             </Paper>
         )
@@ -43,5 +43,5 @@ export default BrowseHeader;
 
 const paperStyle = {
     width: "100%",
-    marginBottom: 20
+    marginBottom: 1
 }
