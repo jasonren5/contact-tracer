@@ -6,4 +6,4 @@ export default function PageNotFound() {
             <h1> 404 Page Not Found, <a href="/">Return Home</a> </h1>
         </div>
     );
-};
+}

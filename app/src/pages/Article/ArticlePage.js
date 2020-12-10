@@ -3,7 +3,7 @@ import Section from "../../components/Articles/ArticleSection";
 import ArticleHeader from "../../components/Articles/ArticleHeader";
 import { Container, Grid } from '@material-ui/core';
 import PageLoading from '../../components/Loading/PageLoading';
-import { LikeButton, ContributeButton } from '../../components/Articles/Buttons';
+import { LikeButton } from '../../components/Articles/Buttons';
 
 import { getPublishedArticleByID } from '../../utils/functions/articles';
 import { withFirebase } from '../../utils/firebase';

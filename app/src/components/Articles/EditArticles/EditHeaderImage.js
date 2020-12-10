@@ -8,7 +8,7 @@ import EditHeaderImageModal from '../../Modals/EditHeaderImageModal';
 
 import { CSSTransition } from 'react-transition-group';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         flexGrow: 1,
     },

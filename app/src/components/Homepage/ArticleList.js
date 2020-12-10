@@ -7,7 +7,6 @@ import PageLoading from '../../components/Loading/PageLoading';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { FirebaseContext } from '../../utils/firebase';
-import SearchBar from "material-ui-search-bar";
 
 
 const useStyles = makeStyles((theme) => ({

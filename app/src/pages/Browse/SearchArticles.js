@@ -7,7 +7,7 @@ import SearchBar from "material-ui-search-bar";
 import { makeStyles } from '@material-ui/core/styles';
 import { useMediaQuery } from 'react-responsive';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     title: {
         marginTop: 30,
         marginBottom: 20,

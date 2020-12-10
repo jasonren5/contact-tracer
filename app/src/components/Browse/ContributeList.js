@@ -1,8 +1,7 @@
 import React from 'react';
-import PageLoading from '../Loading/PageLoading'
-import ContributeThumbnail from '../Browse/ContributeThumbnail'
-import { withFirebase } from '../../utils/firebase'
-import { getAllUnpublishedArticles } from '../../utils/functions/articles'
+import PageLoading from '../Loading/PageLoading';
+import { withFirebase } from '../../utils/firebase';
+import { getAllUnpublishedArticles } from '../../utils/functions/articles';
 import { Grid, Card, Typography } from "@material-ui/core";
 import ArticleContainer from '../Homepage/ArticleContainer';
 

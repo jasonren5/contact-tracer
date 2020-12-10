@@ -16,14 +16,14 @@ import {
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         display: "inline",
     },
 }));
 
 
-export default function SignInMenu(props) {
+export default function SignInMenu() {
     const history = useHistory();
     const classes = useStyles();
 

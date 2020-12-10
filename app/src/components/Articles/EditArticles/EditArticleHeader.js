@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import EditHeaderText from './EditHeaderText';
 import EditHeaderImage from './EditHeaderImage';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     image: {
         width: "100%",
         borderRadius: "8px",

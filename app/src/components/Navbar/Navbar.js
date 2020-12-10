@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../utils/firebase';
-import { useHistory } from "react-router-dom";
 
 import {
     AppBar,
@@ -19,7 +18,7 @@ import SignInMenu from './SignInMenu';
 import MobileMenu from './MobileMenu';
 import { useMediaQuery } from 'react-responsive';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     title: {
         flexGrow: 1,
         textAlign: "left",
@@ -47,7 +46,6 @@ export default function Navbar() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.auth.currentUser;
-    const history = useHistory();
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     useEffect(() => {
@@ -56,10 +54,6 @@ export default function Navbar() {
             setUsername(currentUser.email.substring(0, currentUser.email.indexOf("@")));
         }
     }, [currentUser]);
-
-    const handleSignOut = () => {
-        firebase.doSignOut();
-    }
 
     const openNewArticleModal = () => {
         setNewArticleIsOpen(true);

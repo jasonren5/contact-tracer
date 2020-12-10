@@ -70,6 +70,7 @@ class ProfileSettings extends React.Component {
                     allFieldsFull: false,
                     loading: false
                 });
+                console.log(error);
             });
         }
     }

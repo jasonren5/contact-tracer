@@ -44,7 +44,7 @@ function SignUpForm() {
 
         if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
             firebase.doCreateUserWithEmailAndPassword(email, password, fullName)
-                .then(authUser => {
+                .then(() => {
                     history.push('/');
                 })
                 .catch(error => {
@@ -147,7 +147,7 @@ function SignUpForm() {
             {state.error && <ErrorAlert errorTitle={"Processing Sign Up"} error={state.error.message} />}
         </form>
     );
-};
+}
 
 const SignUpLink = () => (
     <Grid xs item>

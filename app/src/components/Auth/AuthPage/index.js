@@ -56,7 +56,7 @@ function AuthPage(props) {
             </Box>
         </Container>
     );
-};
+}
 
 export { useAuthStyles };
 
