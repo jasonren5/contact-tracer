@@ -27,7 +27,7 @@ class ApplicationListItem extends React.Component {
                         </Typography>
                     </CardContent>
                     <CardActions>
-                        <Button size="small">Review</Button>
+                        <Button size="small" href={"admin/review/" + application.application_id}>Review</Button>
                     </CardActions>
                 </Card>
             </Grid>
