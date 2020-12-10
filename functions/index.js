@@ -1032,6 +1032,7 @@ exports.applyForMod = functions.https.onCall((data, context) => {
     const user_id = context.auth.uid;
     const submitted = admin.firestore.Timestamp.now();
     const review_body = "";
+    const name = (data.name ? data.name : "Anonymous User");
 
     const applicationData = {
         user_id: user_id,
@@ -1039,10 +1040,78 @@ exports.applyForMod = functions.https.onCall((data, context) => {
         type: type,
         status: status,
         submitted: submitted,
-        review_body: review_body
+        review_body: review_body,
+        name: name
     }
 
     var applicationPromise = db.collection("mod_applications").add(applicationData);
 
     return applicationPromise;
+})
+
+exports.getUserApplications = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    // var applications = await db.collection("mod_applications").where("status", "==", "pending")
+    var applications = await db.collection("mod_applications").where("user_id", "==", context.auth.uid).get()
+
+    var resData = [];
+
+    applications.forEach((application) => {
+        var appData = application.data();
+        appData["application_id"] = application.id;
+        resData.push(appData);
+    })
+
+    return resData
+})
+
+exports.getPendingApplications = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    var applications = await db.collection("mod_applications").where("status", "==", "pending").get();
+
+    var resData = [];
+
+    applications.forEach((application) => {
+        var appData = application.data();
+        appData["application_id"] = application.id;
+        resData.push(appData);
+    })
+
+    return resData
+})
+
+exports.getApplicationById = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    const application_id = data.application_id;
+
+    if(application_id === null) {
+        // poorly formatted request, return error
+        return {
+            error: 400
+        };
+    }
+
+    var application = await db.collection("mod_applications").doc(application_id);
+
+    var appData = application.data();
+    appData["application_id"] = application.id;
+
+    return appData;
 })
