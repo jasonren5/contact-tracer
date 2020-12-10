@@ -120,6 +120,7 @@ class ProfileSettings extends React.Component {
                     variant="contained"
                     color="primary"
                     disabled={!this.state.allFieldsFull}
+                    onClick={this.resetPassword}
                 >
                     Change Password
                 </Button>
