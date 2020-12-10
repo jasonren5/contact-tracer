@@ -19,6 +19,7 @@ import EditArticlePage from './pages/Article/EditArticlePage';
 import PublicProfile from './pages/Profile/PublicProfile';
 import PrivateProfile from './pages/Profile/PrivateProfile';
 import Navbar from './components/Navbar/Navbar';
+import AdminPortal from './pages/AdminPortal';
 
 import { withAuthentication } from './utils/session';
 
@@ -39,6 +40,7 @@ const App = () => (
         <Route path={'/contribute/:articleId'} component={EditArticlePage} />
         <Route path={'/user/:userId'} component={PublicProfile} />
         <Route path={'/profile'} component={PrivateProfile} />
+        <Route path={'/admin'} component={AdminPortal} />
         <Route component={PageNotFound} />
       </Switch>
     </Router>
