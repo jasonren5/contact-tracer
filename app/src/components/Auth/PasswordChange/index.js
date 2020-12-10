@@ -104,7 +104,6 @@ function PasswordChangeForm() {
             {state.success && <SuccessAlert action={state.success.action} />}
         </form>
     );
-
-};
+}
 
 export default PasswordChangeForm;

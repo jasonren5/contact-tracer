@@ -98,8 +98,7 @@ function PasswordForgetForm() {
             {state.success && <SuccessAlert action={state.success.action} />}
         </form>
     );
-
-};
+}
 
 const PasswordForgetLink = () => (
     <Grid item xs>

@@ -5,7 +5,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import { Button } from '@material-ui/core';
 
 
-export default function ContributeButton(props) {
+export default function ReadMoreButton(props) {
     const history = useHistory();
     const articleURL = "/article/" + props.articleID;
 

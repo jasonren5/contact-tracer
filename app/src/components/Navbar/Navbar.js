@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../utils/firebase';
-import { useHistory } from "react-router-dom";
 
 import {
     AppBar,
@@ -10,15 +9,16 @@ import {
     Button,
     Link,
 } from '@material-ui/core';
-import { Home } from '@material-ui/icons';
+import { Home, Search } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
 import CreateArticleModal from '../Modals/CreateArticleModal';
 import ProfileButton from './ProfileButton';
+import SignInMenu from './SignInMenu';
 import MobileMenu from './MobileMenu';
 import { useMediaQuery } from 'react-responsive';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     title: {
         flexGrow: 1,
         textAlign: "left",
@@ -38,16 +38,14 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-// TODO: navbar flashing login and logout
-// TODO: Center Title
-// TODO: Turn browse into a search icon
+// low-pri: navbar flashing login and logout - not easy to fix
+// low-pri: Center Title - not easy to do while also staying mobile friendly
 export default function Navbar() {
     const [newArticleIsOpen, setNewArticleIsOpen] = useState(false);
     const [username, setUsername] = useState();
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
     const currentUser = firebase.auth.currentUser;
-    const history = useHistory();
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     useEffect(() => {
@@ -56,10 +54,6 @@ export default function Navbar() {
             setUsername(currentUser.email.substring(0, currentUser.email.indexOf("@")));
         }
     }, [currentUser]);
-
-    const handleSignOut = () => {
-        firebase.doSignOut();
-    }
 
     const openNewArticleModal = () => {
         setNewArticleIsOpen(true);
@@ -72,8 +66,10 @@ export default function Navbar() {
     const LoggedInButtons = () => (
         <div className="loggedInButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-            <Button color="inherit" href="/browse/published" className={classes.navButton}>Browse</Button>
             <Button color="inherit" href="/browse/contribute" className={classes.navButton}>Contribute</Button>
+            <IconButton color="inherit" href="/search">
+                <Search style={{ color: "#fff" }} fontSize="large" />
+            </IconButton>
             <ProfileButton username={username} />
         </div >
     );
@@ -81,9 +77,10 @@ export default function Navbar() {
     const LoggedOutButtons = () => (
         <div className="loggedOutButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-            <Button color="inherit" href="/browse/published" className={classes.navButton}>Browse</Button>
-            <Button color="inherit" onClick={handleSignOut} href="/signin" className={classes.navButton}>Sign In</Button>
-            <Button color="inherit" onClick={handleSignOut} href="/signup" className={classes.navButton}>Create Account</Button>
+            <IconButton color="inherit" href="/search" className={classes.navButton}>
+                <Search style={{ color: "#fff" }} fontSize="large" />
+            </IconButton>
+            <SignInMenu />
         </div>
     );
     return (

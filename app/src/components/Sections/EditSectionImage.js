@@ -15,7 +15,7 @@ import ConfirmModal from '../Modals/ConfirmModal';
 import { CSSTransition } from 'react-transition-group';
 import AddSectionField from './AddSectionField';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     root: {
         flexGrow: 1,
     },

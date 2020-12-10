@@ -27,4 +27,4 @@ export default function ErrorAlert(props) {
             </Box>
         </Collapse>
     );
-};
+}

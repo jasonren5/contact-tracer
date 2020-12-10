@@ -88,7 +88,7 @@ export default function EditHeaderText(props) {
             setPublishingChanges(false);
             setTitleValue(response.data.new_title);
             handleToggleEditing();
-        })
+        });
     };
 
     const handleChange = (event) => {

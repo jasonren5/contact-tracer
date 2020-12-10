@@ -7,7 +7,6 @@ import PageLoading from '../../components/Loading/PageLoading';
 import { makeStyles } from '@material-ui/core/styles';
 
 import { FirebaseContext } from '../../utils/firebase';
-import SearchBar from "material-ui-search-bar";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -34,7 +33,6 @@ export default function ArticleList(props) {
 
     const [allArticles, setAllArticles] = useState([]);
     const [displayArticles, setDisplayArticles] = useState([]);
-    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         getAllArticles(firebase).then((articles) => {
@@ -46,28 +44,32 @@ export default function ArticleList(props) {
     }, []);
 
     useEffect(() => {
+        handleUpdateDisplayedArticles();
+    }, [props.searchTerm]);
+
+    useEffect(() => {
+        handleUpdateDisplayedArticles();
+    }, [props.typeFilter]);
+
+    const handleUpdateDisplayedArticles = () => {
         var passedArticles = [];
 
         allArticles.forEach((article) => {
-            if (article.title.toLowerCase().includes(searchTerm.toLowerCase()) || article.summary.toLowerCase().includes(searchTerm.toLowerCase())) {
-                article.searchTerm = searchTerm;
-                passedArticles.push(article);
+            const includeThis = article.type === props.typeFilter;
+            const includeAll = (props.typeFilter === "all" || props.typeFilter === null);
+            if (includeAll || includeThis) {
+                if (article.title.toLowerCase().includes(props.searchTerm.toLowerCase()) || article.summary.toLowerCase().includes(props.searchTerm.toLowerCase())) {
+                    article.searchTerm = props.searchTerm;
+                    passedArticles.push(article);
+                }
             }
         });
         setDisplayArticles(passedArticles);
-    }, [searchTerm]);
+    }
+
     // TODO: Remove search bar when we move it to browse
     return (
         <div className={classes.root}>
-            <SearchBar
-                value={searchTerm}
-                onChange={(newValue) => setSearchTerm(newValue)}
-                onCancelSearch={() => setSearchTerm("")}
-                className={classes.searchBar}
-                placeholder={"Search for Article"}
-                cancelOnEscape
-            />
-
             <CssBaseline />
             <Grid
                 container
@@ -78,18 +80,17 @@ export default function ArticleList(props) {
             >
                 {allArticles.length > 0 ?
                     displayArticles.map(article => {
-                        return <ArticleContainer key={article.id} article={article} mediaQuery={props.mediaQuery} />;
+                        return <ArticleContainer key={article.id} article={article} maxWidth={props.maxWidth} mediaQuery={props.mediaQuery} />;
                     })
                     :
                     <PageLoading />
                 }
                 {(allArticles.length > 0 && displayArticles.length === 0) &&
                     <Card fontWeight="fontWeightBold" className={classes.card}>
-                        <Typography variant="h5" >No articles found with that keyword!</Typography>
+                        <Typography variant="h5" >No articles found with that keyword and filter!</Typography>
                     </Card>
                 }
             </Grid>
-
         </div>
     );
 }

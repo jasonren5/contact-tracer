@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
-import { FirebaseContext } from '../../utils/firebase';
+import React from 'react';
 
-import { ContributeButton, ReadMoreButton } from '../Articles/Buttons';
+import { ReadMoreButton } from '../Articles/Buttons';
+import { ContributeButton } from '../Articles/Buttons';
 
 import {
     Card,
@@ -18,12 +18,13 @@ var Highlight = require('react-highlighter');
 
 const useStyles = makeStyles((theme) => ({
     card: {
-        padding: theme.spacing(2),
-        textAlign: 'center',
+        // padding: theme.spacing(2),
+        // textAlign: 'center',
         color: theme.palette.text.secondary,
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center',
+        // alignItems: 'center',
+        height: "415px",
     },
     details: {
         display: 'flex',
@@ -42,26 +43,32 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'left',
         marginBottom: 0
     },
+    cardActions: {
+        position: "absolute",
+        height: "780px",
+    }
 }));
 
 export default function ArticleContainer(props) {
     // Note: edit links are temporary, just need a way for the profs to access it in the mvp
     const articleURL = "/article/" + props.article.id;
+    const editArticleURL = "/contribute/" + props.article.id;
     const classes = useStyles();
-    const firebase = useContext(FirebaseContext);
 
     const highlightTerm = props.article.searchTerm ? props.article.searchTerm : "";
+    const maxSizeGrid = props.maxWidth === "lg" ? 4 : 3;
+    const gridSize = props.mediaQuery ? "auto" : maxSizeGrid;
 
     return (
-        <Grid item xs={props.mediaQuery ? "auto" : 4}>
-            <Card className={classes.root}>
+        <Grid item xs={gridSize}>
+            <Card className={classes.card}>
                 <CardMedia
                     className={classes.image}
                     image={props.article.image_url}
                     title={props.article.title}
                 />
                 <CardContent>
-                    <Link href={articleURL} color={"primary"}>
+                    <Link href={props.contribute ? editArticleURL : articleURL} color={"primary"}>
                         <Typography component="h5" variant="h5" gutterBottom>
                             <Highlight search={highlightTerm}>
                                 {props.article.title}
@@ -74,8 +81,12 @@ export default function ArticleContainer(props) {
                         </Highlight>
                     </Typography>
                 </CardContent>
-                <CardActions >
-                    <ReadMoreButton articleID={props.article.id} />
+                <CardActions className={classes.cardActions}>
+                    {props.contribute ?
+                        <ContributeButton articleID={props.article.id} />
+                        :
+                        <ReadMoreButton articleID={props.article.id} />
+                    }
                 </CardActions>
             </Card>
         </Grid>

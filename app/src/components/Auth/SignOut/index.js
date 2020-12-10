@@ -14,4 +14,4 @@ export default function SignOutButton(props) {
             Sign Out
         </Button>
     );
-};
+}

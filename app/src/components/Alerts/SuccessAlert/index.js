@@ -26,4 +26,4 @@ export default function SuccessAlert(props) {
             </Box>
         </Collapse>
     );
-};
+}

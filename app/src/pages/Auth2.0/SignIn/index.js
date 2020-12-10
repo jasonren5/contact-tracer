@@ -123,7 +123,7 @@ function SignInForm() {
             {state.error && <ErrorAlert errorTitle={"Processing Sign In"} error={state.error.message} />}
         </form>
     );
-};
+}
 
 const SignInLink = () => (
     <Grid item xs>
