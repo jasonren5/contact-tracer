@@ -1096,7 +1096,7 @@ exports.getPendingApplications = functions.https.onCall(async (data, context) =>
     return resData
 })
 
-exports.getApplicationById = functions.https.onCall(async (data, context) => {
+exports.getApplicationById = functions.https.onCall(async (data) => {
     const db = admin.firestore();
 
     const application_id = data.application_id;
