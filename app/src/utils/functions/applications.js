@@ -67,9 +67,62 @@ async function getApplication(firebase, application_id) {
     }
 }
 
+async function approveApplication(firebase, application_id) {
+    var approveApplication = firebase.functions.httpsCallable("approveApplicationById");
+
+    const data = {
+        application_id: application_id,
+    }
+
+    try {
+        var response = await approveApplication(data);
+        return response.data
+    }
+    catch{
+        return {
+            error: "Error approving application."
+        }
+    }
+}
+
+async function rejectApplication(firebase, application_id) {
+    var rejectApplication = firebase.functions.httpsCallable("rejectApplicationById");
+
+    const data = {
+        application_id: application_id,
+    }
+
+    try {
+        var response = await rejectApplication(data);
+        return response.data
+    }
+    catch{
+        return {
+            error: "Error rejecting application."
+        }
+    }
+}
+
+async function verifyAdmin(firebase) {
+    var verifyAdmin = firebase.functions.httpsCallable("verifyAdmin");
+
+    try {
+        var response = await verifyAdmin();
+        return response.data
+    }
+    catch{
+        return {
+            admin: false
+        }
+    }
+}
+
 export {
     submitApplication,
     getUserApplications,
     getPendingApplications,
-    getApplication
+    getApplication,
+    approveApplication,
+    rejectApplication,
+    verifyAdmin
 }
