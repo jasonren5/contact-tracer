@@ -1108,10 +1108,115 @@ exports.getApplicationById = functions.https.onCall(async (data, context) => {
         };
     }
 
-    var application = await db.collection("mod_applications").doc(application_id);
+    var application = await db.collection("mod_applications").doc(application_id).get();
 
     var appData = application.data();
     appData["application_id"] = application.id;
 
     return appData;
 })
+
+exports.approveApplicationById = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    const user_id = context.auth.uid;
+
+    const adminData = await _verifyAdmin(db, user_id)
+
+    if (!adminData.admin) {
+        // not admin, return error
+        return {
+            error: 401
+        };
+    }
+
+    const application_id = data.application_id;
+
+    if(application_id === null) {
+        // poorly formatted request, return error
+        return {
+            error: 400
+        };
+    }
+
+    const application = await db.collection("mod_applications").doc(application_id).get();
+
+    const type = application.data().type;
+    const app_user_id = application.data().user_id;
+
+    var promises = []
+
+    const applicationPromise = db.collection("mod_applications").doc(application_id).update({status: "approved"});
+    promises.push(applicationPromise);
+
+    const userPromise = db.collection("users").doc(app_user_id).update({expertises: admin.firestore.FieldValue.arrayUnion(type)});
+    promises.push(userPromise);
+
+    return Promise.all(promises);
+})
+
+exports.rejectApplicationById = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    const user_id = context.auth.uid;
+
+    const adminData = await _verifyAdmin(db, user_id)
+
+    if (!adminData.admin) {
+        // not admin, return error
+        return {
+            error: 401
+        };
+    }
+
+    const application_id = data.application_id;
+
+    if(application_id === null) {
+        // poorly formatted request, return error
+        return {
+            error: 400
+        };
+    }
+
+    return db.collection("mod_applications").doc(application_id).update({status: "rejected"});
+})
+
+exports.verifyAdmin = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    const user_id = context.auth.uid;
+
+    return _verifyAdmin(db, user_id);
+})
+
+async function _verifyAdmin(db, user_id) {
+
+    const response = await db.collection("users").doc(user_id).get();
+
+    const userData = response.data()
+
+    return {
+        admin: userData.admin
+    }
+}
