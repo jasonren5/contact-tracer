@@ -13,7 +13,7 @@ class Firebase {
         this.functions = app.functions();
 
         // Local functions line  (uncomment it to use local emulators)
-        // this.functions.useFunctionsEmulator("http://localhost:5001");
+        this.functions.useFunctionsEmulator("http://localhost:5001");
     }
 
     // Firebase Auth API
@@ -46,6 +46,16 @@ class Firebase {
     doReauthenticateWithCredential = credential => this.auth.currentUser.reauthenticateWithCredential(credential);
 
     doGetCurrentUser = () => {return this.auth.currentUser;};
+
+    doGetCurrentName = () => {
+        const user = this.auth.currentUser
+
+        if(user === null) {
+            return null;
+        }
+
+        return this.auth.currentUser.displayName;
+    };
 }
 
 export default Firebase;
