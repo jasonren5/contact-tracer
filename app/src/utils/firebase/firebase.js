@@ -46,6 +46,16 @@ class Firebase {
     doReauthenticateWithCredential = credential => this.auth.currentUser.reauthenticateWithCredential(credential);
 
     doGetCurrentUser = () => {return this.auth.currentUser;};
+
+    doGetCurrentName = () => {
+        const user = this.auth.currentUser
+
+        if(user === null) {
+            return null;
+        }
+
+        return this.auth.currentUser.displayName;
+    };
 }
 
 export default Firebase;
