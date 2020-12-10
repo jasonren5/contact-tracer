@@ -4,7 +4,8 @@ import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import ProfileHistory from './ProfileHistory';
-import ProfileSettings from './ProfileSettings'
+import ProfileModApp from './ProfileModApp';
+import ProfileSettings from './ProfileSettings';
 import Card from "@material-ui/core/Card";
 import CardContent from '@material-ui/core/CardContent';
 
@@ -27,6 +28,8 @@ class ProfileSections extends React.Component {
             case 0:
                 return (<ProfileHistory user_id={this.props.user_id}></ProfileHistory>);
             case 1:
+                return (<ProfileModApp />);
+            case 2:
                 return (<ProfileSettings user_id={this.props.user_id}></ProfileSettings>);
             default:
                 return (<ProfileHistory user_id={this.props.user_id}></ProfileHistory>);
@@ -46,6 +49,9 @@ class ProfileSections extends React.Component {
                             aria-label="Select profile section."
                         >
                             <Tab label="History" />
+                            {this.props.private && 
+                                <Tab label="Expertise" />
+                            }
                             {this.props.private && 
                                 <Tab label="Settings" />
                             }

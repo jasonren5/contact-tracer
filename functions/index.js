@@ -1015,3 +1015,34 @@ exports.updateUserField = functions.https.onCall((data, context) => {
         }
     })
 });
+
+exports.applyForMod = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    const body = (data.body ? data.body : "");
+    const status = "pending";
+    const type = (data.type ? data.type : "general");
+    const user_id = context.auth.uid;
+    const submitted = admin.firestore.Timestamp.now();
+    const review_body = "";
+
+    const applicationData = {
+        user_id: user_id,
+        body: body,
+        type: type,
+        status: status,
+        submitted: submitted,
+        review_body: review_body
+    }
+
+    var applicationPromise = db.collection("mod_applications").add(applicationData);
+
+    return applicationPromise;
+})
