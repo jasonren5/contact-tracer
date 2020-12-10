@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 
 import EditHeaderText from './EditHeaderText';
-import SectionImage from '../../Sections/SectionImage';
+import EditHeaderImage from './EditHeaderImage';
 
 const useStyles = makeStyles((theme) => ({
     image: {
@@ -27,7 +27,7 @@ export default function EditArticleHeader(props) {
                 article_id={props.article.id}
             />
             {props.article.image_url &&
-                <SectionImage section={fakeSection} classes={classes.image} />
+                <EditHeaderImage section={fakeSection} classes={classes.image} article_id={props.article.id} />
             }
         </div>
     );
