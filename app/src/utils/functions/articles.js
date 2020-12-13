@@ -65,7 +65,7 @@ async function publishContribution(firebase, section, newBody, merging) {
     };
 }
 
-async function addSection(firebase, section) {
+async function addSection(firebase, section, source) {
     var addSectionAtIndex = firebase.functions.httpsCallable("addSectionAtIndex");
 
     let requestData = {
@@ -77,8 +77,14 @@ async function addSection(firebase, section) {
     var newSection = section;
     newSection.id = response.data.section_id;
     newSection.version_id = response.data.version_id;
+    console.log("debug1");
+    if (source) {
+        var sourceObject = await addSourceToArticle(firebase, newSection, source);
+        const returnObject = { newSection, sourceObject }
+        return returnObject;
+    }
 
-    return newSection
+    return { newSection };
 }
 
 async function createBlankArticle(firebase) {
@@ -129,9 +135,9 @@ async function editArticleTitle(firebase, article_id, title) {
 }
 
 async function editArticleImage(firebase, article_id, image_url) {
-    let editArticleTitle = firebase.functions.httpsCallable("editArticleHeaderImage");
+    let editArticleImage = firebase.functions.httpsCallable("editArticleHeaderImage");
 
-    const response = await editArticleTitle({
+    const response = await editArticleImage({
         article_id: article_id,
         image_url: image_url
     });
