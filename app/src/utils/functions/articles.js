@@ -24,14 +24,14 @@ async function getFullArticle(firebase, article_id) {
 async function getAllUnpublishedArticles(firebase) {
     var getAllArticles = firebase.functions.httpsCallable("getAllArticlesWithSummaries");
 
-    var response = await getAllArticles()
+    var response = await getAllArticles();
     return response.data;
 }
 
 async function getAllArticles(firebase) {
     var getAllArticles = firebase.functions.httpsCallable("getAllPublishedArticlesWithSummaries");
 
-    var response = await getAllArticles()
+    var response = await getAllArticles();
     return response.data;
 }
 
@@ -166,6 +166,14 @@ async function addSourceToArticle(firebase, section, source) {
     return newSource;
 }
 
+async function getAllSources(firebase, article_id) {
+    let getAllSourcesByID = firebase.functions.httpsCallable("getAllSources");
+
+    var response = await getAllSourcesByID({ article_id: article_id });
+
+    return response.data;
+}
+
 export {
     getFullArticle,
     getAllArticles,
@@ -179,4 +187,5 @@ export {
     editArticleTitle,
     editArticleImage,
     addSourceToArticle,
+    getAllSources,
 };
