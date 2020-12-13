@@ -733,6 +733,7 @@ exports.publishArticleByID = functions.https.onRequest(async (req, res) => {
 })
 
 // Shared functionality for publishing an article
+// TODO: Handle Sources
 async function _publishArticleByID(db, article_id) {
     const article = await _getFullArticleByID(db, article_id);
     const type = (article.article_data.type ? article.article_data.type : "general");
@@ -1273,3 +1274,26 @@ exports.addSourceToArticle = functions.https.onCall((data, context) => {
     });
 
 })
+
+exports.getAllSources = functions.https.onCall((data) => {
+    const db = admin.firestore();
+    const article_id = data.article_id;
+
+    return _getAllSources(db, article_id).then((data) => {
+        return data;
+    }).catch((err) => {
+        return {
+            error: err
+        }
+    });
+})
+
+async function _getAllSources(db, article_id) {
+    // TODO: Handle real-time updates to the collection and maybe trigger this or something? : https://cloud.google.com/firestore/docs/query-data/listen
+
+    const sourcePromise = await db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get();
+
+    var data = sourcePromise.data();
+
+    return data;
+}
