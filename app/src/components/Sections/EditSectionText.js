@@ -31,6 +31,7 @@ const styles = theme => ({
     editField: {
         width: "100%",
         height: "200%",
+        marginTop: "1rem",
     },
     highlightWrapper: {
         position: "relative",
@@ -41,7 +42,6 @@ const styles = theme => ({
         zIndex: "200",
         "&:hover": {
             background: "#8eacbb",
-            // paddingTop: "1.5rem",
         },
     },
     wrapper: {

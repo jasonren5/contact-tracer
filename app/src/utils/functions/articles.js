@@ -77,7 +77,6 @@ async function addSection(firebase, section, source) {
     var newSection = section;
     newSection.id = response.data.section_id;
     newSection.version_id = response.data.version_id;
-    console.log("debug1");
     if (source) {
         var sourceObject = await addSourceToArticle(firebase, newSection, source);
         const returnObject = { newSection, sourceObject }

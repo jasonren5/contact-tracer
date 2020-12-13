@@ -65,8 +65,8 @@ export default function AddSectionField(props) {
     const addImageSectionBelow = (imageURL) => {
         let section = new ArticleSection(props.article_id, null, null, "image", imageURL, (props.order + 1), []);
 
-        addSection(firebase, section).then((data) => {
-            props.addSectionToArticle(data.section);
+        addSection(firebase, section, imageURL).then((data) => {
+            props.addSectionToArticle(data.newSection);
             setAddImage(false);
         });
     };
