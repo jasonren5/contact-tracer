@@ -139,6 +139,21 @@ async function editArticleImage(firebase, article_id, image_url) {
     return response;
 }
 
+async function addSourceToArticle(firebase, section, source) {
+    var addSourceToArticle = firebase.functions.httpsCallable("addSourceToArticle");
+
+    const requestData = {
+        article_id: section.article_id,
+        section_id: section.id,
+        source_url: source,
+    };
+
+    var response = await addSourceToArticle(requestData);
+    var newSource = response.data;
+
+    return newSource;
+}
+
 export {
     getFullArticle,
     getAllArticles,
@@ -150,5 +165,6 @@ export {
     getPublishedArticleByID,
     getAllUnpublishedArticles,
     editArticleTitle,
-    editArticleImage
+    editArticleImage,
+    addSourceToArticle,
 };
