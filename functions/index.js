@@ -317,7 +317,7 @@ exports.getAllArticles = functions.https.onCall(() => {
 */
 exports.getAllArticlesWithSummaries = functions.https.onCall(async () => {
     const db = admin.firestore();
-    const snapshot = await db.collection("articles").where("published", "==", false).orderBy("created", "desc").get();
+    const snapshot = await db.collection("articles").where("published", "==", false).get();
 
     let resData = { "article_list": [] };
 
@@ -1101,7 +1101,7 @@ exports.getApplicationById = functions.https.onCall(async (data) => {
 
     const application_id = data.application_id;
 
-    if(application_id === null) {
+    if (application_id === null) {
         // poorly formatted request, return error
         return {
             error: 400
@@ -1139,7 +1139,7 @@ exports.approveApplicationById = functions.https.onCall(async (data, context) =>
 
     const application_id = data.application_id;
 
-    if(application_id === null) {
+    if (application_id === null) {
         // poorly formatted request, return error
         return {
             error: 400
@@ -1153,10 +1153,10 @@ exports.approveApplicationById = functions.https.onCall(async (data, context) =>
 
     var promises = []
 
-    const applicationPromise = db.collection("mod_applications").doc(application_id).update({status: "approved"});
+    const applicationPromise = db.collection("mod_applications").doc(application_id).update({ status: "approved" });
     promises.push(applicationPromise);
 
-    const userPromise = db.collection("users").doc(app_user_id).update({expertises: admin.firestore.FieldValue.arrayUnion(type)});
+    const userPromise = db.collection("users").doc(app_user_id).update({ expertises: admin.firestore.FieldValue.arrayUnion(type) });
     promises.push(userPromise);
 
     return Promise.all(promises);
@@ -1185,14 +1185,14 @@ exports.rejectApplicationById = functions.https.onCall(async (data, context) => 
 
     const application_id = data.application_id;
 
-    if(application_id === null) {
+    if (application_id === null) {
         // poorly formatted request, return error
         return {
             error: 400
         };
     }
 
-    return db.collection("mod_applications").doc(application_id).update({status: "rejected"});
+    return db.collection("mod_applications").doc(application_id).update({ status: "rejected" });
 })
 
 exports.verifyAdmin = functions.https.onCall(async (data, context) => {
