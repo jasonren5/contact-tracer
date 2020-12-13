@@ -21,7 +21,6 @@ class ContributeList extends React.Component {
             })
         })
     }
-    // TODO: Duplicate the homepage article container object here instead of current object
     render() {
         if (!this.state.articles) {
             return (

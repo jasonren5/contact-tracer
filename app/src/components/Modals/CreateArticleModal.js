@@ -81,7 +81,6 @@ export default function CreateArticleModal(props) {
                     required
                 />
                 <TextField
-                    autoFocus
                     margin="dense"
                     id="imageURL"
                     type="url"

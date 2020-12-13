@@ -91,7 +91,6 @@ export default function CreateImageModal(props) {
                         type="url"
                         onChange={handleChange}
                         label="Image URL"
-                        // fullWidth
                         disabled={state.merging}
                         required
                         className={classes.textField}
@@ -104,7 +103,6 @@ export default function CreateImageModal(props) {
                             type="text"
                             onChange={handleChange}
                             label="Body text"
-                            // fullWidth
                             disabled={state.merging}
                             required
                             multiline
@@ -112,14 +110,11 @@ export default function CreateImageModal(props) {
                             className={classes.textField}
                         />
                         <TextField
-                            autoFocus
                             id="sourceURL"
                             type="url"
                             onChange={handleChange}
                             label="Source URL"
-                            // fullWidth
                             disabled={state.merging}
-                            required
                             className={classes.textField}
                         />
                     </div>
