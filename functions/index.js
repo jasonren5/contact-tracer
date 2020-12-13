@@ -566,6 +566,16 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
         type: "text"
     };
 
+    const sourceData = {
+        url: source,
+        user: "generated",
+        section: "title",
+        deleted: false,
+    };
+
+    const newSourceRef = newArticleRef.collection("sources").doc();
+    batch.set(newSourceRef, sourceData);
+
     const newArticleRef = db.collection("articles").doc();
     batch.set(newArticleRef, articleData);
 
@@ -593,7 +603,7 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
 
 });
 
-function _createArticleWithTitleAndImage(title, image, type, body) {
+function _createArticleWithTitleAndImage(title, image, type, body, source) {
     const db = admin.firestore();
     const batch = db.batch();
 
@@ -619,6 +629,13 @@ function _createArticleWithTitleAndImage(title, image, type, body) {
         type: "text"
     };
 
+    const sourceData = {
+        url: source,
+        user: "generated",
+        section: "title",
+        deleted: false,
+    };
+
     const newArticleRef = db.collection("articles").doc();
     batch.set(newArticleRef, articleData);
 
@@ -627,6 +644,9 @@ function _createArticleWithTitleAndImage(title, image, type, body) {
 
     const versionRef = newSectionRef.collection("versions").doc();
     batch.set(versionRef, versionData);
+
+    const newSourceRef = newArticleRef.collection("sources").doc();
+    batch.set(newSourceRef, sourceData);
 
     return batch.commit()
         .then(() => {
@@ -818,7 +838,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
                 let numCreated = 0;
                 for (i = 0; i < articlesToCreate; i++) {
                     if (data.articles[i] != null) {
-                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description, data.articles[i].url);
                         numCreated++;
                     }
                 }
@@ -850,7 +870,7 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
                 let i;
                 for (i = 0; i < articlesToCreate; i++) {
                     if (data.articles[i] != null) {
-                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description, data.articles[i].url);
                     }
                 }
             }

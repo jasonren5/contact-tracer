@@ -7,12 +7,13 @@
     sections: The firebase document id's of this article's sections
 */
 class Article {
-    constructor(id, title, image_url, body, sections) {
+    constructor(id, title, image_url, body, sections, sources) {
         this.id = id;
         this.title = title;
         this.image_url = image_url;
         this.body = body;
         this.sections = sections;
+        this.sources = sources;
     }
 }
 
