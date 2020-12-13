@@ -524,6 +524,7 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
 
     const title = data.title;
     const image = data.image_url;
+    const source = data.source;
     const created = admin.firestore.Timestamp.now();
     const type = (data.type ? data.type : "general");
     const published = false;
@@ -1240,3 +1241,35 @@ async function _verifyAdmin(db, user_id) {
         admin: userData.admin
     }
 }
+
+exports.addSourceToArticle = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const article_id = data.article_id;
+    const section_id = data.section_id;
+    const source_url = data.source_url;
+    const user_id = (context.auth ? context.auth.uid : null);
+
+    const sourceData = {
+        url: source_url,
+        user: user_id,
+        section: section_id,
+        deleted: false,
+    };
+
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+    const articleRef = db.collection("articles").doc(article_id);
+
+    var sourcePromise = articleRef.collection("sources").add(sourceData);
+
+    return sourcePromise.then((doc) => {
+        sourceData["id"] = doc.id;
+
+        return sourceData;
+    });
+
+})
