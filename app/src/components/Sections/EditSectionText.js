@@ -31,7 +31,7 @@ const styles = theme => ({
     editField: {
         width: "100%",
         height: "200%",
-        marginTop: "1rem",
+        marginTop: ".75rem",
     },
     highlightWrapper: {
         position: "relative",
@@ -82,6 +82,7 @@ class EditSectionText extends React.Component {
             sectionHover: false,
             publishingDelete: false,
             removeModal: false,
+            source: "",
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
@@ -96,15 +97,12 @@ class EditSectionText extends React.Component {
     }
 
     handleChange(event) {
-        if (this.state.merging) {
-            this.setState({
-                mergeValue: event.target.value
-            })
-        } else {
-            this.setState({
-                editValue: event.target.value
-            })
-        }
+        const { id, value } = event.target;
+
+        this.setState(prevState => ({
+            ...prevState,
+            [id]: value
+        }));
     }
 
     toggleEditing() {
@@ -114,6 +112,7 @@ class EditSectionText extends React.Component {
             editValue: this.state.section.body,
             mergeValue: "",
             sectionHover: false,
+            source: "",
         });
     }
 
@@ -133,6 +132,7 @@ class EditSectionText extends React.Component {
         this.setState({
             publishingDelete: true,
             editValue: "",
+
         }, function () {
             this.publishChanges();
         });
@@ -154,8 +154,9 @@ class EditSectionText extends React.Component {
         this.setState({ publishingChanges: true });
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
+        const finalSource = this.state.source === "" ? null : this.state.source;
 
-        publishContribution(this.props.firebase, this.state.section, newBody, this.state.merging).then((response) => {
+        publishContribution(this.props.firebase, newSection, newBody, this.state.merging, finalSource).then((response) => {
             // handle merge conflict
             if (response.conflict) {
                 var localSection = this.state.section;
@@ -202,8 +203,9 @@ class EditSectionText extends React.Component {
                 <Card>
                     <CardContent>
                         <TextField
-                            id="open_editor"
+                            id="editValue"
                             label="Edit Section"
+                            type="text"
                             multiline
                             disabled={this.state.merging}
                             rowsMax={10}
@@ -211,10 +213,21 @@ class EditSectionText extends React.Component {
                             onChange={(event) => this.handleChange(event)}
                             className={classes.editField}
                         />
+                        <TextField
+                            id="source"
+                            label="Edit Source"
+                            type="url"
+                            disabled={this.state.merging}
+                            rowsMax={10}
+                            value={this.state.source}
+                            onChange={(event) => this.handleChange(event)}
+                            className={classes.editField}
+                        />
                         {this.state.merging && (
                             <TextField
-                                id="open_editor"
+                                id="mergeValue"
                                 label="Merge Changes"
+                                type="text"
                                 multiline
                                 rowsMax={10}
                                 value={this.state.mergeValue}

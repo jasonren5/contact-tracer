@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
     textField: {
         width: "500px",
+        marginTop: ".75rem",
     },
 }));
 

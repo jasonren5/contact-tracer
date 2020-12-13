@@ -35,7 +35,7 @@ async function getAllArticles(firebase) {
     return response.data;
 }
 
-async function publishContribution(firebase, section, newBody, merging) {
+async function publishContribution(firebase, section, newBody, merging, source) {
     var addVersionToSection = firebase.functions.httpsCallable("addVersionToSection");
 
     let requestData = {
@@ -57,6 +57,14 @@ async function publishContribution(firebase, section, newBody, merging) {
     } else {
         newSection.body = data.body;
         newSection.version_id = data.version_id;
+        if (source) {
+            var sourceObject = await addSourceToArticle(firebase, newSection, source);
+            return {
+                section: newSection,
+                conflict: conflict,
+                sourceObject
+            };
+        }
     }
 
     return {
@@ -79,8 +87,7 @@ async function addSection(firebase, section, source) {
     newSection.version_id = response.data.version_id;
     if (source) {
         var sourceObject = await addSourceToArticle(firebase, newSection, source);
-        const returnObject = { newSection, sourceObject }
-        return returnObject;
+        return { newSection, sourceObject };
     }
 
     return { newSection };

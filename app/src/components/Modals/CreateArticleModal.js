@@ -74,6 +74,7 @@ export default function CreateArticleModal(props) {
                 <TextField
                     autoFocus
                     margin="dense"
+                    type="text"
                     id="articleTitle"
                     onChange={handleChange}
                     label="Article Title"

@@ -101,7 +101,6 @@ export default function EditHeaderText(props) {
         else {
             setEditValue(event.target.value);
         }
-
     };
 
     const handleToggleEditing = value => {

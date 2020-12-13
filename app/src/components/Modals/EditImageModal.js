@@ -78,7 +78,7 @@ export default function EditImageModal(props) {
             publishingChanges: true
         }));
 
-        publishContribution(firebase, state.section, state.editValue, state.merging).then((response) => {
+        publishContribution(firebase, state.section, state.editValue, state.merging, state.editValue).then((response) => {
             // handle merge conflict
             if (response.conflict) {
                 var localSection = state.section;
