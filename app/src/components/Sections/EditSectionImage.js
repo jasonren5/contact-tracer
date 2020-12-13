@@ -140,7 +140,7 @@ export default function EditSectionImage(props) {
                         </CSSTransition>
 
                     </div>
-                    < AddSectionField
+                    <AddSectionField
                         article_id={section.article_id}
                         addSectionToArticle={props.addSectionToArticle}
                         order={section.order}

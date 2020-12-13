@@ -31,15 +31,11 @@ class EditArticlePage extends React.Component {
 
     addSectionToArticle(section) {
         var article = this.state.article;
-
-        // console.log(article.sections.join());
         for (let i = section.order; i < article.sections.length; i++) {
             article.sections[i].order += 1;
         }
 
         article.sections.splice(section.order, 0, section);
-        // console.log(article.sections.join());
-
         this.setState({
             article: article
         })
