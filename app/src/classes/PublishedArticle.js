@@ -25,8 +25,10 @@ class PublishedArticle {
         data.sections.forEach((section, index) => {
             this.addSection(section, index);
         });
-        data.sources.forEach((source) => {
-            this.addSource(source);
+        data.sources.map((source, index) => {
+            if (!source.deleted) {
+                this.addSource(source, index);
+            }
         });
     }
     addSection(sectionData, index) {
@@ -37,14 +39,15 @@ class PublishedArticle {
         var newSection = new ArticleSection(this.article_id, section_id, version_id, type, body, index, []);
         this.sections.push(newSection);
     }
-    addSource(sourceData) {
+    addSource(sourceData, index) {
         const source_id = sourceData.source_id;
         const url = sourceData.url;
         const deleted = sourceData.deleted;
         const user_id = sourceData.user;
         const section_id = sourceData.section;
         const created = sourceData.created;
-        var newSource = new Source(this.article_id, source_id, url, deleted, user_id, section_id, created);
+        const order = index;
+        var newSource = new Source(this.article_id, source_id, url, deleted, user_id, section_id, created, order);
         this.sources.push(newSource);
     }
 }

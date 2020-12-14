@@ -17,9 +17,11 @@ async function getFullArticle(firebase, article_id) {
 
         var sources = [];
 
-        data.sources_data.forEach((source) => {
-            var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user, source.section, source.created);
-            sources.push(s);
+        data.sources_data.map((source, index) => {
+            if (!source.deleted) {
+                var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user, source.section, source.created, index + 1);
+                sources.push(s);
+            }
         });
 
         var article = new Article(data.article_data.article_id, data.article_data.title, data.article_data.image_url, "Hello, World!", sections, sources);
