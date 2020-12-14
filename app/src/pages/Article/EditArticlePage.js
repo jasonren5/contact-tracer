@@ -2,7 +2,8 @@ import React from 'react';
 import EditArticleSection from "../../components/Articles/EditArticles/EditArticleSection";
 import EditArticleHeader from "../../components/Articles/EditArticles/EditArticleHeader";
 import AddSectionField from "../../components/Sections/AddSectionField";
-import { getFullArticle, getAllSources } from '../../utils/functions/articles';
+import SourcesList from "../../components/Sources/SourcesList";
+import { getFullArticle } from '../../utils/functions/articles';
 import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { Container } from '@material-ui/core';
 
@@ -72,6 +73,7 @@ class EditArticlePage extends React.Component {
                     >
                     </EditArticleSection>
                 )}
+                {this.state.article.sources && <SourcesList editing sources={this.state.article.sources} />}
             </Container>
         )
     }

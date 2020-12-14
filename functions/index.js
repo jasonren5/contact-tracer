@@ -72,7 +72,7 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
         var sourcesData = [];
         values[2].forEach(source => {
             var sourceData = source.data();
-            source["source_id"] = source.id;
+            sourceData["source_id"] = source.id;
             sourcesData.push(sourceData);
         });
 

@@ -1,5 +1,5 @@
 import ArticleSection from './ArticleSection';
-import Source from '.Source';
+import Source from './Source';
 
 /*
     Stores article information.

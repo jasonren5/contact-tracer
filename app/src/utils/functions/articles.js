@@ -1,6 +1,7 @@
-import Article from '../../classes/Article'
-import ArticleSection from '../../classes/ArticleSection'
-import PublishedArticle from '../../classes/PublishedArticle'
+import Article from '../../classes/Article';
+import ArticleSection from '../../classes/ArticleSection';
+import PublishedArticle from '../../classes/PublishedArticle';
+import Source from '../../classes/Source';
 
 async function getFullArticle(firebase, article_id) {
 
@@ -14,7 +15,14 @@ async function getFullArticle(firebase, article_id) {
             sections.push(s)
         });
 
-        var article = new Article(data.article_data.article_id, data.article_data.title, data.article_data.image_url, "Hello, World!", sections, data.sources_data);
+        var sources = [];
+
+        data.sources_data.forEach((source) => {
+            var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user);
+            sources.push(s);
+        });
+
+        var article = new Article(data.article_data.article_id, data.article_data.title, data.article_data.image_url, "Hello, World!", sections, sources);
         return article;
     });
 
