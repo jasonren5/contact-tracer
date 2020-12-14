@@ -18,7 +18,7 @@ async function getFullArticle(firebase, article_id) {
         var sources = [];
 
         data.sources_data.forEach((source) => {
-            var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user);
+            var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user, source.section);
             sources.push(s);
         });
 

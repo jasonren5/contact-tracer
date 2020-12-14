@@ -22,7 +22,9 @@ export default function SourcesList(props) {
     return (
         <ListItem>
             <Typography noWrap>
-                {props.source.order + ": "}
+                <Link href={"#" + props.source.section_id}>
+                    {props.source.order + ": "}
+                </Link>
                 <Link href={props.source.url}>
                     {props.source.url}
                 </Link>

@@ -12,6 +12,7 @@ import PageLoading from '../../components/Loading/PageLoading';
 class EditArticlePage extends React.Component {
     constructor(props) {
         super(props);
+        this.myRef = React.createRef()
         this.state = {
             article: null
         }
@@ -42,6 +43,10 @@ class EditArticlePage extends React.Component {
         })
     }
 
+    jumpArticleSection(ref) {
+        this.myRef.current.scrollIntoView();
+    }
+
     render() {
         // If article hasn't loaded yet, render div
         if (!this.state.article) {
@@ -59,7 +64,7 @@ class EditArticlePage extends React.Component {
                 maxWidth="md"
                 spacing={2}
             >
-                <EditArticleHeader article={this.state.article} />
+                <EditArticleHeader id="title" article={this.state.article} />
                 <AddSectionField
                     article_id={this.state.article.id}
                     addSectionToArticle={this.addSectionToArticle}
@@ -67,6 +72,7 @@ class EditArticlePage extends React.Component {
                 />
                 {this.state.article.sections.map((section) =>
                     <EditArticleSection
+                        id={section.id}
                         key={section.id + section.order}
                         section={section}
                         addSectionToArticle={this.addSectionToArticle}
