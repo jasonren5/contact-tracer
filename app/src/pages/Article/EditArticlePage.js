@@ -53,7 +53,12 @@ function EditArticlePage(props) {
                         >
                         </EditArticleSection>
                     )}
-                    {article.sources && <SourcesList editing sources={article.sources} />}
+                    {article.sources &&
+                        <SourcesList
+                            editing
+                            sources={article.sources}
+                            refreshArticle={fetchArticle}
+                        />}
                 </div>
                 :
                 <PageLoading />

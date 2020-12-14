@@ -571,7 +571,6 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
         })
 
 });
-
 function _createArticleWithTitleAndImage(title, image, type, body, source) {
     const db = admin.firestore();
     const batch = db.batch();
@@ -603,6 +602,7 @@ function _createArticleWithTitleAndImage(title, image, type, body, source) {
         user: "generated",
         section: "title",
         deleted: false,
+        created: created,
     };
 
     const newArticleRef = db.collection("articles").doc();
@@ -1269,5 +1269,54 @@ async function _getAllSources(db, article_id) {
         resData.push(doc.data());
     });
     return resData;
+}
 
+exports.deleteSource = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+    let article_id = data.article_id;
+    let source_id = data.source_id;
+
+    return _deleteSource(db, article_id, source_id).then((data) => {
+        return data;
+    }).catch((err) => {
+        return {
+            error: err
+        }
+    });
+})
+
+async function _deleteSource(db, article_id, source_id) {
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+
+    if (!source_id) {
+        return {
+            error: 400,
+            message: "source_id cannot be null"
+        }
+    }
+
+    const sourceRef = db.collection("articles").doc(article_id).collection("sources").doc(source_id);
+    const doc = await sourceRef.get();
+
+    // check if doc exists before updating
+    if (doc.exists) {
+        await sourceRef.update({
+            deleted: true
+        });
+
+        return {
+            status: 200,
+            message: "Successfully deleted source",
+        }
+    } else {
+        return {
+            error: 500,
+            message: "cannot delete source"
+        }
+    }
 }

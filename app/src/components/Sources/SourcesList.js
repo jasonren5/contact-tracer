@@ -8,7 +8,6 @@ import EditSourceItem from './EditSourceItem';
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        // flexGrow: 1,
         padding: "1rem",
         marginTop: "2rem",
         marginBottom: "1rem",
@@ -42,7 +41,7 @@ export default function SourcesList(props) {
                 <List>
                     {displaySources.map((source) => {
                         return props.editing ?
-                            <EditSourceItem key={source.order} source={source} />
+                            <EditSourceItem key={source.order} source={source} refreshArticle={props.refreshArticle} />
                             :
                             <SourceItem key={source.order} source={source} />
                     }
