@@ -1,5 +1,5 @@
 import React from 'react';
-import { publishContribution, addSection } from "../../utils/functions/articles"
+import { publishContribution, addSection, getSectionByID } from "../../utils/functions/articles"
 import { withFirebase } from '../../utils/firebase';
 
 import { withStyles } from "@material-ui/core/styles";
@@ -115,6 +115,9 @@ class EditSectionText extends React.Component {
             mergeValue: "",
             sectionHover: false,
         });
+        getSectionByID(this.props.firebase, this.props.section.article_id, this.state.section.id).then((sections) =>{
+            console.log(sections);
+        })
     }
 
     hoverOn() {

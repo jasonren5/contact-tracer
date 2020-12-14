@@ -139,6 +139,17 @@ async function editArticleImage(firebase, article_id, image_url) {
     return response;
 }
 
+async function getSectionByID(firebase, article_id, section_id) {
+    let getSection = firebase.functions.httpsCallable("getSectionByID");
+
+    const response = await getSection({
+        article_id: article_id,
+        section_id: section_id
+    })
+
+    return response.data;
+}
+
 export {
     getFullArticle,
     getAllArticles,
@@ -150,5 +161,6 @@ export {
     getPublishedArticleByID,
     getAllUnpublishedArticles,
     editArticleTitle,
-    editArticleImage
+    editArticleImage,
+    getSectionByID
 };
