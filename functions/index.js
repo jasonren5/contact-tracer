@@ -1227,13 +1227,18 @@ exports.getSectionByID = functions.https.onCall(async (data) => {
     const article_id = data.article_id;
     const section_id = data.section_id;
 
-    var versions = await db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").get();
+    var versions = await db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").orderBy("order").get();
+
+    var prevBody = "";
 
     var promises = versions.docs.map(async (version) => {
         var versionData = version.data();
         versionData.version_id = version.id;
 
         var user_id = versionData.user_id;
+
+        versionData.prevBody = prevBody;
+        prevBody = versionData.body;
 
         try {
             var user = await db.collection("users").doc(user_id).get();
@@ -1244,8 +1249,8 @@ exports.getSectionByID = functions.https.onCall(async (data) => {
             versionData.user = userData;
         } catch (error) {
             var userErrorData = {
-                error: error
-            }
+                    error: "No user found."
+                }
             versionData.user = userErrorData;
         }
        
