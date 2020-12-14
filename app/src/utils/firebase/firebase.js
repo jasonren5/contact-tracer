@@ -13,7 +13,7 @@ class Firebase {
         this.functions = app.functions();
 
         // Local functions line  (uncomment it to use local emulators)
-        this.functions.useFunctionsEmulator("http://localhost:5001");
+        // this.functions.useFunctionsEmulator("http://localhost:5001");
     }
 
     // Firebase Auth API
