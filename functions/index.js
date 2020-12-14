@@ -1220,3 +1220,37 @@ async function _verifyAdmin(db, user_id) {
         admin: userData.admin
     }
 }
+
+exports.getSectionByID = functions.https.onCall(async (data) => {
+    const db = admin.firestore()
+
+    const article_id = data.article_id;
+    const section_id = data.section_id;
+
+    var versions = await db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").get();
+
+    var promises = versions.docs.map(async (version) => {
+        var versionData = version.data();
+        versionData.version_id = version.id;
+
+        var user_id = versionData.user_id;
+
+        try {
+            var user = await db.collection("users").doc(user_id).get();
+
+            var userData = user.data();
+            userData.user_id = user.id;
+
+            versionData.user = userData;
+        } catch (error) {
+            var userErrorData = {
+                error: error
+            }
+            versionData.user = userErrorData;
+        }
+       
+        return versionData;
+    })
+    
+    return Promise.all(promises)
+})
