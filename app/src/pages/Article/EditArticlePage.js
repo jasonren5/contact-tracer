@@ -13,13 +13,18 @@ function EditArticlePage(props) {
     const [article, setArticle] = useState();
 
     useEffect(() => {
+        fetchArticle();
+    }, []);
+
+    const fetchArticle = () => {
+        console.log("here");
         let article_id = props.match.params.articleId
         getFullArticle(props.firebase, article_id).then((article) => {
             setArticle(article);
         }).catch((err) => {
             console.log(err);
         })
-    }, []);
+    }
 
     const addSectionToArticle = (section) => {
         var updateArticle = article;
@@ -45,10 +50,10 @@ function EditArticlePage(props) {
         >
             {article ?
                 <div className="holder">
-                    <EditArticleHeader id="title" article={article} />
+                    <EditArticleHeader id="title" article={article} refreshArticle={fetchArticle} />
                     <AddSectionField
                         article_id={article.id}
-                        addSectionToArticle={addSectionToArticle}
+                        refreshArticle={fetchArticle}
                         order={-1}
                     />
                     {article.sections.map((section) =>
@@ -56,7 +61,7 @@ function EditArticlePage(props) {
                             id={section.id}
                             key={section.id + section.order}
                             section={section}
-                            addSectionToArticle={addSectionToArticle}
+                            refreshArticle={fetchArticle}
                         >
                         </EditArticleSection>
                     )}

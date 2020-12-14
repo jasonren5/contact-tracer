@@ -142,7 +142,7 @@ export default function EditSectionImage(props) {
                     </div>
                     <AddSectionField
                         article_id={section.article_id}
-                        addSectionToArticle={props.addSectionToArticle}
+                        refreshArticle={props.refreshArticle}
                         order={section.order}
                     />
                 </div>

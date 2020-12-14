@@ -73,6 +73,8 @@ export default function EditImageModal(props) {
 
         editArticleImage(firebase, props.article_id, state.editValue).then((response) => {
             props.updateImage(response.data.new_image);
+
+            props.refreshArticle();
             setState(prevState => ({
                 ...prevState,
                 merging: false,

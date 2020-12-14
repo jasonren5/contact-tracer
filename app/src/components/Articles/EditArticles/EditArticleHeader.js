@@ -25,9 +25,15 @@ export default function EditArticleHeader(props) {
             <EditHeaderText
                 title={props.article.title}
                 article_id={props.article.id}
+                refreshArticle={props.refreshArticle}
             />
             {props.article.image_url &&
-                <EditHeaderImage section={fakeSection} classes={classes.image} article_id={props.article.id} />
+                <EditHeaderImage
+                    section={fakeSection}
+                    classes={classes.image}
+                    article_id={props.article.id}
+                    refreshArticle={props.refreshArticle}
+                />
             }
         </div>
     );

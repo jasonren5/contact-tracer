@@ -93,6 +93,7 @@ export default function EditSectionImage(props) {
                 updateImage={handleUpdateImage}
                 section={section}
                 article_id={props.article_id}
+                refreshArticle={props.refreshArticle}
             />
         </div>
     );

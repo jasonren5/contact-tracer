@@ -43,7 +43,8 @@ class PublishedArticle {
         const deleted = sourceData.deleted;
         const user_id = sourceData.user;
         const section_id = sourceData.section;
-        var newSource = new Source(this.article_id, source_id, url, deleted, user_id, section_id);
+        const created = sourceData.created;
+        var newSource = new Source(this.article_id, source_id, url, deleted, user_id, section_id, created);
         this.sources.push(newSource);
     }
 }

@@ -62,7 +62,7 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
     promises.push(db.collection("articles").doc(article_id).collection("sections").orderBy('order').get());
-    promises.push(db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get());
+    promises.push(db.collection("articles").doc(article_id).collection("sources").orderBy('created').get());
     return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
@@ -105,7 +105,7 @@ async function _getFullArticleByID(db, article_id) {
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
     promises.push(db.collection("articles").doc(article_id).collection("sections").orderBy('order').get());
-    promises.push(db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get());
+    promises.push(db.collection("articles").doc(article_id).collection("sources").orderBy('created').get());
     return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
@@ -1216,12 +1216,14 @@ exports.addSourceToArticle = functions.https.onCall((data, context) => {
     const section_id = data.section_id;
     const source_url = data.source_url;
     const user_id = (context.auth ? context.auth.uid : null);
+    const created = admin.firestore.Timestamp.now();
 
     const sourceData = {
         url: source_url,
         user: user_id,
         section: section_id,
         deleted: false,
+        created: created,
     };
 
     if (!article_id) {

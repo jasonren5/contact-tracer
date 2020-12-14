@@ -57,7 +57,7 @@ export default function AddSectionField(props) {
 
         addSection(firebase, section, finalSource).then((data) => {
             console.log(data);
-            props.addSectionToArticle(data.newSection);
+            props.refreshArticle();
             setAddText(false);
         });
     };
@@ -66,7 +66,7 @@ export default function AddSectionField(props) {
         let section = new ArticleSection(props.article_id, null, null, "image", imageURL, (props.order + 1), []);
 
         addSection(firebase, section, imageURL).then((data) => {
-            props.addSectionToArticle(data.newSection);
+            props.refreshArticle();
             setAddImage(false);
         });
     };

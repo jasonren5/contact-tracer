@@ -155,7 +155,6 @@ class EditSectionText extends React.Component {
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
         const finalSource = this.state.source === "" ? null : this.state.source;
-
         publishContribution(this.props.firebase, newSection, newBody, this.state.merging, finalSource).then((response) => {
             // handle merge conflict
             if (response.conflict) {
@@ -174,6 +173,7 @@ class EditSectionText extends React.Component {
                 return;
             }
             else {
+                this.props.refreshArticle();
                 this.setState({
                     editing: false,
                     section: response.section,
@@ -192,7 +192,7 @@ class EditSectionText extends React.Component {
         let section = new ArticleSection(this.state.section.article_id, null, null, "text", "This is a new section, edit it to add content.", (this.state.section.order + 1), []);
         addSection(this.props.firebase, section).then((section) => {
             this.setState({ publishingNewSection: false });
-            this.props.addSectionToArticle(section);
+            this.props.refreshArticle();
         })
     }
 
@@ -328,7 +328,7 @@ class EditSectionText extends React.Component {
                         }
                         < AddSectionField
                             article_id={this.state.section.article_id}
-                            addSectionToArticle={this.props.addSectionToArticle}
+                            refreshArticle={this.props.refreshArticle}
                             order={this.state.section.order}
                         />
                     </div>
