@@ -1221,13 +1221,11 @@ async function _verifyAdmin(db, user_id) {
     }
 }
 
-exports.getSectionByID = functions.https.onCall(async (data, context) => {
+exports.getSectionByID = functions.https.onCall(async (data) => {
     const db = admin.firestore()
 
     const article_id = data.article_id;
     const section_id = data.section_id;
-    console.log(article_id);
-    console.log(section_id);
 
     var versions = await db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").get();
 
@@ -1244,11 +1242,11 @@ exports.getSectionByID = functions.https.onCall(async (data, context) => {
             userData.user_id = user.id;
 
             versionData.user = userData;
-        } catch {
-            var userData = {
-
+        } catch (error) {
+            var userErrorData = {
+                error: error
             }
-            versionData.user = userData;
+            versionData.user = userErrorData;
         }
        
         return versionData;
