@@ -8,12 +8,15 @@
     body: the body text for this version of the section.
 */
 class SectionVersion {
-    constructor(article_id, section_id, id, previous_version_id, user_id, body) {
+    constructor(article_id, section_id, data) {
         this.article_id = article_id;
         this.section_id = section_id;
-        this.id = id;
-        this.previous_version_id = previous_version_id;
-        this.user_id = user_id;
-        this.body = body;
+        this.id = data.version_id;
+        this.previous_version_id = data.previous_version_id;
+        this.user = data.user;
+        this.body = data.body;
+        this.prevBody = data.prevBody;
     }
 }
+
+export default SectionVersion;

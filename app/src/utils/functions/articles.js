@@ -1,6 +1,7 @@
 import Article from '../../classes/Article'
 import ArticleSection from '../../classes/ArticleSection'
 import PublishedArticle from '../../classes/PublishedArticle'
+import SectionVersion from '../../classes/SectionVersion';
 
 async function getFullArticle(firebase, article_id) {
 
@@ -147,7 +148,13 @@ async function getSectionByID(firebase, article_id, section_id) {
         section_id: section_id
     })
 
-    return response.data;
+    var versions = [];
+
+    response.data.forEach((versionData) => {
+        versions.push(new SectionVersion(article_id, section_id, versionData))
+    })
+
+    return versions;
 }
 
 export {

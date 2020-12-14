@@ -14,6 +14,10 @@ import { compose } from 'recompose';
 import ArticleSection from '../../classes/ArticleSection';
 import AddSectionField from './AddSectionField';
 
+import VersionHistory from '../Articles/EditArticles/VesionHistory'
+import HistoryIcon from '@material-ui/icons/History';
+
+
 import {
     TextField,
     Button,
@@ -82,6 +86,7 @@ class EditSectionText extends React.Component {
             sectionHover: false,
             publishingDelete: false,
             removeModal: false,
+            showHistory: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
@@ -90,6 +95,8 @@ class EditSectionText extends React.Component {
         this.handleRemoveSection = this.handleRemoveSection.bind(this);
         this.handleCloseRemoveModal = this.handleCloseRemoveModal.bind(this);
         this.handleOpenRemoveModal = this.handleOpenRemoveModal.bind(this);
+        this.handleShowHistory = this.handleShowHistory.bind(this);
+        this.handleHideHistory = this.handleHideHistory.bind(this);
 
         this.hoverOn = this.hoverOn.bind(this);
         this.hoverOff = this.hoverOff.bind(this);
@@ -115,8 +122,17 @@ class EditSectionText extends React.Component {
             mergeValue: "",
             sectionHover: false,
         });
-        getSectionByID(this.props.firebase, this.props.section.article_id, this.state.section.id).then((sections) =>{
-            console.log(sections);
+    }
+
+    handleShowHistory() {
+        this.setState({
+            showHistory:true
+        })
+    }
+
+    handleHideHistory() {
+        this.setState({
+            showHistory:false
         })
     }
 
@@ -227,6 +243,9 @@ class EditSectionText extends React.Component {
                         )}
                     </CardContent>
                     <CardActions>
+                        <IconButton onClick={this.handleShowHistory}>
+                            <HistoryIcon />
+                        </IconButton>
                         <Button
                             className={classes.submitButton}
                             aria-label="submit edit"
@@ -321,6 +340,7 @@ class EditSectionText extends React.Component {
                             addSectionToArticle={this.props.addSectionToArticle}
                             order={this.state.section.order}
                         />
+                        <VersionHistory section={this.props.section} open={this.state.showHistory} close={this.handleHideHistory} />
                     </div>
                 }
             </div>
