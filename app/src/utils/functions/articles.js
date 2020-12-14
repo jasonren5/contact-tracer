@@ -14,7 +14,7 @@ async function getFullArticle(firebase, article_id) {
             sections.push(s)
         });
 
-        var article = new Article(data.article_data.article_id, data.article_data.title, data.article_data.image_url, "Hello, World!", sections);
+        var article = new Article(data.article_data.article_id, data.article_data.title, data.article_data.image_url, "Hello, World!", sections, data.sources_data);
         return article;
     });
 

@@ -69,9 +69,11 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
 
         let sectionData = values[1];
 
-        var sourceData = [];
+        var sourcesData = [];
         values[2].forEach(source => {
-            sourceData.push(source.data());
+            var sourceData = source.data();
+            source["source_id"] = source.id;
+            sourcesData.push(sourceData);
         });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
@@ -90,7 +92,7 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
         let data = {
             article_data: articleData,
             section_data: sections,
-            sources_data: sourceData,
+            sources_data: sourcesData,
         }
 
         return data;
@@ -110,9 +112,11 @@ async function _getFullArticleByID(db, article_id) {
 
         let sectionData = values[1];
 
-        var sourceData = [];
+        var sourcesData = [];
         values[2].forEach(source => {
-            sourceData.push(source.data());
+            var sourceData = source.data();
+            source["source_id"] = source.id;
+            sourcesData.push(sourceData);
         });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
@@ -131,7 +135,7 @@ async function _getFullArticleByID(db, article_id) {
         let data = {
             article_data: articleData,
             section_data: sections,
-            sources_data: sourceData,
+            sources_data: sourcesData,
         }
 
         return data;
@@ -697,7 +701,6 @@ exports.publishArticleByID = functions.https.onRequest(async (req, res) => {
 })
 
 // Shared functionality for publishing an article
-// TODO: Handle Sources
 async function _publishArticleByID(db, article_id) {
     const article = await _getFullArticleByID(db, article_id);
     const type = (article.article_data.type ? article.article_data.type : "general");
@@ -1253,8 +1256,6 @@ exports.getAllSources = functions.https.onCall((data) => {
 })
 
 async function _getAllSources(db, article_id) {
-    // TODO: Handle real-time updates to the collection and maybe trigger this or something? : https://cloud.google.com/firestore/docs/query-data/listen
-
     const snapshot = await db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get();
 
     if (snapshot.empty) {

@@ -2,7 +2,7 @@ import React from 'react';
 import EditArticleSection from "../../components/Articles/EditArticles/EditArticleSection";
 import EditArticleHeader from "../../components/Articles/EditArticles/EditArticleHeader";
 import AddSectionField from "../../components/Sections/AddSectionField";
-import { getFullArticle } from '../../utils/functions/articles';
+import { getFullArticle, getAllSources } from '../../utils/functions/articles';
 import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { Container } from '@material-ui/core';
 
