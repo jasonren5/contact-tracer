@@ -62,11 +62,17 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
     promises.push(db.collection("articles").doc(article_id).collection("sections").orderBy('order').get());
+    promises.push(db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get());
     return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
 
         let sectionData = values[1];
+
+        var sourceData = [];
+        values[2].forEach(source => {
+            sourceData.push(source.data());
+        });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
             const versions = await db.collection("articles").doc(article_id).collection("sections").doc(doc.id).collection("versions").orderBy('order', 'desc').get();
@@ -83,7 +89,8 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
 
         let data = {
             article_data: articleData,
-            section_data: sections
+            section_data: sections,
+            sources_data: sourceData,
         }
 
         return data;
@@ -96,11 +103,17 @@ async function _getFullArticleByID(db, article_id) {
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
     promises.push(db.collection("articles").doc(article_id).collection("sections").orderBy('order').get());
+    promises.push(db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get());
     return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
 
         let sectionData = values[1];
+
+        var sourceData = [];
+        values[2].forEach(source => {
+            sourceData.push(source.data());
+        });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
             const versions = await db.collection("articles").doc(article_id).collection("sections").doc(doc.id).collection("versions").orderBy('order', 'desc').get();
@@ -117,7 +130,8 @@ async function _getFullArticleByID(db, article_id) {
 
         let data = {
             article_data: articleData,
-            section_data: sections
+            section_data: sections,
+            sources_data: sourceData,
         }
 
         return data;
@@ -401,56 +415,6 @@ exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
         return error;
     });
 });
-
-/*
-* Test GET request for the getAllArticles
-*/
-
-// exports.getArticleListGetRequest = functions.https.onRequest(async (req, res) => {
-//     // Get db and articles
-//     const db = admin.firestore();
-//     const articlesPromise = db.collection("articles").get();
-
-//     // Articles promise
-//     articlesPromise.then(async (snapshot) => {
-//         // Preset return array
-//         let resData = { "article_list": [] };
-//         // For each article
-//         await Promise.all(snapshot.docs.map(async (article) => {
-//             // Default the snippet to having no summary data
-//             var snippet = "There is nothing written yet for this article. Be the first to contribute!";
-
-//             // See if there is section data 
-//             const sectionQuery = await db.collection("articles").doc(article.id).collection("sections").where("type", "==", "text").orderBy("order", "asc").limit(1).get();
-//             var section = sectionQuery.docs[0];
-
-//             // If there is section data 
-//             if (section !== undefined) {
-//                 // Get the most recent version, and retrieve body and save to snippet
-//                 const versionQuery = await db.collection("articles").doc(article.id).collection("sections").doc(section.id).collection("versions").orderBy("order", "desc").limit(1).get();
-//                 var latestVersion = versionQuery.docs[0];
-//                 snippet = latestVersion.data().body;
-
-//                 // If the snippet is over 30 characters, trunacte it
-//                 if (snippet.length > 30) {
-//                     snippet = snippet.substring(0, 29) + "...";
-//                 }
-//             }
-//             // Push the article information to the array
-//             resData["article_list"].push({
-//                 "id": article.id,
-//                 "title": article.data().title,
-//                 "image_url": article.data().image_url,
-//                 "summary": snippet
-//             });
-//         }));
-//         // send the array of articles
-//         res.send(resData);
-//     }).catch(error => {
-//         console.log(error);
-//         res.send(error);
-//     });
-// });
 
 /*
 *   Creates a blank article with two sections that have one version each
@@ -1291,9 +1255,16 @@ exports.getAllSources = functions.https.onCall((data) => {
 async function _getAllSources(db, article_id) {
     // TODO: Handle real-time updates to the collection and maybe trigger this or something? : https://cloud.google.com/firestore/docs/query-data/listen
 
-    const sourcePromise = await db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get();
+    const snapshot = await db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get();
 
-    var data = sourcePromise.data();
+    if (snapshot.empty) {
+        return "No source found";
+    }
 
-    return data;
+    var resData = [];
+    snapshot.forEach(doc => {
+        resData.push(doc.data());
+    });
+    return resData;
+
 }

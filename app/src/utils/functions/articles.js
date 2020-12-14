@@ -168,10 +168,9 @@ async function addSourceToArticle(firebase, section, source) {
 
 async function getAllSources(firebase, article_id) {
     let getAllSourcesByID = firebase.functions.httpsCallable("getAllSources");
-
     var response = await getAllSourcesByID({ article_id: article_id });
 
-    return response.data;
+    return response;
 }
 
 export {
