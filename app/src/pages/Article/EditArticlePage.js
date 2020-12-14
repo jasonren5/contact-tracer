@@ -17,7 +17,6 @@ function EditArticlePage(props) {
     }, []);
 
     const fetchArticle = () => {
-        console.log("here");
         let article_id = props.match.params.articleId
         getFullArticle(props.firebase, article_id).then((article) => {
             setArticle(article);
@@ -25,21 +24,6 @@ function EditArticlePage(props) {
             console.log(err);
         })
     }
-
-    const addSectionToArticle = (section) => {
-        var updateArticle = article;
-        for (let i = section.order; i < updateArticle.sections.length; i++) {
-            updateArticle.sections[i].order += 1;
-        }
-
-        updateArticle.sections.splice(section.order, 0, section);
-        setArticle(updateArticle);
-    }
-
-    // jumpArticleSection(ref) {
-    //     this.myRef.current.scrollIntoView();
-    // }
-
 
     // Render the article
     return (
@@ -50,7 +34,11 @@ function EditArticlePage(props) {
         >
             {article ?
                 <div className="holder">
-                    <EditArticleHeader id="title" article={article} refreshArticle={fetchArticle} />
+                    <EditArticleHeader
+                        id="title"
+                        article={article}
+                        refreshArticle={fetchArticle}
+                    />
                     <AddSectionField
                         article_id={article.id}
                         refreshArticle={fetchArticle}
