@@ -38,7 +38,7 @@ class ProfileSections extends React.Component {
 
     render() {
         return (
-            <Grid item xs={8}>
+            <Grid item sm={12} md={8}>
                 <Card style={cardStyles}>
                     <Paper square>
                         <Tabs

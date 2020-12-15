@@ -4,6 +4,7 @@ import { getPublicProfileData } from '../../utils/functions/users';
 import { withFirebase } from '../../utils/firebase';
 import PageLoading from '../../components/Loading/PageLoading';
 import ProfileCardItem from './ProfileCardItem';
+import Chip from '@material-ui/core/Chip';
 
 const cardStyles = {
     margin: 25,
@@ -36,7 +37,7 @@ class ProfileCard extends React.Component {
             return this.state.user_data.name;
         }
         const email = this.state.user_data.username;
-        var splitEmail = email.split("@")
+        var splitEmail = email.split("@");
         return splitEmail[0];
     }
 
@@ -53,8 +54,9 @@ class ProfileCard extends React.Component {
         const bio = (user_data.bio ? user_data.bio : "This user hasn't added a bio yet.")
         const twitter = (user_data.twitter ? user_data.twitter : "Twitter not added.")
         const linkedin = (user_data.linkedin ? user_data.linkedin : "LinkedIn not added.")
+        const expertises = (user_data.expertises ? user_data.expertises : []);
         return (
-            <Grid item xs={4}>
+            <Grid item sm={12} md={4}>
                 <Paper style={cardStyles}>
                     <h1>{this.getUsername()}</h1>
                     <p><strong>{user_data.number_of_contributions}</strong> Contributions</p>
@@ -67,11 +69,23 @@ class ProfileCard extends React.Component {
                     <ProfileCardItem user={user_data} fieldKey="username" fieldValue={user_data.username} multiline={false} private={false}/>
                     <ProfileCardItem user={user_data} fieldKey="twitter" fieldValue={twitter} multiline={false} private={this.props.private}/>
                     <ProfileCardItem user={user_data} fieldKey="linkedin" fieldValue={linkedin} multiline={false} private={this.props.private}/>
-
+                    {(expertises.length > 0 || user_data.admin) && 
+                        <div>
+                            <Divider />
+                            {user_data.expertises.map((expertise) => <Chip label={expertise + " expert"} color="primary" style={chipStyles}/>)}
+                            {user_data.admin && <Chip label="admin" color="secondary" style={chipStyles}/>}
+                        </div>
+                    }
                 </Paper>
             </Grid>
         )
     }
+}
+
+const chipStyles = {
+    marginLeft: 5,
+    marginRight: 5,
+    marginTop: 15
 }
 
 export default withFirebase(ProfileCard);
