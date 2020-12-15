@@ -15,6 +15,8 @@ const Diff = require('diff');
 class VersionCard extends React.Component {
     constructor(props) {
         super(props);
+
+        this.restoreVersion = this.restoreVersion.bind(this);
     }
 
     getBlockStyles(block) {
@@ -33,6 +35,10 @@ class VersionCard extends React.Component {
         };
     }
 
+    restoreVersion() {
+        this.props.restoreVersion(this.props.version.body);
+    }
+
     render() {
         const difs = Diff.diffChars(this.props.version.prevBody, this.props.version.body)
         return (
@@ -46,7 +52,7 @@ class VersionCard extends React.Component {
                     </Typography>
                 </CardContent>
                 <CardActions>
-                    <IconButton aria-label="Restore this Version">
+                    <IconButton onClick={this.restoreVersion} aria-label="Restore this Version">
                         <RotateLeftIcon />
                     </IconButton>
                 </CardActions>
