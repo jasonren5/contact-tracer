@@ -96,10 +96,11 @@ export default function ViewSourceModal(props) {
                     <DialogActions>
                         <Button
                             onClick={props.closeModal}
-                            color="primary"
+                            color="secondary"
+                            variant="contained"
                         >
                             Close
-                    </Button>
+                        </Button>
                     </DialogActions>
                 </Dialog>
             }
