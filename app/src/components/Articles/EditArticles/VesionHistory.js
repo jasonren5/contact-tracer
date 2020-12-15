@@ -1,17 +1,20 @@
-import React, { version } from 'react';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography'
-import VersionCard from './VersionCard';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import Chip from '@material-ui/core/Chip';
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton'
+import React from 'react';
 
 import { withFirebase } from '../../../utils/firebase';
-import { getSectionByID } from "../../../utils/functions/articles"
-import { Icon } from '@material-ui/core';
+import { getSectionByID } from "../../../utils/functions/articles";
+
+import VersionCard from "./VersionCard";
+
+import {
+    Paper,
+    Typography,
+    DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogActions,
+    Chip,
+    Button
+} from '@material-ui/core';
 
 class VersionHistory extends React.Component {
     constructor(props) {
@@ -28,7 +31,7 @@ class VersionHistory extends React.Component {
     }
 
     componentDidMount() {
-        getSectionByID(this.props.firebase, this.props.section.article_id, this.props.section.id).then((versions) =>{
+        getSectionByID(this.props.firebase, this.props.section.article_id, this.props.section.id).then((versions) => {
             this.setState({
                 versions: versions
             })
@@ -47,9 +50,9 @@ class VersionHistory extends React.Component {
         })
     }
 
-    componentDidUpdate(){
-        if(this.props.open != this.state.open){
-            this.setState({          
+    componentDidUpdate() {
+        if (this.props.open != this.state.open) {
+            this.setState({
                 open: this.props.open
             });
         }
@@ -61,70 +64,79 @@ class VersionHistory extends React.Component {
     }
 
     render() {
-        if(this.state.versions === null) {
+        if (this.state.versions === null) {
             return (
                 <Dialog
                     open={this.state.open}
                     onClose={this.props.close}
                     maxWidth="sm"
                 >
-                        <Paper>
-                            <DialogTitle style={titlePaperStyles}>
-                                <Typography variant="h5" style={titleStyles}>
-                                    Version History
+                    <Paper>
+                        <DialogTitle style={titlePaperStyles}>
+                            <Typography variant="h5" style={titleStyles}>
+                                Version History
                                 </Typography>
-                            </DialogTitle>
-                            <DialogContent>
-                                <Typography variant="body2" color="textSecondary">
-                                    Loading...
+                        </DialogTitle>
+                        <DialogContent>
+                            <Typography variant="body2" color="textSecondary">
+                                Loading...
                                 </Typography>
-                            </DialogContent>
-                        </Paper>
+                        </DialogContent>
+                    </Paper>
                 </Dialog>
             )
         }
-        if(this.state.versions.length < 1) {
+        if (this.state.versions.length < 1) {
             return (
                 <Dialog
                     open={this.state.open}
                     onClose={this.props.close}
                     maxWidth="sm"
                 >
-                        <Paper>
-                            <DialogTitle style={titlePaperStyles}>
-                                <Typography variant="h5" style={titleStyles}>
-                                    Version History
+                    <Paper>
+                        <DialogTitle style={titlePaperStyles}>
+                            <Typography variant="h5" style={titleStyles}>
+                                Version History
                                 </Typography>
-                            </DialogTitle>
-                            <DialogContent>
-                                <Typography variant="body2" color="textSecondary">
-                                    No versions to show.
+                        </DialogTitle>
+                        <DialogContent>
+                            <Typography variant="body2" color="textSecondary">
+                                No versions to show.
                                 </Typography>
-                            </DialogContent>
-                        </Paper>
+                        </DialogContent>
+                    </Paper>
                 </Dialog>
             )
         }
-        return(
+        return (
             <Dialog
                 open={this.state.open}
                 onClose={this.props.close}
                 maxWidth="sm"
             >
-                    <Paper>
-                        <DialogTitle style={titlePaperStyles}>
-                            <Typography variant="h5" style={titleStyles}>
-                                Version History
+                <Paper>
+                    <DialogTitle style={titlePaperStyles}>
+                        <Typography variant="h5" style={titleStyles}>
+                            Version History
                             </Typography>
-                        </DialogTitle>
-                        <DialogContent>
-                            <Chip label="First Contribution" color="primary" size="small" style={chipStyles} />
-                            {this.state.versions.map(
-                                (version, index) => <VersionCard key={index.toString()} version={version} restoreVersion={this.restoreVersion}/>
-                            )}
-                            <Chip label="Most Recent Contribution" color="primary" size="small" style={chipStyles}/>
-                        </DialogContent>
-                    </Paper>
+                    </DialogTitle>
+                    <DialogContent>
+                        <Chip label="First Contribution" color="primary" size="small" style={chipStyles} />
+                        {this.state.versions.map(
+                            (version, index) => <VersionCard key={index.toString()} version={version} restoreVersion={this.restoreVersion} />
+                        )}
+                        <Chip label="Most Recent Contribution" color="primary" size="small" style={chipStyles} />
+                    </DialogContent>
+                    <DialogActions>
+                        <Button
+                            onClick={this.props.close}
+                            variant="contained"
+                            color="secondary"
+                        >
+                            Close
+                        </Button>
+                    </DialogActions>
+                </Paper>
             </Dialog>
         )
     }
