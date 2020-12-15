@@ -135,6 +135,7 @@ async function getPublishedArticleByID(firebase, article_id) {
 
     const response = await getPublishedArticleByID({ article_id: article_id });
 
+
     var article = new PublishedArticle(response.data)
 
     return article;
