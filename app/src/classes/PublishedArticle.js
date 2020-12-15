@@ -22,11 +22,18 @@ class PublishedArticle {
         this.strikes = data.strikes;
         this.sections = [];
         this.sources = [];
-        data.sources.map((source, index) => {
-            if (!source.deleted) {
-                this.addSource(source, index);
-            }
-        });
+        if(data.sources) {
+          data.sources.map((source, index) => {
+              if (!source.deleted) {
+                  this.addSource(source, index);
+              }
+          });
+          data.sections.forEach((section, index) => {
+              this.addSection(section, index);
+          });
+        }
+        this.contributors = (data.contributors ? data.contributors : []);
+      
         data.sections.forEach((section, index) => {
             this.addSection(section, index);
         });
