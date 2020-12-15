@@ -11,7 +11,6 @@ import Source from './Source';
 */
 class PublishedArticle {
     constructor(data) {
-        console.log(data);
         this.id = data.article_id;
         this.title = data.title;
         this.image_url = data.image_url;
@@ -22,21 +21,17 @@ class PublishedArticle {
         this.strikes = data.strikes;
         this.sections = [];
         this.sources = [];
-        if(data.sources) {
-          data.sources.map((source, index) => {
-              if (!source.deleted) {
-                  this.addSource(source, index);
-              }
-          });
-          data.sections.forEach((section, index) => {
-              this.addSection(section, index);
-          });
+        if (data.sources) {
+            data.sources.map((source, index) => {
+                if (!source.deleted) {
+                    this.addSource(source, index);
+                }
+            });
+            data.sections.forEach((section, index) => {
+                this.addSection(section, index);
+            });
         }
         this.contributors = (data.contributors ? data.contributors : []);
-      
-        data.sections.forEach((section, index) => {
-            this.addSection(section, index);
-        });
     }
     addSection(sectionData, index) {
         const section_id = sectionData.section_id;

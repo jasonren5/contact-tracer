@@ -148,8 +148,8 @@ async function _getFullArticleByID(db, article_id) {
 
             versions.forEach((version) => {
                 const user_id = version.data().user_id;
-                if(user_id) {
-                    contributors[user_id] = (contributors[user_id] ? contributors[user_id] + 1 : 1 );
+                if (user_id) {
+                    contributors[user_id] = (contributors[user_id] ? contributors[user_id] + 1 : 1);
                 }
             })
 
@@ -825,7 +825,7 @@ async function _getPublishedArticleByID(db, article_id) {
     const articleJSON = JSON.parse(articleJSONString);
 
     var contributors = [];
-    if(data.contributors_json) {
+    if (data.contributors_json) {
         contributors = JSON.parse(data.contributors_json)
     }
 
@@ -837,10 +837,23 @@ async function _getPublishedArticleByID(db, article_id) {
     resData.type = data.type;
     resData.updated = data.updated;
     resData.sections = articleJSON.section_data;
+    resData.sources = articleJSON.sources_data;
     resData.contributors = contributors;
 
     return resData;
 }
+
+// exports.testGetPublishedArticle = functions.https.onRequest((req, res) => {
+//     // Grab the id parameter.
+//     const db = admin.firestore();
+//     const article_id = "0riTwHPCwLlqqnCaqeOj";
+
+//     return _getPublishedArticleByID(db, article_id).then((data) => {
+//         res.send(data);
+//     }).catch((err) => {
+//         res.send(err);
+//     });
+// });
 
 /*
 *   At midnight every day, gets top english headlines from news API, 

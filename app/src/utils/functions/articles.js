@@ -77,7 +77,6 @@ async function publishContribution(firebase, section, newBody, merging, source) 
 
         if (source) {
             var sourceObject = await addSourceToArticle(firebase, newSection, source);
-            console.log(sourceObject);
             return {
                 section: newSection,
                 conflict: conflict,
@@ -142,7 +141,6 @@ async function getPublishedArticleByID(firebase, article_id) {
     let getPublishedArticleByID = firebase.functions.httpsCallable("getPublishedArticleByID");
 
     const response = await getPublishedArticleByID({ article_id: article_id });
-
 
     var article = new PublishedArticle(response.data)
 

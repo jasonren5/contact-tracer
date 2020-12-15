@@ -21,6 +21,7 @@ class ArticlePage extends React.Component {
     componentDidMount() {
         let article_id = this.props.match.params.articleId
         getPublishedArticleByID(this.props.firebase, article_id).then((article) => {
+            console.log(article);
             this.setState({
                 article: article
             });
