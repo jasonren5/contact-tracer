@@ -1,5 +1,5 @@
 import React from 'react';
-import Section from "../../components/Articles/ArticleSection";
+import ArticleSection from "../../components/Articles/ArticleSection";
 import ArticleHeader from "../../components/Articles/ArticleHeader";
 import { Container, Grid } from '@material-ui/core';
 import PageLoading from '../../components/Loading/PageLoading';
@@ -61,7 +61,7 @@ class ArticlePage extends React.Component {
                     </Grid>
                 </Grid>
                 {this.state.article.sections.map((section) =>
-                    <Section key={section.id} section={section}></Section>
+                    <ArticleSection key={section.id} section={section} article_id={this.state.article.id} />
                 )}
                 {this.state.article.sources &&
                     <SourcesList

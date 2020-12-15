@@ -1,5 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import ImageSectionSource from '../Sources/ImageSectionSource';
 
 const useStyles = makeStyles((theme) => ({
     image: {
@@ -18,6 +19,7 @@ export default function SectionImage(props) {
     return (
         <div className={classes.wrapper}>
             <img src={props.section.body} alt={props.section.alt_text} className={classes.image} />
+            <ImageSectionSource article_id={props.article_id} sources={props.section.sources} />
         </div>
     );
 }

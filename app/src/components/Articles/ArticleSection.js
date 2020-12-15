@@ -10,9 +10,9 @@ class ArticleSection extends React.Component {
     renderCorrectSection() {
         switch (this.props.section.type) {
             case "text":
-                return (<SectionText section={this.props.section}></SectionText>);
+                return (<SectionText article_id={this.props.article_id} section={this.props.section}></SectionText>);
             case "image":
-                return (<SectionImage section={this.props.section}></SectionImage>);
+                return (<SectionImage article_id={this.props.article_id} section={this.props.section}></SectionImage>);
             default:
                 console.log("error loading section");
                 return (<div></div>)
