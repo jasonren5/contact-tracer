@@ -70,10 +70,15 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
         let sectionData = values[1];
 
         var sourcesData = [];
+        var sourceIndexCounter = 1;
         values[2].forEach(source => {
             var sourceData = source.data();
-            sourceData["source_id"] = source.id;
-            sourcesData.push(sourceData);
+            if (!sourceData.deleted) {
+                sourceData["source_id"] = source.id;
+                sourceData["order"] = sourceIndexCounter;
+                sourcesData.push(sourceData);
+                sourceIndexCounter += 1;
+            }
         });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
@@ -122,10 +127,15 @@ async function _getFullArticleByID(db, article_id) {
         let sectionData = values[1];
 
         var sourcesData = [];
+        var sourceIndexCounter = 1;
         values[2].forEach(source => {
             var sourceData = source.data();
-            source["source_id"] = source.id;
-            sourcesData.push(sourceData);
+            if (!sourceData.deleted) {
+                sourceData["source_id"] = source.id;
+                sourceData["order"] = sourceIndexCounter;
+                sourcesData.push(sourceData);
+                sourceIndexCounter += 1;
+            }
         });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
@@ -1275,18 +1285,26 @@ exports.getAllSources = functions.https.onCall((data) => {
 })
 
 async function _getAllSources(db, article_id) {
-    const snapshot = await db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get();
+    const snapshot = await db.collection("articles").doc(article_id).collection("sources").orderBy('created').get();
 
     if (snapshot.empty) {
         return "No source found";
     }
 
     var resData = [];
-    snapshot.forEach(doc => {
-        resData.push(doc.data());
+    var indexCounter = 1;
+    snapshot.forEach((source) => {
+        var sourceData = source.data();
+        if (!sourceData.deleted) {
+            sourceData["source_id"] = source.id;
+            sourceData["order"] = indexCounter;
+            resData.push(sourceData);
+            indexCounter += 1;
+        }
     });
     return resData;
 }
+
 
 exports.deleteSource = functions.https.onCall(async (data) => {
     const db = admin.firestore();

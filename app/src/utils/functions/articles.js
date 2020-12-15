@@ -13,14 +13,13 @@ async function getFullArticle(firebase, article_id) {
         var sections = [];
         var sources = [];
 
-        console.log(data);
-        data.sources_data.map((source, index) => {
+        data.sources_data.map(source => {
             if (!source.deleted) {
-                var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user, source.section, source.created, index + 1);
+                var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user, source.section, source.created, source.order);
                 sources.push(s);
             }
         });
-
+        console.log(data);
         data.section_data.forEach((section, index) => {
             var s = new ArticleSection(data.article_data.article_id, section.section_id, section.current_version, section.type, section.body, index, [], section.sources);
             sections.push(s)

@@ -43,7 +43,6 @@ class ContributeList extends React.Component {
                 spacing={4}
             >
                 {this.state.articles.map((article, index) =>
-
                     <ArticleContainer
                         key={article.id + index}
                         contribute

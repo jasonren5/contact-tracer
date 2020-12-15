@@ -79,6 +79,7 @@ export default function EditSectionImage(props) {
             closeEditImageModal();
             closeConfirmModal();
             setPublishingDelete(false);
+            props.refreshArticle();
         });
     }
 
