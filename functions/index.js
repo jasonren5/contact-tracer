@@ -624,14 +624,6 @@ function _createArticleWithTitleAndImage(title, image, type, body, source) {
         type: "text"
     };
 
-    const sourceData = {
-        url: source,
-        user: "generated",
-        section: "title",
-        deleted: false,
-        created: created,
-    };
-
     const newArticleRef = db.collection("articles").doc();
     batch.set(newArticleRef, articleData);
 
@@ -640,6 +632,14 @@ function _createArticleWithTitleAndImage(title, image, type, body, source) {
 
     const versionRef = newSectionRef.collection("versions").doc();
     batch.set(versionRef, versionData);
+
+    const sourceData = {
+        url: source,
+        user: "generated",
+        section: newArticleRef.id,
+        deleted: false,
+        created: created,
+    };
 
     const newSourceRef = newArticleRef.collection("sources").doc();
     batch.set(newSourceRef, sourceData);
