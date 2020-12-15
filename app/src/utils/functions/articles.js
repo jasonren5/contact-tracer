@@ -205,6 +205,7 @@ async function editSource(firebase, article_id, source_id, new_url) {
     });
 
     return response;
+}
 async function getSectionByID(firebase, article_id, section_id) {
     let getSection = firebase.functions.httpsCallable("getSectionByID");
 
