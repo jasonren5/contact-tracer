@@ -884,7 +884,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
 *   Failsafe in case the scheduled function fails and we need to 
 */
 exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
-    const articlesToCreate = 3;
+    const articlesToCreate = req.query.article_number;
 
     const apiKey = functions.config().news_api.key;
     const url = "https://newsapi.org/v2/top-headlines?language=en&sources=google-news&apiKey=" + apiKey;
