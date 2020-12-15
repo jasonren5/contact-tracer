@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { version } from 'react';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography'
 import VersionCard from './VersionCard';
@@ -24,6 +24,7 @@ class VersionHistory extends React.Component {
 
         this.handleClose = this.handleClose.bind(this);
         this.handleOpen = this.handleOpen.bind(this);
+        this.restoreVersion = this.restoreVersion.bind(this);
     }
 
     componentDidMount() {
@@ -52,6 +53,11 @@ class VersionHistory extends React.Component {
                 open: this.props.open
             });
         }
+    }
+
+    restoreVersion(body) {
+        this.props.restoreVersion(body);
+        this.handleClose();
     }
 
     render() {
@@ -112,11 +118,9 @@ class VersionHistory extends React.Component {
                             </Typography>
                         </DialogTitle>
                         <DialogContent>
-                            <div>
-                                <Chip label="First Contribution" color="primary" size="small" style={chipStyles} />
-                            </div>
+                            <Chip label="First Contribution" color="primary" size="small" style={chipStyles} />
                             {this.state.versions.map(
-                                version => <VersionCard version={version} />
+                                (version, index) => <VersionCard key={index.toString()} version={version} restoreVersion={this.restoreVersion}/>
                             )}
                             <Chip label="Most Recent Contribution" color="primary" size="small" style={chipStyles}/>
                         </DialogContent>
