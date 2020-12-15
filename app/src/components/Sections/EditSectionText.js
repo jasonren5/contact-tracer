@@ -215,7 +215,7 @@ class EditSectionText extends React.Component {
                         />
                         <TextField
                             id="source"
-                            label="Edit Source"
+                            label="Add Source"
                             type="url"
                             disabled={this.state.merging}
                             rowsMax={10}
