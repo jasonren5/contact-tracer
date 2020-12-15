@@ -9,6 +9,7 @@ import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { withFirebase } from '../../utils/firebase';
+import ApplicationList from './ApplicationList';
 
 import { submitApplication } from '../../utils/functions/applications';
 
@@ -89,7 +90,7 @@ class ProfileModApp extends React.Component {
 
     render() {
         return (
-            <Grid container direction="column">
+            <Grid container direction="column" alignContent="center">
                 <h3>Apply to be an Expert</h3>
                 <FormControl variant="outlined">
                     <InputLabel id="mod-app-label">Field of Expertise</InputLabel>
@@ -146,6 +147,7 @@ class ProfileModApp extends React.Component {
                         {(this.state.loading ? <CircularProgress /> : "Submit Application")}
                     </Button>
                 </FormControl>
+                <ApplicationList />
             </Grid>
         )
     }
