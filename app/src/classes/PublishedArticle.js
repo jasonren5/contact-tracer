@@ -22,13 +22,13 @@ class PublishedArticle {
         this.strikes = data.strikes;
         this.sections = [];
         this.sources = [];
-        data.sections.forEach((section, index) => {
-            this.addSection(section, index);
-        });
         data.sources.map((source, index) => {
             if (!source.deleted) {
                 this.addSource(source, index);
             }
+        });
+        data.sections.forEach((section, index) => {
+            this.addSection(section, index);
         });
     }
     addSection(sectionData, index) {

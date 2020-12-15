@@ -53,7 +53,7 @@ export default function AddSectionField(props) {
 
     const addTextSectionBelow = (bodyText, source) => {
         const finalSource = source === "" ? null : source;
-        let section = new ArticleSection(props.article_id, null, null, "text", bodyText, (props.order + 1), []);
+        let section = new ArticleSection(props.article_id, null, null, "text", bodyText, (props.order + 1), [], []);
 
         addSection(firebase, section, finalSource).then((data) => {
             console.log(data);
@@ -63,7 +63,7 @@ export default function AddSectionField(props) {
     };
 
     const addImageSectionBelow = (imageURL) => {
-        let section = new ArticleSection(props.article_id, null, null, "image", imageURL, (props.order + 1), []);
+        let section = new ArticleSection(props.article_id, null, null, "image", imageURL, (props.order + 1), [], []);
 
         addSection(firebase, section, imageURL).then((data) => {
             props.refreshArticle();

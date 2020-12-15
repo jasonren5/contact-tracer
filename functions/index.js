@@ -86,6 +86,15 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
             section["current_version"] = latestVersion.id;
             section["body"] = latestVersionData.body;
 
+            var localSources = [];
+
+            sourcesData.forEach(source => {
+                if (source.section === doc.id) {
+                    localSources.push(source);
+                }
+            });
+            section["sources"] = localSources;
+
             return section;
         }))
 
@@ -128,6 +137,14 @@ async function _getFullArticleByID(db, article_id) {
             section["section_id"] = doc.id;
             section["current_version"] = latestVersion.id;
             section["body"] = latestVersionData.body;
+
+            var localSources = [];
+            sourcesData.forEach(source => {
+                if (source.section === doc.id) {
+                    localSources.push(source);
+                }
+            });
+            section["sources"] = localSources;
 
             return section;
         }))
@@ -1400,13 +1417,13 @@ exports.getSectionByID = functions.https.onCall(async (data) => {
             versionData.user = userData;
         } catch (error) {
             var userErrorData = {
-                    error: "No user found."
-                }
+                error: "No user found."
+            }
             versionData.user = userErrorData;
         }
-       
+
         return versionData;
     })
-    
+
     return Promise.all(promises)
 })

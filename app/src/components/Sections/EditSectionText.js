@@ -126,13 +126,13 @@ class EditSectionText extends React.Component {
 
     handleShowHistory() {
         this.setState({
-            showHistory:true
+            showHistory: true
         })
     }
 
     handleHideHistory() {
         this.setState({
-            showHistory:false
+            showHistory: false
         })
     }
 
@@ -216,7 +216,7 @@ class EditSectionText extends React.Component {
 
     addSectionBelow() {
         this.setState({ publishingNewSection: true });
-        let section = new ArticleSection(this.state.section.article_id, null, null, "text", "This is a new section, edit it to add content.", (this.state.section.order + 1), []);
+        let section = new ArticleSection(this.state.section.article_id, null, null, "text", "This is a new section, edit it to add content.", (this.state.section.order + 1), [], []);
         addSection(this.props.firebase, section).then((section) => {
             this.setState({ publishingNewSection: false });
             this.props.refreshArticle();
@@ -362,10 +362,10 @@ class EditSectionText extends React.Component {
                             order={this.state.section.order}
                         />
                         {!this.state.publishingChanges &&
-                            <VersionHistory 
-                                section={this.props.section} 
-                                open={this.state.showHistory} 
-                                close={this.handleHideHistory} 
+                            <VersionHistory
+                                section={this.props.section}
+                                open={this.state.showHistory}
+                                close={this.handleHideHistory}
                                 restoreVersion={this.restoreVersion}
                             />
                         }
