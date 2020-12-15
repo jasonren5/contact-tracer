@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { FirebaseContext } from '../../utils/firebase';
 import {
     publishContribution
@@ -71,6 +71,7 @@ export default function EditSectionImage(props) {
     const handleUpdateImage = section => {
         setSection(section);
         closeEditImageModal();
+        props.refreshArticle();
     }
 
     const handleDeleteSection = () => {
@@ -91,6 +92,10 @@ export default function EditSectionImage(props) {
     const closeConfirmModal = () => {
         setConfirmDelete(false);
     }
+
+    useEffect(() => {
+        setSection(props.section);
+    }, [props.section])
 
     return (
         <div className={classes.root}>

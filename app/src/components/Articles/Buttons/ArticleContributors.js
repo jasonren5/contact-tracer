@@ -17,12 +17,12 @@ class ArticleContributors extends React.Component {
     }
 
     getTopContributors() {
-        var contributors = this.state.contributors.sort((a, b) =>{
+        var contributors = this.state.contributors.sort((a, b) => {
             return a.numContributions - b.numContributions;
         })
 
         if (contributors.length > 5) {
-            contributors = contributors.slice(0,5);
+            contributors = contributors.slice(0, 5);
         }
 
         return (
@@ -30,8 +30,8 @@ class ArticleContributors extends React.Component {
                 <Typography variant="body1">Top Contributors</Typography>
                 <Divider />
                 {contributors.map((user) =>
-                    <NameTag key={user.displayName} variant="body1" user={user}/>
-                    )}
+                    <NameTag key={user.displayName} variant="body1" user={user} />
+                )}
             </div>
         )
     }
@@ -47,7 +47,7 @@ class ArticleContributors extends React.Component {
                 interactive
                 arrow
             >
-                <IconButton>
+                <IconButton color="secondary">
                     <PeopleIcon></PeopleIcon>
                     {this.state.numContributors}
                 </IconButton>

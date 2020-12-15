@@ -1,7 +1,7 @@
 import React from 'react';
-import Section from "../../components/Articles/ArticleSection";
+import ArticleSection from "../../components/Articles/ArticleSection";
 import ArticleHeader from "../../components/Articles/ArticleHeader";
-import { Container, Grid } from '@material-ui/core';
+import { Container, Grid, Typography } from '@material-ui/core';
 import PageLoading from '../../components/Loading/PageLoading';
 import { LikeButton } from '../../components/Articles/Buttons';
 import ArticleContributors from '../../components/Articles/Buttons/ArticleContributors';
@@ -9,20 +9,25 @@ import ArticleContributions from '../../components/Articles/Buttons/ArticleContr
 
 import { getPublishedArticleByID } from '../../utils/functions/articles';
 import { withFirebase } from '../../utils/firebase';
+import SourcesList from '../../components/Sources/SourcesList';
+import LastUpdated from '../../components/Articles/LastUpdated';
 
 class ArticlePage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            article: null
+            article: null,
+            updated: null,
         }
     }
 
     componentDidMount() {
         let article_id = this.props.match.params.articleId
         getPublishedArticleByID(this.props.firebase, article_id).then((article) => {
+            const date = new Date(article.updated._seconds * 1000).toLocaleString();
             this.setState({
-                article: article
+                article: article,
+                updated: date,
             });
         }).catch((err) => {
             console.log(err);
@@ -58,14 +63,21 @@ class ArticlePage extends React.Component {
                     <Grid item >
                         <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
                     </Grid>
-                    {/* <Grid item xs>
-                            <ContributeButton inArticleButton articleID={this.state.article.id} />
-                        </Grid> */}
+                    {this.state.updated &&
+                        <Grid item>
+                            <LastUpdated updated={this.state.updated} />
+                        </Grid>
+                    }
                 </Grid>
-
                 {this.state.article.sections.map((section) =>
-                    <Section key={section.id} section={section}></Section>
+                    <ArticleSection key={section.id} section={section} article_id={this.state.article.id} />
                 )}
+                {this.state.article.sources &&
+                    <SourcesList
+                        article_id={this.state.article.id}
+                        sources={this.state.article.sources}
+                    />
+                }
             </Container>
         )
     }

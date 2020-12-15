@@ -57,6 +57,11 @@ const styles = theme => ({
     editButtonWrapper: {
         position: "absolute",
         top: 0,
+        right: 80,
+    },
+    historyButtonWrapper: {
+        position: "absolute",
+        top: 0,
         right: 40,
     },
     removeButtonWrapper: {
@@ -265,9 +270,6 @@ class EditSectionText extends React.Component {
                         )}
                     </CardContent>
                     <CardActions>
-                        <IconButton disabled={this.state.publishingChanges} onClick={this.handleShowHistory}>
-                            <HistoryIcon />
-                        </IconButton>
                         <Button
                             className={classes.submitButton}
                             aria-label="submit edit"
@@ -324,6 +326,24 @@ class EditSectionText extends React.Component {
                         </IconButton>
                     </div>
                 </CSSTransition>
+
+                <CSSTransition
+                    in={this.state.sectionHover}
+                    classNames="alert"
+                    timeout={200}
+                    unmountOnExit
+                >
+                    <div className={classes.historyButtonWrapper}>
+                        <IconButton
+                            disabled={this.state.publishingChanges}
+                            onClick={this.handleShowHistory}
+                            color="secondary"
+                        >
+                            <HistoryIcon />
+                        </IconButton>
+                    </div>
+                </CSSTransition>
+
                 <CSSTransition
                     in={this.state.sectionHover}
                     classNames="alert"
@@ -341,6 +361,7 @@ class EditSectionText extends React.Component {
                         </IconButton>
                     </div>
                 </CSSTransition>
+
                 <ConfirmModal
                     open={this.state.removeModal}
                     closeModal={this.handleCloseRemoveModal}

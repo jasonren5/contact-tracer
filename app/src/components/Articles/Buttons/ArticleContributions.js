@@ -22,10 +22,10 @@ class ArticleContributions extends React.Component {
         })
     }
 
-    render () {
+    render() {
         return (
             <Tooltip title={this.state.numContributions.toString() + " Contributions"} >
-                <IconButton>
+                <IconButton color="secondary">
                     <EditIcon />
                     {this.state.numContributions}
                 </IconButton>

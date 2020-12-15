@@ -21,17 +21,11 @@ class EditArticleSection extends React.Component {
 
     render() {
         return (
-            <div style={sectionStyle}>
+            <div className="article section container">
                 {this.props.section.body && this.renderCorrectSection()}
             </div>
-        )
-
+        );
     }
 }
 
 export default EditArticleSection;
-
-const sectionStyle = {
-    // marginTop: 10,
-    // marginBottom: 10
-}

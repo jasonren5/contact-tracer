@@ -5,7 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 
 class ProfileVersion extends React.Component {
     render() {
-        const articlePath = "articles/" + this.props.version.article_id;
+        const articlePath = "article/" + this.props.version.article_id;
         return (
             <Grid item xs={6}>
                 <Card>
