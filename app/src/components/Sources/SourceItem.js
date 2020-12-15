@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Typography, ListItem, Link } from '@material-ui/core';
 import ViewSourceModal from './ViewSourceModal';
 
-export default function SourcesList(props) {
+export default function SourceItem(props) {
     const [sourceModal, setSourceModal] = useState(false);
 
     const handleOpenSourceModal = () => {

@@ -11,7 +11,6 @@ import Source from './Source';
 */
 class PublishedArticle {
     constructor(data) {
-        console.log("constructor data", data);
         this.id = data.article_id;
         this.title = data.title;
         this.image_url = data.image_url;

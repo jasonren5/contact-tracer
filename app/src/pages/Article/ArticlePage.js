@@ -9,6 +9,7 @@ import ArticleContributions from '../../components/Articles/Buttons/ArticleContr
 
 import { getPublishedArticleByID } from '../../utils/functions/articles';
 import { withFirebase } from '../../utils/firebase';
+import SourcesList from '../../components/Sources/SourcesList';
 
 class ArticlePage extends React.Component {
     constructor(props) {
@@ -21,7 +22,6 @@ class ArticlePage extends React.Component {
     componentDidMount() {
         let article_id = this.props.match.params.articleId
         getPublishedArticleByID(this.props.firebase, article_id).then((article) => {
-            console.log(article);
             this.setState({
                 article: article
             });
@@ -59,14 +59,16 @@ class ArticlePage extends React.Component {
                     <Grid item >
                         <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
                     </Grid>
-                    {/* <Grid item xs>
-                            <ContributeButton inArticleButton articleID={this.state.article.id} />
-                        </Grid> */}
                 </Grid>
-
                 {this.state.article.sections.map((section) =>
                     <Section key={section.id} section={section}></Section>
                 )}
+                {this.state.article.sources &&
+                    <SourcesList
+                        article_id={this.state.article.id}
+                        sources={this.state.article.sources}
+                    />
+                }
             </Container>
         )
     }

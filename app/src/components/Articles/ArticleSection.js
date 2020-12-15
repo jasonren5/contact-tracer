@@ -7,7 +7,7 @@ class ArticleSection extends React.Component {
         super(props);
     }
 
-    render() {
+    renderCorrectSection() {
         switch (this.props.section.type) {
             case "text":
                 return (<SectionText section={this.props.section}></SectionText>);
@@ -18,6 +18,14 @@ class ArticleSection extends React.Component {
                 return (<div></div>)
         }
 
+    }
+
+    render() {
+        return (
+            <div className="article section container">
+                {this.props.section.body && this.renderCorrectSection()}
+            </div>
+        );
     }
 }
 
