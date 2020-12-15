@@ -6,7 +6,6 @@ const axios = require('axios');
 
 // Needed to interface with firebase firestore
 const admin = require('firebase-admin');
-const { user } = require('firebase-functions/lib/providers/auth');
 require('firebase-functions/lib/providers/auth');
 admin.initializeApp();
 
