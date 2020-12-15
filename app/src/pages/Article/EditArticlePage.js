@@ -3,7 +3,7 @@ import EditArticleSection from "../../components/Articles/EditArticles/EditArtic
 import EditArticleHeader from "../../components/Articles/EditArticles/EditArticleHeader";
 import AddSectionField from "../../components/Sections/AddSectionField";
 import SourcesList from "../../components/Sources/SourcesList";
-import { getFullArticle, getAllSources } from '../../utils/functions/articles';
+import { getFullArticle } from '../../utils/functions/articles';
 import { withAuthorization, userLoggedInCondition } from '../../utils/session';
 import { Container } from '@material-ui/core';
 
@@ -20,12 +20,6 @@ function EditArticlePage(props) {
         let article_id = props.match.params.articleId
         getFullArticle(props.firebase, article_id).then((article) => {
             setArticle(article);
-        }).catch((err) => {
-            console.log(err);
-        });
-
-        getAllSources(props.firebase, article_id).then((data) => {
-            console.log(data);
         }).catch((err) => {
             console.log(err);
         });

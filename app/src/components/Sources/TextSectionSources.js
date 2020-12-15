@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 
 import { Typography, Link } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import ViewSourceModal from './ViewSourceModal';
 
 const useStyles = makeStyles(() => ({
     icons: {
@@ -17,6 +18,7 @@ export default function TextSectionSources(props) {
     const handleOpenModal = (source) => {
         setOpenSourceModal(true);
         setModalSource(source);
+        console.log(source);
     }
 
     const handleCloseModal = () => {
@@ -25,18 +27,25 @@ export default function TextSectionSources(props) {
     }
 
     return (
-        <Typography component="span" color="secondary" >
-            {props.sources.map((source) =>
-                <Link
-                    color="inherit"
-                    key={source.url}
-                    onClick={(source) => handleOpenModal}
-                >
-                    <sup className={classes.icons}>
-                        {"[" + source.order + "]"}
-                    </sup>
-                </Link>
-            )}
-        </Typography>
+        <span className="root">
+            <Typography component="span" color="secondary" >
+                {props.sources.map((source) =>
+                    <Link
+                        color="inherit"
+                        key={source.url}
+                        onClick={() => handleOpenModal(source)}
+                    >
+                        <sup className={classes.icons}>
+                            {"[" + source.order + "]"}
+                        </sup>
+                    </Link>
+                )}
+            </Typography>
+            <ViewSourceModal
+                open={openSourceModal}
+                source={modalSource}
+                closeModal={handleCloseModal}
+            />
+        </span>
     );
 }
