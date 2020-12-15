@@ -77,6 +77,7 @@ async function publishContribution(firebase, section, newBody, merging, source) 
 
         if (source) {
             var sourceObject = await addSourceToArticle(firebase, newSection, source);
+            console.log(sourceObject);
             return {
                 section: newSection,
                 conflict: conflict,

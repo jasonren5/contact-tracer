@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export default function TextSectionSources(props) {
+export default function ImageSectionSource(props) {
     const classes = useStyles();
     const [openSourceModal, setOpenSourceModal] = useState(false);
     const [primarySource, setPrimarySource] = useState();
@@ -20,7 +20,7 @@ export default function TextSectionSources(props) {
     useEffect(() => {
         const source = props.sources.slice(-1).pop()
         setPrimarySource(source);
-    }, [])
+    }, [props.sources]);
 
     const handleCloseModal = () => {
         setOpenSourceModal(false);
