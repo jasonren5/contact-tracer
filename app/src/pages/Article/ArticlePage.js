@@ -4,6 +4,8 @@ import ArticleHeader from "../../components/Articles/ArticleHeader";
 import { Container, Grid } from '@material-ui/core';
 import PageLoading from '../../components/Loading/PageLoading';
 import { LikeButton } from '../../components/Articles/Buttons';
+import ArticleContributors from '../../components/Articles/Buttons/ArticleContributors';
+import ArticleContributions from '../../components/Articles/Buttons/ArticleContributions';
 
 import { getPublishedArticleByID } from '../../utils/functions/articles';
 import { withFirebase } from '../../utils/firebase';
@@ -46,8 +48,14 @@ class ArticlePage extends React.Component {
             >
                 <ArticleHeader article={this.state.article} />
 
-                <Grid container>
-                    <Grid item xs>
+                <Grid container direction="row">
+                    <Grid item >
+                        <ArticleContributions contributors={this.state.article.contributors} />
+                    </Grid>
+                    <Grid item >
+                        <ArticleContributors contributors={this.state.article.contributors} />
+                    </Grid>
+                    <Grid item >
                         <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
                     </Grid>
                     {/* <Grid item xs>
