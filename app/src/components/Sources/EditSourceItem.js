@@ -6,7 +6,8 @@ import {
     Typography,
     ListItemIcon,
     IconButton,
-    TextField
+    TextField,
+    CircularProgress
 } from '@material-ui/core';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
@@ -16,7 +17,7 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import { FirebaseContext } from '../../utils/firebase';
 import ConfirmModal from '../Modals/ConfirmModal';
-import { removeSource } from '../../utils/functions/articles';
+import { removeSource, editSource } from '../../utils/functions/articles';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -60,14 +61,18 @@ export default function SourcesList(props) {
     const handleDeleteSource = () => {
         setPublishingDelete(true);
         removeSource(firebase, props.source.article_id, props.source.id).then((response) => {
-            console.log(response);
             handleCloseRemoveModal();
             props.refreshArticle();
         });
     }
 
     const handleSubmitEdit = () => {
-
+        setPublishingEdit(true);
+        editSource(firebase, props.source.article_id, props.source.id, editValue).then((response) => {
+            setPublishingEdit(false);
+            handleStopEditing();
+            props.refreshArticle();
+        });
     }
 
     const handleStartEditing = () => {
@@ -115,14 +120,18 @@ export default function SourcesList(props) {
                         />
                         <ListItemIcon>
                             <IconButton
-                                disabled={publishingDelete}
+                                disabled={publishingDelete || publishingEdit}
                                 onClick={handleSubmitEdit}
                                 className={classes.submitButton}
                             >
-                                <DoneIcon />
+                                {publishingEdit ?
+                                    <CircularProgress size={20} color="primary" />
+                                    :
+                                    <DoneIcon />
+                                }
                             </IconButton>
                             <IconButton
-                                disabled={publishingDelete}
+                                disabled={publishingDelete || publishingEdit}
                                 onClick={handleStopEditing}
                                 className={classes.cancelButton}
                             >

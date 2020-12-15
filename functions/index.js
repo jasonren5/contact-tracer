@@ -1320,3 +1320,54 @@ async function _deleteSource(db, article_id, source_id) {
         }
     }
 }
+
+exports.editSource = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+    let article_id = data.article_id;
+    let source_id = data.source_id;
+    let new_url = data.new_url;
+
+    return _editSource(db, article_id, source_id, new_url).then((data) => {
+        return data;
+    }).catch((err) => {
+        return {
+            error: err
+        }
+    });
+})
+
+async function _editSource(db, article_id, source_id, new_url) {
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+
+    if (!source_id) {
+        return {
+            error: 400,
+            message: "source_id cannot be null"
+        }
+    }
+
+    const sourceRef = db.collection("articles").doc(article_id).collection("sources").doc(source_id);
+    const doc = await sourceRef.get();
+
+    // check if doc exists before updating
+    if (doc.exists) {
+        await sourceRef.update({
+            url: new_url,
+        });
+
+        return {
+            status: 200,
+            message: "Successfully deleted source",
+        }
+    } else {
+        return {
+            error: 500,
+            message: "cannot delete source"
+        }
+    }
+}

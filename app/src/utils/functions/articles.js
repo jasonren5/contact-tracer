@@ -194,6 +194,18 @@ async function removeSource(firebase, article_id, source_id) {
     return response;
 }
 
+async function editSource(firebase, article_id, source_id, new_url) {
+    let deleteSource = firebase.functions.httpsCallable("editSource");
+
+    const response = await deleteSource({
+        article_id: article_id,
+        source_id: source_id,
+        new_url: new_url,
+    });
+
+    return response;
+}
+
 export {
     getFullArticle,
     getAllArticles,
@@ -209,4 +221,5 @@ export {
     addSourceToArticle,
     getAllSources,
     removeSource,
+    editSource,
 };
