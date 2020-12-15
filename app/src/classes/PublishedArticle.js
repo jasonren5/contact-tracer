@@ -11,6 +11,7 @@ import Source from './Source';
 */
 class PublishedArticle {
     constructor(data) {
+        console.log("constructor data", data);
         this.id = data.article_id;
         this.title = data.title;
         this.image_url = data.image_url;
@@ -38,7 +39,8 @@ class PublishedArticle {
         const version_id = sectionData.current_version;
         const type = sectionData.type;
         const body = sectionData.body;
-        var newSection = new ArticleSection(this.article_id, section_id, version_id, type, body, index, []);
+        const sources = sectionData.sources;
+        var newSection = new ArticleSection(this.article_id, section_id, version_id, type, body, index, [], sources);
         this.sections.push(newSection);
     }
     addSource(sourceData, index) {

@@ -843,18 +843,6 @@ async function _getPublishedArticleByID(db, article_id) {
     return resData;
 }
 
-// exports.testGetPublishedArticle = functions.https.onRequest((req, res) => {
-//     // Grab the id parameter.
-//     const db = admin.firestore();
-//     const article_id = "0riTwHPCwLlqqnCaqeOj";
-
-//     return _getPublishedArticleByID(db, article_id).then((data) => {
-//         res.send(data);
-//     }).catch((err) => {
-//         res.send(err);
-//     });
-// });
-
 /*
 *   At midnight every day, gets top english headlines from news API, 
 *   and then takes first three entries (definied in const articlesToCreate)
