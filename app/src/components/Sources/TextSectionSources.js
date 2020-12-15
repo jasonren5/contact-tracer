@@ -18,7 +18,6 @@ export default function TextSectionSources(props) {
     const handleOpenModal = (source) => {
         setOpenSourceModal(true);
         setModalSource(source);
-        console.log(source);
     }
 
     const handleCloseModal = () => {
@@ -45,6 +44,7 @@ export default function TextSectionSources(props) {
                 open={openSourceModal}
                 source={modalSource}
                 closeModal={handleCloseModal}
+                article_id={props.article_id}
             />
         </span>
     );

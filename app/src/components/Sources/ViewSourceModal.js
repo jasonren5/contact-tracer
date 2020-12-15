@@ -7,16 +7,19 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
-    Link
+    Link,
+    Typography
 } from '@material-ui/core';
 
 import { getPublicProfileData } from '../../utils/functions/users';
+import { getSectionByID } from '../../utils/functions/articles';
 import { FirebaseContext } from '../../utils/firebase';
 import NameTag from '../Profiles/NameTag';
 
 export default function ViewSourceModal(props) {
     const [user, setUser] = useState();
     const [date, setDate] = useState();
+    const [sectionBody, setSectionBody] = useState();
     const firebase = useContext(FirebaseContext);
 
 
@@ -44,7 +47,15 @@ export default function ViewSourceModal(props) {
         if (props.source) {
             const date = new Date(props.source.created._seconds * 1000).toLocaleString();
             setDate(date);
-            console.log(date);
+        }
+    }, [props.source]);
+
+    useEffect(() => {
+        if (props.source) {
+            getSectionByID(firebase, props.article_id, props.source.section).then((sectionVersions) => {
+                const latestVersion = sectionVersions.slice(-1).pop();
+                setSectionBody(latestVersion.body)
+            });
         }
     }, [props.source]);
 
@@ -72,6 +83,11 @@ export default function ViewSourceModal(props) {
                         {date &&
                             <DialogContentText id="alert-dialog-description">
                                 Date Created: {date}
+                            </DialogContentText>
+                        }
+                        {sectionBody &&
+                            <DialogContentText id="alert-dialog-description">
+                                Section: <Typography variant="span" color="primary">{sectionBody}</Typography>
                             </DialogContentText>
                         }
                     </DialogContent>
