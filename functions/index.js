@@ -1305,7 +1305,6 @@ async function _getAllSources(db, article_id) {
     return resData;
 }
 
-
 exports.deleteSource = functions.https.onCall(async (data) => {
     const db = admin.firestore();
     let article_id = data.article_id;
