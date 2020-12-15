@@ -42,14 +42,14 @@ class PublishedArticle {
         var newSection = new ArticleSection(this.article_id, section_id, version_id, type, body, index, [], sources);
         this.sections.push(newSection);
     }
-    addSource(sourceData, index) {
+    addSource(sourceData) {
         const source_id = sourceData.source_id;
         const url = sourceData.url;
         const deleted = sourceData.deleted;
         const user_id = sourceData.user;
         const section_id = sourceData.section;
         const created = sourceData.created;
-        const order = index;
+        const order = sourceData.order;
         var newSource = new Source(this.article_id, source_id, url, deleted, user_id, section_id, created, order);
         this.sources.push(newSource);
     }
