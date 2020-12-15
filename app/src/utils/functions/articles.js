@@ -11,18 +11,17 @@ async function getFullArticle(firebase, article_id) {
     var articlePromise = getFullArticleByID({ article_id: article_id }).then((response) => {
         let data = response.data;
         var sections = [];
-        data.section_data.forEach((section, index) => {
-            var s = new ArticleSection(data.article_data.article_id, section.section_id, section.current_version, section.type, section.body, index, [])
-            sections.push(s)
-        });
-
         var sources = [];
 
-        data.sources_data.map((source, index) => {
+        data.sources_data.map(source => {
             if (!source.deleted) {
-                var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user, source.section, source.created, index + 1);
+                var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user, source.section, source.created, source.order);
                 sources.push(s);
             }
+        });
+        data.section_data.forEach((section, index) => {
+            var s = new ArticleSection(data.article_data.article_id, section.section_id, section.current_version, section.type, section.body, index, [], section.sources);
+            sections.push(s)
         });
 
         var article = new Article(data.article_data.article_id, data.article_data.title, data.article_data.image_url, "Hello, World!", sections, sources);
@@ -207,6 +206,7 @@ async function editSource(firebase, article_id, source_id, new_url) {
 
     return response;
 }
+
 async function getSectionByID(firebase, article_id, section_id) {
     let getSection = firebase.functions.httpsCallable("getSectionByID");
 

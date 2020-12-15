@@ -10,9 +10,9 @@ class EditArticleSection extends React.Component {
     renderCorrectSection() {
         switch (this.props.section.type) {
             case "text":
-                return (<EditSectionText section={this.props.section} refreshArticle={this.props.refreshArticle} />);
+                return (<EditSectionText article_id={this.props.article_id} section={this.props.section} refreshArticle={this.props.refreshArticle} />);
             case "image":
-                return (<EditArticleImage section={this.props.section} refreshArticle={this.props.refreshArticle} />)
+                return (<EditArticleImage article_id={this.props.article_id} section={this.props.section} refreshArticle={this.props.refreshArticle} />)
             default:
                 console.log("error loading section");
                 return (<div></div>)

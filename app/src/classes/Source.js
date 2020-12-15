@@ -7,13 +7,13 @@
     user_id: User ID for user that published source
 */
 class Source {
-    constructor(article_id, id, url, deleted, user_id, section_id, created, order) {
+    constructor(article_id, id, url, deleted, user, section, created, order) {
         this.article_id = article_id;
         this.id = id;
         this.url = url;
         this.deleted = deleted;
-        this.user_id = user_id;
-        this.section_id = section_id;
+        this.user = user;
+        this.section = section;
         this.created = created;
         this.order = order;
     }

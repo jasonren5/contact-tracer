@@ -18,6 +18,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { FirebaseContext } from '../../utils/firebase';
 import ConfirmModal from '../Modals/ConfirmModal';
 import { removeSource, editSource } from '../../utils/functions/articles';
+import ViewSourceModal from './ViewSourceModal';
 
 const useStyles = makeStyles((theme) => ({
     button: {
@@ -53,10 +54,7 @@ export default function SourcesList(props) {
     const [publishingEdit, setPublishingEdit] = useState(false);
     const [editValue, setEditValue] = useState(props.source.url)
     const [editing, setEditing] = useState(false);
-
-    // const handleScroll = () => {
-    //     document.getElementById("title").scrollIntoView()
-    // };
+    const [sourceModal, setSourceModal] = useState(false);
 
     const handleDeleteSource = () => {
         setPublishingDelete(true);
@@ -97,6 +95,14 @@ export default function SourcesList(props) {
     const handleChange = (event) => {
         const { id, value } = event.target;
         setEditValue(value);
+    }
+
+    const handleOpenSourceModal = () => {
+        setSourceModal(true);
+    }
+
+    const handleCloseSourceModal = () => {
+        setSourceModal(false);
     }
 
     return (
@@ -143,13 +149,16 @@ export default function SourcesList(props) {
                 :
                 <div className="Not Editing">
                     <ListItem>
-                        <Typography noWrap>
-                            {props.source.order + ": "}
+                        <Typography noWrap color="secondary">
+                            <Link color="inherit" onClick={handleOpenSourceModal}>
+                                {"[" + props.source.order + "]"}
+                            </Link>
+                            {": "}
                             <Link href={props.source.url}>
                                 {props.source.url}
                             </Link>
                         </Typography>
-                        {(firebase.auth.currentUser.uid === props.source.user_id) &&
+                        {(firebase.auth.currentUser.uid === props.source.user) &&
                             <ListItemIcon>
                                 <IconButton
                                     disabled={publishingDelete}
@@ -174,6 +183,12 @@ export default function SourcesList(props) {
                         handleConfirm={handleDeleteSource}
                         confirmAction={"Delete Source"}
                         publishingConfirm={publishingDelete}
+                    />
+                    <ViewSourceModal
+                        open={sourceModal}
+                        source={props.source}
+                        closeModal={handleCloseSourceModal}
+                        article_id={props.article_id}
                     />
                 </div>
             }

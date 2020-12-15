@@ -70,10 +70,15 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
         let sectionData = values[1];
 
         var sourcesData = [];
+        var sourceIndexCounter = 1;
         values[2].forEach(source => {
             var sourceData = source.data();
-            sourceData["source_id"] = source.id;
-            sourcesData.push(sourceData);
+            if (!sourceData.deleted) {
+                sourceData["source_id"] = source.id;
+                sourceData["order"] = sourceIndexCounter;
+                sourcesData.push(sourceData);
+                sourceIndexCounter += 1;
+            }
         });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
@@ -85,6 +90,15 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
             section["section_id"] = doc.id;
             section["current_version"] = latestVersion.id;
             section["body"] = latestVersionData.body;
+
+            var localSources = [];
+
+            sourcesData.forEach(source => {
+                if (source.section === doc.id) {
+                    localSources.push(source);
+                }
+            });
+            section["sources"] = localSources;
 
             return section;
         }))
@@ -113,10 +127,15 @@ async function _getFullArticleByID(db, article_id) {
         let sectionData = values[1];
 
         var sourcesData = [];
+        var sourceIndexCounter = 1;
         values[2].forEach(source => {
             var sourceData = source.data();
-            source["source_id"] = source.id;
-            sourcesData.push(sourceData);
+            if (!sourceData.deleted) {
+                sourceData["source_id"] = source.id;
+                sourceData["order"] = sourceIndexCounter;
+                sourcesData.push(sourceData);
+                sourceIndexCounter += 1;
+            }
         });
 
         var contributors = {};
@@ -137,6 +156,14 @@ async function _getFullArticleByID(db, article_id) {
             section["section_id"] = doc.id;
             section["current_version"] = latestVersion.id;
             section["body"] = latestVersionData.body;
+
+            var localSources = [];
+            sourcesData.forEach(source => {
+                if (source.section === doc.id) {
+                    localSources.push(source);
+                }
+            });
+            section["sources"] = localSources;
 
             return section;
         }))
@@ -617,14 +644,6 @@ function _createArticleWithTitleAndImage(title, image, type, body, source) {
         type: "text"
     };
 
-    const sourceData = {
-        url: source,
-        user: "generated",
-        section: "title",
-        deleted: false,
-        created: created,
-    };
-
     const newArticleRef = db.collection("articles").doc();
     batch.set(newArticleRef, articleData);
 
@@ -633,6 +652,14 @@ function _createArticleWithTitleAndImage(title, image, type, body, source) {
 
     const versionRef = newSectionRef.collection("versions").doc();
     batch.set(versionRef, versionData);
+
+    const sourceData = {
+        url: source,
+        user: "generated",
+        section: newArticleRef.id,
+        deleted: false,
+        created: created,
+    };
 
     const newSourceRef = newArticleRef.collection("sources").doc();
     batch.set(newSourceRef, sourceData);
@@ -1287,15 +1314,22 @@ exports.getAllSources = functions.https.onCall((data) => {
 })
 
 async function _getAllSources(db, article_id) {
-    const snapshot = await db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get();
+    const snapshot = await db.collection("articles").doc(article_id).collection("sources").orderBy('created').get();
 
     if (snapshot.empty) {
         return "No source found";
     }
 
     var resData = [];
-    snapshot.forEach(doc => {
-        resData.push(doc.data());
+    var indexCounter = 1;
+    snapshot.forEach((source) => {
+        var sourceData = source.data();
+        if (!sourceData.deleted) {
+            sourceData["source_id"] = source.id;
+            sourceData["order"] = indexCounter;
+            resData.push(sourceData);
+            indexCounter += 1;
+        }
     });
     return resData;
 }
@@ -1429,13 +1463,13 @@ exports.getSectionByID = functions.https.onCall(async (data) => {
             versionData.user = userData;
         } catch (error) {
             var userErrorData = {
-                    error: "No user found."
-                }
+                error: "No user found."
+            }
             versionData.user = userErrorData;
         }
-       
+
         return versionData;
     })
-    
+
     return Promise.all(promises)
 })

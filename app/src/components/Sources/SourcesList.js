@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import { Container, List, Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -20,30 +20,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function SourcesList(props) {
-    const [displaySources, setDisplaySources] = useState([]);
     const classes = useStyles();
-
-    useEffect(() => {
-        var newSourceList = [];
-        props.sources.map((source, index) => {
-            if (!source.deleted) {
-                source["order"] = index + 1;
-                newSourceList.push(source);
-            }
-        });
-        setDisplaySources(newSourceList);
-    }, [props.sources]);
 
     return (
         <Container maxWidth="xl">
             <Paper elevation={3} className={classes.root}>
                 <Typography variant="h4" className={classes.title}>Sources</Typography>
                 <List>
-                    {displaySources.map((source) => {
+                    {props.sources.map((source) => {
                         return props.editing ?
-                            <EditSourceItem key={source.order} source={source} refreshArticle={props.refreshArticle} />
+                            <EditSourceItem
+                                article_id={props.article_id}
+                                key={source.order}
+                                source={source}
+                                refreshArticle={props.refreshArticle}
+                            />
                             :
-                            <SourceItem key={source.order} source={source} />
+                            <SourceItem
+                                key={source.order}
+                                article_id={props.article_id}
+                                source={source}
+                            />
                     }
                     )}
                 </List>

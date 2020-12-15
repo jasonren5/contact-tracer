@@ -14,6 +14,7 @@ import ConfirmModal from '../Modals/ConfirmModal';
 
 import { CSSTransition } from 'react-transition-group';
 import AddSectionField from './AddSectionField';
+import ImageSectionSource from '../Sources/ImageSectionSource';
 
 const useStyles = makeStyles(() => ({
     root: {
@@ -79,6 +80,7 @@ export default function EditSectionImage(props) {
             closeEditImageModal();
             closeConfirmModal();
             setPublishingDelete(false);
+            props.refreshArticle();
         });
     }
 
@@ -138,7 +140,7 @@ export default function EditSectionImage(props) {
                                 </div>
                             }
                         </CSSTransition>
-
+                        <ImageSectionSource article_id={props.article_id} sources={section.sources} />
                     </div>
                     <AddSectionField
                         article_id={section.article_id}

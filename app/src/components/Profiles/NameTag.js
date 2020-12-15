@@ -9,23 +9,20 @@ class NameTag extends React.Component {
         const isMod = (this.props.user.expertises ? this.props.user.expertises.length > 0 : false);
         const isAdmin = (this.props.user.admin ? this.props.user.admin : false);
         const name = (this.props.user.displayName ? this.props.user.displayName : "Anonymous User");
-        const url =  (this.props.user.user_id ? "/user/" + this.props.user.user_id : "/user-not-found");
+        const url = (this.props.user.user_id ? "/user/" + this.props.user.user_id : "/user-not-found");
         const expertString = (isMod ? "Expertise in: \n" + this.props.user.expertises.join("\n ") : "No expertises to show.")
         return (
-            <div>
-                <Typography variant={this.props.variant}>
-                    <Link href={url}>
-                        {name}
-                    </Link>
-                    { isMod && 
-                        <Tooltip title={expertString} arrow>
-                            <Chip label="Expert" color="primary" size="small" style={chipStyles}/> 
-                        </Tooltip>
-                    }
-                    { isAdmin && <Chip label="Admin" color="secondary" size="small" style={chipStyles}/> }
-                </Typography>
-                
-            </div>
+            <Typography variant={this.props.variant}>
+                <Link href={url}>
+                    {name}
+                </Link>
+                { isMod &&
+                    <Tooltip title={expertString} arrow>
+                        <Chip label="Expert" color="primary" size="small" style={chipStyles} />
+                    </Tooltip>
+                }
+                { isAdmin && <Chip label="Admin" color="secondary" size="small" style={chipStyles} />}
+            </Typography>
         )
     }
 }

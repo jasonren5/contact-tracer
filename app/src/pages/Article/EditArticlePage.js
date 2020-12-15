@@ -22,7 +22,7 @@ function EditArticlePage(props) {
             setArticle(article);
         }).catch((err) => {
             console.log(err);
-        })
+        });
     }
 
     // Render the article
@@ -47,6 +47,7 @@ function EditArticlePage(props) {
                     {article.sections.map((section) =>
                         <EditArticleSection
                             id={section.id}
+                            article_id={article.id}
                             key={section.id + section.order}
                             section={section}
                             refreshArticle={fetchArticle}
@@ -56,6 +57,7 @@ function EditArticlePage(props) {
                     {article.sources &&
                         <SourcesList
                             editing
+                            article_id={article.id}
                             sources={article.sources}
                             refreshArticle={fetchArticle}
                         />}
