@@ -10,7 +10,8 @@ class NameTag extends React.Component {
         const isAdmin = (this.props.user.admin ? this.props.user.admin : false);
         const name = (this.props.user.displayName ? this.props.user.displayName : "Anonymous User");
         const url = (this.props.user.user_id ? "/user/" + this.props.user.user_id : "/user-not-found");
-        const expertString = (isMod ? "Expertise in: \n" + this.props.user.expertises.join("\n ") : "No expertises to show.")
+        const expertString = (isMod ? "Expertise in: \n" + this.props.user.expertises.join(",\n ") : "No expertises to show.")
+
         return (
             <Typography variant={this.props.variant}>
                 <Link href={url}>
