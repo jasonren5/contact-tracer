@@ -74,6 +74,7 @@ export default function CreateArticleModal(props) {
                 <TextField
                     autoFocus
                     margin="dense"
+                    type="text"
                     id="articleTitle"
                     onChange={handleChange}
                     label="Article Title"
@@ -81,7 +82,6 @@ export default function CreateArticleModal(props) {
                     required
                 />
                 <TextField
-                    autoFocus
                     margin="dense"
                     id="imageURL"
                     type="url"

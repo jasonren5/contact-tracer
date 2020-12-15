@@ -1,4 +1,5 @@
-import ArticleSection from './ArticleSection'
+import ArticleSection from './ArticleSection';
+import Source from './Source';
 
 /*
     Stores article information.
@@ -20,8 +21,14 @@ class PublishedArticle {
         this.liked_users = data.liked_users;
         this.strikes = data.strikes;
         this.sections = [];
+        this.sources = [];
         data.sections.forEach((section, index) => {
             this.addSection(section, index);
+        });
+        data.sources.map((source, index) => {
+            if (!source.deleted) {
+                this.addSource(source, index);
+            }
         });
     }
     addSection(sectionData, index) {
@@ -31,6 +38,17 @@ class PublishedArticle {
         const body = sectionData.body;
         var newSection = new ArticleSection(this.article_id, section_id, version_id, type, body, index, []);
         this.sections.push(newSection);
+    }
+    addSource(sourceData, index) {
+        const source_id = sourceData.source_id;
+        const url = sourceData.url;
+        const deleted = sourceData.deleted;
+        const user_id = sourceData.user;
+        const section_id = sourceData.section;
+        const created = sourceData.created;
+        const order = index;
+        var newSource = new Source(this.article_id, source_id, url, deleted, user_id, section_id, created, order);
+        this.sources.push(newSource);
     }
 }
 

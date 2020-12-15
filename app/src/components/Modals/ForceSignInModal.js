@@ -42,10 +42,10 @@ export default function ForceSignInModal(props) {
           </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button onClick={handleSignIn} color="primary">
+                <Button onClick={handleSignIn} color="primary" autoFocus>
                     Sign In
           </Button>
-                <Button onClick={handleClose} color="primary" autoFocus>
+                <Button onClick={handleClose} color="primary">
                     Go Back
           </Button>
             </DialogActions>

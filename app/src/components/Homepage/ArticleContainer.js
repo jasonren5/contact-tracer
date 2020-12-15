@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         // alignItems: 'center',
-        height: "415px",
+        height: "28rem",
     },
     details: {
         display: 'flex',
@@ -45,8 +45,11 @@ const useStyles = makeStyles((theme) => ({
     },
     cardActions: {
         position: "absolute",
-        height: "780px",
-    }
+        height: "53rem",
+    },
+    contentHolder: {
+        paddingBottom: "40px",
+    },
 }));
 
 export default function ArticleContainer(props) {
@@ -67,7 +70,7 @@ export default function ArticleContainer(props) {
                     image={props.article.image_url}
                     title={props.article.title}
                 />
-                <CardContent>
+                <CardContent className={classes.contentHolder}>
                     <Link href={props.contribute ? editArticleURL : articleURL} color={"primary"}>
                         <Typography component="h5" variant="h5" gutterBottom>
                             <Highlight search={highlightTerm}>

@@ -35,6 +35,7 @@ const styles = theme => ({
     editField: {
         width: "100%",
         height: "200%",
+        marginTop: ".75rem",
     },
     highlightWrapper: {
         position: "relative",
@@ -45,7 +46,6 @@ const styles = theme => ({
         zIndex: "200",
         "&:hover": {
             background: "#8eacbb",
-            // paddingTop: "1.5rem",
         },
     },
     wrapper: {
@@ -86,7 +86,8 @@ class EditSectionText extends React.Component {
             sectionHover: false,
             publishingDelete: false,
             removeModal: false,
-            showHistory: false
+            source: "",
+            showHistory: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
@@ -104,15 +105,12 @@ class EditSectionText extends React.Component {
     }
 
     handleChange(event) {
-        if (this.state.merging) {
-            this.setState({
-                mergeValue: event.target.value
-            })
-        } else {
-            this.setState({
-                editValue: event.target.value
-            })
-        }
+        const { id, value } = event.target;
+
+        this.setState(prevState => ({
+            ...prevState,
+            [id]: value
+        }));
     }
 
     toggleEditing() {
@@ -122,6 +120,7 @@ class EditSectionText extends React.Component {
             editValue: this.state.section.body,
             mergeValue: "",
             sectionHover: false,
+            source: "",
         });
     }
 
@@ -153,6 +152,7 @@ class EditSectionText extends React.Component {
         this.setState({
             publishingDelete: true,
             editValue: "",
+
         }, function () {
             this.publishChanges();
         });
@@ -174,8 +174,8 @@ class EditSectionText extends React.Component {
         this.setState({ publishingChanges: true });
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
-
-        publishContribution(this.props.firebase, this.state.section, newBody, this.state.merging).then((response) => {
+        const finalSource = this.state.source === "" ? null : this.state.source;
+        publishContribution(this.props.firebase, newSection, newBody, this.state.merging, finalSource).then((response) => {
             // handle merge conflict
             if (response.conflict) {
                 var localSection = this.state.section;
@@ -193,6 +193,7 @@ class EditSectionText extends React.Component {
                 return;
             }
             else {
+                this.props.refreshArticle();
                 this.setState({
                     editing: false,
                     section: response.section,
@@ -218,7 +219,7 @@ class EditSectionText extends React.Component {
         let section = new ArticleSection(this.state.section.article_id, null, null, "text", "This is a new section, edit it to add content.", (this.state.section.order + 1), []);
         addSection(this.props.firebase, section).then((section) => {
             this.setState({ publishingNewSection: false });
-            this.props.addSectionToArticle(section);
+            this.props.refreshArticle();
         })
     }
 
@@ -229,8 +230,9 @@ class EditSectionText extends React.Component {
                 <Card>
                     <CardContent>
                         <TextField
-                            id="open_editor"
+                            id="editValue"
                             label="Edit Section"
+                            type="text"
                             multiline
                             disabled={this.state.merging}
                             rowsMax={10}
@@ -238,10 +240,21 @@ class EditSectionText extends React.Component {
                             onChange={(event) => this.handleChange(event)}
                             className={classes.editField}
                         />
+                        <TextField
+                            id="source"
+                            label="Add Source"
+                            type="url"
+                            disabled={this.state.merging}
+                            rowsMax={10}
+                            value={this.state.source}
+                            onChange={(event) => this.handleChange(event)}
+                            className={classes.editField}
+                        />
                         {this.state.merging && (
                             <TextField
-                                id="open_editor"
+                                id="mergeValue"
                                 label="Merge Changes"
+                                type="text"
                                 multiline
                                 rowsMax={10}
                                 value={this.state.mergeValue}
@@ -345,7 +358,7 @@ class EditSectionText extends React.Component {
                         }
                         <AddSectionField
                             article_id={this.state.section.article_id}
-                            addSectionToArticle={this.props.addSectionToArticle}
+                            refreshArticle={this.props.refreshArticle}
                             order={this.state.section.order}
                         />
                         {!this.state.publishingChanges &&

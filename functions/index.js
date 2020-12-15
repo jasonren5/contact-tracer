@@ -62,11 +62,19 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
     promises.push(db.collection("articles").doc(article_id).collection("sections").orderBy('order').get());
+    promises.push(db.collection("articles").doc(article_id).collection("sources").orderBy('created').get());
     return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
 
         let sectionData = values[1];
+
+        var sourcesData = [];
+        values[2].forEach(source => {
+            var sourceData = source.data();
+            sourceData["source_id"] = source.id;
+            sourcesData.push(sourceData);
+        });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
             const versions = await db.collection("articles").doc(article_id).collection("sections").doc(doc.id).collection("versions").orderBy('order', 'desc').get();
@@ -83,7 +91,8 @@ exports.getFullArticleByID = functions.https.onCall((data) => {
 
         let data = {
             article_data: articleData,
-            section_data: sections
+            section_data: sections,
+            sources_data: sourcesData,
         }
 
         return data;
@@ -96,11 +105,19 @@ async function _getFullArticleByID(db, article_id) {
     var promises = [];
     promises.push(db.collection("articles").doc(article_id).get());
     promises.push(db.collection("articles").doc(article_id).collection("sections").orderBy('order').get());
+    promises.push(db.collection("articles").doc(article_id).collection("sources").orderBy('created').get());
     return Promise.all(promises).then(async (values) => {
         var articleData = values[0].data();
         articleData["article_id"] = values[0].id;
 
         let sectionData = values[1];
+
+        var sourcesData = [];
+        values[2].forEach(source => {
+            var sourceData = source.data();
+            source["source_id"] = source.id;
+            sourcesData.push(sourceData);
+        });
 
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
             const versions = await db.collection("articles").doc(article_id).collection("sections").doc(doc.id).collection("versions").orderBy('order', 'desc').get();
@@ -117,7 +134,8 @@ async function _getFullArticleByID(db, article_id) {
 
         let data = {
             article_data: articleData,
-            section_data: sections
+            section_data: sections,
+            sources_data: sourcesData,
         }
 
         return data;
@@ -317,7 +335,7 @@ exports.getAllArticles = functions.https.onCall(() => {
 */
 exports.getAllArticlesWithSummaries = functions.https.onCall(async () => {
     const db = admin.firestore();
-    const snapshot = await db.collection("articles").where("published", "==", false).orderBy("created", "desc").get();
+    const snapshot = await db.collection("articles").where("published", "==", false).get();
 
     let resData = { "article_list": [] };
 
@@ -403,56 +421,6 @@ exports.getAllPublishedArticlesWithSummaries = functions.https.onCall(() => {
 });
 
 /*
-* Test GET request for the getAllArticles
-*/
-
-// exports.getArticleListGetRequest = functions.https.onRequest(async (req, res) => {
-//     // Get db and articles
-//     const db = admin.firestore();
-//     const articlesPromise = db.collection("articles").get();
-
-//     // Articles promise
-//     articlesPromise.then(async (snapshot) => {
-//         // Preset return array
-//         let resData = { "article_list": [] };
-//         // For each article
-//         await Promise.all(snapshot.docs.map(async (article) => {
-//             // Default the snippet to having no summary data
-//             var snippet = "There is nothing written yet for this article. Be the first to contribute!";
-
-//             // See if there is section data 
-//             const sectionQuery = await db.collection("articles").doc(article.id).collection("sections").where("type", "==", "text").orderBy("order", "asc").limit(1).get();
-//             var section = sectionQuery.docs[0];
-
-//             // If there is section data 
-//             if (section !== undefined) {
-//                 // Get the most recent version, and retrieve body and save to snippet
-//                 const versionQuery = await db.collection("articles").doc(article.id).collection("sections").doc(section.id).collection("versions").orderBy("order", "desc").limit(1).get();
-//                 var latestVersion = versionQuery.docs[0];
-//                 snippet = latestVersion.data().body;
-
-//                 // If the snippet is over 30 characters, trunacte it
-//                 if (snippet.length > 30) {
-//                     snippet = snippet.substring(0, 29) + "...";
-//                 }
-//             }
-//             // Push the article information to the array
-//             resData["article_list"].push({
-//                 "id": article.id,
-//                 "title": article.data().title,
-//                 "image_url": article.data().image_url,
-//                 "summary": snippet
-//             });
-//         }));
-//         // send the array of articles
-//         res.send(resData);
-//     }).catch(error => {
-//         console.log(error);
-//         res.send(error);
-//     });
-// });
-
-/*
 *   Creates a blank article with two sections that have one version each
 *         using firestore batch commits
 */
@@ -524,6 +492,7 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
 
     const title = data.title;
     const image = data.image_url;
+    const source = data.source;
     const created = admin.firestore.Timestamp.now();
     const type = (data.type ? data.type : "general");
     const published = false;
@@ -566,6 +535,16 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
         type: "text"
     };
 
+    const sourceData = {
+        url: source,
+        user: "generated",
+        section: "title",
+        deleted: false,
+    };
+
+    const newSourceRef = newArticleRef.collection("sources").doc();
+    batch.set(newSourceRef, sourceData);
+
     const newArticleRef = db.collection("articles").doc();
     batch.set(newArticleRef, articleData);
 
@@ -592,8 +571,7 @@ exports.createArticleWithTitleAndImage = functions.https.onCall((data, context) 
         })
 
 });
-
-function _createArticleWithTitleAndImage(title, image, type, body) {
+function _createArticleWithTitleAndImage(title, image, type, body, source) {
     const db = admin.firestore();
     const batch = db.batch();
 
@@ -619,6 +597,14 @@ function _createArticleWithTitleAndImage(title, image, type, body) {
         type: "text"
     };
 
+    const sourceData = {
+        url: source,
+        user: "generated",
+        section: "title",
+        deleted: false,
+        created: created,
+    };
+
     const newArticleRef = db.collection("articles").doc();
     batch.set(newArticleRef, articleData);
 
@@ -627,6 +613,9 @@ function _createArticleWithTitleAndImage(title, image, type, body) {
 
     const versionRef = newSectionRef.collection("versions").doc();
     batch.set(versionRef, versionData);
+
+    const newSourceRef = newArticleRef.collection("sources").doc();
+    batch.set(newSourceRef, sourceData);
 
     return batch.commit()
         .then(() => {
@@ -818,7 +807,7 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
                 let numCreated = 0;
                 for (i = 0; i < articlesToCreate; i++) {
                     if (data.articles[i] != null) {
-                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description, data.articles[i].url);
                         numCreated++;
                     }
                 }
@@ -850,7 +839,7 @@ exports.insertTopHeadlinesRequest = functions.https.onRequest((req, res) => {
                 let i;
                 for (i = 0; i < articlesToCreate; i++) {
                     if (data.articles[i] != null) {
-                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description);
+                        _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description, data.articles[i].url);
                     }
                 }
             }
@@ -1101,7 +1090,7 @@ exports.getApplicationById = functions.https.onCall(async (data) => {
 
     const application_id = data.application_id;
 
-    if(application_id === null) {
+    if (application_id === null) {
         // poorly formatted request, return error
         return {
             error: 400
@@ -1139,7 +1128,7 @@ exports.approveApplicationById = functions.https.onCall(async (data, context) =>
 
     const application_id = data.application_id;
 
-    if(application_id === null) {
+    if (application_id === null) {
         // poorly formatted request, return error
         return {
             error: 400
@@ -1153,10 +1142,10 @@ exports.approveApplicationById = functions.https.onCall(async (data, context) =>
 
     var promises = []
 
-    const applicationPromise = db.collection("mod_applications").doc(application_id).update({status: "approved"});
+    const applicationPromise = db.collection("mod_applications").doc(application_id).update({ status: "approved" });
     promises.push(applicationPromise);
 
-    const userPromise = db.collection("users").doc(app_user_id).update({expertises: admin.firestore.FieldValue.arrayUnion(type)});
+    const userPromise = db.collection("users").doc(app_user_id).update({ expertises: admin.firestore.FieldValue.arrayUnion(type) });
     promises.push(userPromise);
 
     return Promise.all(promises);
@@ -1185,14 +1174,14 @@ exports.rejectApplicationById = functions.https.onCall(async (data, context) => 
 
     const application_id = data.application_id;
 
-    if(application_id === null) {
+    if (application_id === null) {
         // poorly formatted request, return error
         return {
             error: 400
         };
     }
 
-    return db.collection("mod_applications").doc(application_id).update({status: "rejected"});
+    return db.collection("mod_applications").doc(application_id).update({ status: "rejected" });
 })
 
 exports.verifyAdmin = functions.https.onCall(async (data, context) => {
@@ -1218,6 +1207,168 @@ async function _verifyAdmin(db, user_id) {
 
     return {
         admin: userData.admin
+    }
+}
+
+exports.addSourceToArticle = functions.https.onCall((data, context) => {
+    const db = admin.firestore();
+    const article_id = data.article_id;
+    const section_id = data.section_id;
+    const source_url = data.source_url;
+    const user_id = (context.auth ? context.auth.uid : null);
+    const created = admin.firestore.Timestamp.now();
+
+    const sourceData = {
+        url: source_url,
+        user: user_id,
+        section: section_id,
+        deleted: false,
+        created: created,
+    };
+
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+    const articleRef = db.collection("articles").doc(article_id);
+
+    var sourcePromise = articleRef.collection("sources").add(sourceData);
+
+    return sourcePromise.then((doc) => {
+        sourceData["id"] = doc.id;
+
+        return sourceData;
+    });
+
+})
+
+exports.getAllSources = functions.https.onCall((data) => {
+    const db = admin.firestore();
+    const article_id = data.article_id;
+
+    return _getAllSources(db, article_id).then((data) => {
+        return data;
+    }).catch((err) => {
+        return {
+            error: err
+        }
+    });
+})
+
+async function _getAllSources(db, article_id) {
+    const snapshot = await db.collection("articles").doc(article_id).collection("sources").where("deleted", "==", false).get();
+
+    if (snapshot.empty) {
+        return "No source found";
+    }
+
+    var resData = [];
+    snapshot.forEach(doc => {
+        resData.push(doc.data());
+    });
+    return resData;
+}
+
+exports.deleteSource = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+    let article_id = data.article_id;
+    let source_id = data.source_id;
+
+    return _deleteSource(db, article_id, source_id).then((data) => {
+        return data;
+    }).catch((err) => {
+        return {
+            error: err
+        }
+    });
+})
+
+async function _deleteSource(db, article_id, source_id) {
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+
+    if (!source_id) {
+        return {
+            error: 400,
+            message: "source_id cannot be null"
+        }
+    }
+
+    const sourceRef = db.collection("articles").doc(article_id).collection("sources").doc(source_id);
+    const doc = await sourceRef.get();
+
+    // check if doc exists before updating
+    if (doc.exists) {
+        await sourceRef.update({
+            deleted: true
+        });
+
+        return {
+            status: 200,
+            message: "Successfully deleted source",
+        }
+    } else {
+        return {
+            error: 500,
+            message: "cannot delete source"
+        }
+    }
+}
+
+exports.editSource = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+    let article_id = data.article_id;
+    let source_id = data.source_id;
+    let new_url = data.new_url;
+
+    return _editSource(db, article_id, source_id, new_url).then((data) => {
+        return data;
+    }).catch((err) => {
+        return {
+            error: err
+        }
+    });
+})
+
+async function _editSource(db, article_id, source_id, new_url) {
+    if (!article_id) {
+        return {
+            error: 400,
+            message: "article_id cannot be null"
+        };
+    }
+
+    if (!source_id) {
+        return {
+            error: 400,
+            message: "source_id cannot be null"
+        }
+    }
+
+    const sourceRef = db.collection("articles").doc(article_id).collection("sources").doc(source_id);
+    const doc = await sourceRef.get();
+
+    // check if doc exists before updating
+    if (doc.exists) {
+        await sourceRef.update({
+            url: new_url,
+        });
+
+        return {
+            status: 200,
+            message: "Successfully deleted source",
+        }
+    } else {
+        return {
+            error: 500,
+            message: "cannot delete source"
+        }
     }
 }
 

@@ -1,6 +1,7 @@
-import Article from '../../classes/Article'
-import ArticleSection from '../../classes/ArticleSection'
-import PublishedArticle from '../../classes/PublishedArticle'
+import Article from '../../classes/Article';
+import ArticleSection from '../../classes/ArticleSection';
+import PublishedArticle from '../../classes/PublishedArticle';
+import Source from '../../classes/Source';
 import SectionVersion from '../../classes/SectionVersion';
 
 async function getFullArticle(firebase, article_id) {
@@ -15,7 +16,16 @@ async function getFullArticle(firebase, article_id) {
             sections.push(s)
         });
 
-        var article = new Article(data.article_data.article_id, data.article_data.title, data.article_data.image_url, "Hello, World!", sections);
+        var sources = [];
+
+        data.sources_data.map((source, index) => {
+            if (!source.deleted) {
+                var s = new Source(data.article_data.article_id, source.source_id, source.url, source.deleted, source.user, source.section, source.created, index + 1);
+                sources.push(s);
+            }
+        });
+
+        var article = new Article(data.article_data.article_id, data.article_data.title, data.article_data.image_url, "Hello, World!", sections, sources);
         return article;
     });
 
@@ -25,18 +35,18 @@ async function getFullArticle(firebase, article_id) {
 async function getAllUnpublishedArticles(firebase) {
     var getAllArticles = firebase.functions.httpsCallable("getAllArticlesWithSummaries");
 
-    var response = await getAllArticles()
+    var response = await getAllArticles();
     return response.data;
 }
 
 async function getAllArticles(firebase) {
     var getAllArticles = firebase.functions.httpsCallable("getAllPublishedArticlesWithSummaries");
 
-    var response = await getAllArticles()
+    var response = await getAllArticles();
     return response.data;
 }
 
-async function publishContribution(firebase, section, newBody, merging) {
+async function publishContribution(firebase, section, newBody, merging, source) {
     var addVersionToSection = firebase.functions.httpsCallable("addVersionToSection");
 
     let requestData = {
@@ -58,6 +68,14 @@ async function publishContribution(firebase, section, newBody, merging) {
     } else {
         newSection.body = data.body;
         newSection.version_id = data.version_id;
+        if (source) {
+            var sourceObject = await addSourceToArticle(firebase, newSection, source);
+            return {
+                section: newSection,
+                conflict: conflict,
+                sourceObject
+            };
+        }
     }
 
     return {
@@ -66,7 +84,7 @@ async function publishContribution(firebase, section, newBody, merging) {
     };
 }
 
-async function addSection(firebase, section) {
+async function addSection(firebase, section, source) {
     var addSectionAtIndex = firebase.functions.httpsCallable("addSectionAtIndex");
 
     let requestData = {
@@ -78,8 +96,12 @@ async function addSection(firebase, section) {
     var newSection = section;
     newSection.id = response.data.section_id;
     newSection.version_id = response.data.version_id;
+    if (source) {
+        var sourceObject = await addSourceToArticle(firebase, newSection, source);
+        return { newSection, sourceObject };
+    }
 
-    return newSection
+    return { newSection };
 }
 
 async function createBlankArticle(firebase) {
@@ -130,9 +152,9 @@ async function editArticleTitle(firebase, article_id, title) {
 }
 
 async function editArticleImage(firebase, article_id, image_url) {
-    let editArticleTitle = firebase.functions.httpsCallable("editArticleHeaderImage");
+    let editArticleImage = firebase.functions.httpsCallable("editArticleHeaderImage");
 
-    const response = await editArticleTitle({
+    const response = await editArticleImage({
         article_id: article_id,
         image_url: image_url
     });
@@ -140,6 +162,49 @@ async function editArticleImage(firebase, article_id, image_url) {
     return response;
 }
 
+async function addSourceToArticle(firebase, section, source) {
+    var addSourceToArticle = firebase.functions.httpsCallable("addSourceToArticle");
+
+    const requestData = {
+        article_id: section.article_id,
+        section_id: section.id,
+        source_url: source,
+    };
+
+    var response = await addSourceToArticle(requestData);
+    var newSource = response.data;
+
+    return newSource;
+}
+
+async function getAllSources(firebase, article_id) {
+    let getAllSourcesByID = firebase.functions.httpsCallable("getAllSources");
+    var response = await getAllSourcesByID({ article_id: article_id });
+
+    return response;
+}
+
+async function removeSource(firebase, article_id, source_id) {
+    let deleteSource = firebase.functions.httpsCallable("deleteSource");
+
+    const response = await deleteSource({
+        article_id: article_id,
+        source_id: source_id,
+    });
+
+    return response;
+}
+
+async function editSource(firebase, article_id, source_id, new_url) {
+    let deleteSource = firebase.functions.httpsCallable("editSource");
+
+    const response = await deleteSource({
+        article_id: article_id,
+        source_id: source_id,
+        new_url: new_url,
+    });
+
+    return response;
 async function getSectionByID(firebase, article_id, section_id) {
     let getSection = firebase.functions.httpsCallable("getSectionByID");
 
@@ -169,5 +234,9 @@ export {
     getAllUnpublishedArticles,
     editArticleTitle,
     editArticleImage,
-    getSectionByID
+    addSourceToArticle,
+    getAllSources,
+    removeSource,
+    editSource,
+    getSectionByID,
 };

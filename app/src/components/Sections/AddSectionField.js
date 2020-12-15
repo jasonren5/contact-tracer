@@ -51,11 +51,13 @@ export default function AddSectionField(props) {
     const [addImage, setAddImage] = useState(false);
     const [addText, setAddText] = useState(false);
 
-    const addTextSectionBelow = (bodyText) => {
+    const addTextSectionBelow = (bodyText, source) => {
+        const finalSource = source === "" ? null : source;
         let section = new ArticleSection(props.article_id, null, null, "text", bodyText, (props.order + 1), []);
 
-        addSection(firebase, section).then((section) => {
-            props.addSectionToArticle(section);
+        addSection(firebase, section, finalSource).then((data) => {
+            console.log(data);
+            props.refreshArticle();
             setAddText(false);
         });
     };
@@ -63,8 +65,8 @@ export default function AddSectionField(props) {
     const addImageSectionBelow = (imageURL) => {
         let section = new ArticleSection(props.article_id, null, null, "image", imageURL, (props.order + 1), []);
 
-        addSection(firebase, section).then((section) => {
-            props.addSectionToArticle(section);
+        addSection(firebase, section, imageURL).then((data) => {
+            props.refreshArticle();
             setAddImage(false);
         });
     };
@@ -100,7 +102,6 @@ export default function AddSectionField(props) {
 
     return (
         <div className={classes.container}>
-
             <div className="Menu Holder">
                 <IconButton
                     className={classes.button}

@@ -21,11 +21,13 @@ const useStyles = makeStyles((theme) => ({
     },
     textField: {
         width: "500px",
+        marginTop: ".75rem",
     },
 }));
 
 const INITIAL_STATE = {
     editValue: "",
+    sourceURL: "",
     publishingChanges: false,
 };
 
@@ -41,6 +43,7 @@ export default function CreateImageModal(props) {
         setState(prevState => ({
             ...prevState,
             editValue: "",
+            sourceURL: "",
             publishingChanges: false,
         }));
     }, [props.isOpen]);
@@ -59,7 +62,7 @@ export default function CreateImageModal(props) {
             ...prevState,
             publishingChanges: true,
         }));
-        props.handleSubmitModal(state.editValue)
+        props.type === "image" ? props.handleSubmitModal(state.editValue) : props.handleSubmitModal(state.editValue, state.sourceURL);
     };
 
     //eslint-disable-next-line
@@ -79,7 +82,7 @@ export default function CreateImageModal(props) {
                     {props.type === "image" ?
                         "To create an image, please submit a new URL ending in .jpg or .png."
                         :
-                        "To add a text section, please fill out the body."
+                        "To add a text section, please fill out the body and add a source."
                     }
                 </DialogContentText>
                 {props.type === "image" ?
@@ -89,25 +92,33 @@ export default function CreateImageModal(props) {
                         type="url"
                         onChange={handleChange}
                         label="Image URL"
-                        // fullWidth
                         disabled={state.merging}
                         required
                         className={classes.textField}
                     />
                     :
-                    <TextField
-                        autoFocus
-                        id="editValue"
-                        type="text"
-                        onChange={handleChange}
-                        label="Body text"
-                        // fullWidth
-                        disabled={state.merging}
-                        required
-                        multiline
-                        rowsMax={10}
-                        className={classes.textField}
-                    />
+                    <div className="Text Options">
+                        <TextField
+                            autoFocus
+                            id="editValue"
+                            type="text"
+                            onChange={handleChange}
+                            label="Body text"
+                            disabled={state.merging}
+                            required
+                            multiline
+                            rowsMax={10}
+                            className={classes.textField}
+                        />
+                        <TextField
+                            id="sourceURL"
+                            type="url"
+                            onChange={handleChange}
+                            label="Source URL"
+                            disabled={state.merging}
+                            className={classes.textField}
+                        />
+                    </div>
                 }
             </DialogContent>
             <DialogActions>
