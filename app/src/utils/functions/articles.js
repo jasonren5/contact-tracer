@@ -67,6 +67,14 @@ async function publishContribution(firebase, section, newBody, merging, source) 
     } else {
         newSection.body = data.body;
         newSection.version_id = data.version_id;
+
+        if (newSection.body === "" || newSection.type === "image") {
+            newSection.sources.forEach(async (source) => {
+                var deleteSource = await removeSource(firebase, newSection.article_id, source.source_id);
+                console.log(deleteSource);
+            });
+        }
+
         if (source) {
             var sourceObject = await addSourceToArticle(firebase, newSection, source);
             return {

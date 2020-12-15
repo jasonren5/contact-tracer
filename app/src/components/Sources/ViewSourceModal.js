@@ -56,7 +56,6 @@ export default function ViewSourceModal(props) {
             getSectionByID(firebase, props.article_id, props.source.section).then((sectionVersions) => {
                 const latestVersion = sectionVersions.slice(-1).pop();
                 if (latestVersion) {
-                    console.log(latestVersion);
                     setSectionBody(latestVersion.body);
                 }
             });

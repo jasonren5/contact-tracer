@@ -17,7 +17,7 @@ function EditArticlePage(props) {
     }, []);
 
     const fetchArticle = () => {
-        let article_id = props.match.params.articleId
+        let article_id = props.match.params.articleId;
         getFullArticle(props.firebase, article_id).then((article) => {
             setArticle(article);
         }).catch((err) => {
