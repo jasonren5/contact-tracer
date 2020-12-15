@@ -74,7 +74,7 @@ class LikeButton extends React.Component {
     render() {
         return (
             <div className="Like Button Wrapper">
-                <IconButton aria-label="Like" onClick={this.handleClick}>
+                <IconButton aria-label="Like" onClick={this.handleClick} color="secondary">
                     {this.state.liked ? (
                         <FavoriteIcon></FavoriteIcon>
                     ) : (
