@@ -15,7 +15,7 @@ export default function LastUpdated(props) {
 
     return (
         <Typography color="secondary" variant="h6" className={classes.text}>
-            Last Updated: {props.updated}
+            Article Last Updated: {props.updated}
         </Typography>
     );
 }
