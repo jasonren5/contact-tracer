@@ -2,6 +2,7 @@ import Article from '../../classes/Article';
 import ArticleSection from '../../classes/ArticleSection';
 import PublishedArticle from '../../classes/PublishedArticle';
 import Source from '../../classes/Source';
+import SectionVersion from '../../classes/SectionVersion';
 
 async function getFullArticle(firebase, article_id) {
 
@@ -204,6 +205,21 @@ async function editSource(firebase, article_id, source_id, new_url) {
     });
 
     return response;
+async function getSectionByID(firebase, article_id, section_id) {
+    let getSection = firebase.functions.httpsCallable("getSectionByID");
+
+    const response = await getSection({
+        article_id: article_id,
+        section_id: section_id
+    })
+
+    var versions = [];
+
+    response.data.forEach((versionData) => {
+        versions.push(new SectionVersion(article_id, section_id, versionData))
+    })
+
+    return versions;
 }
 
 export {
@@ -222,4 +238,5 @@ export {
     getAllSources,
     removeSource,
     editSource,
+    getSectionByID,
 };

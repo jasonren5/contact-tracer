@@ -1371,3 +1371,42 @@ async function _editSource(db, article_id, source_id, new_url) {
         }
     }
 }
+
+exports.getSectionByID = functions.https.onCall(async (data) => {
+    const db = admin.firestore()
+
+    const article_id = data.article_id;
+    const section_id = data.section_id;
+
+    var versions = await db.collection("articles").doc(article_id).collection("sections").doc(section_id).collection("versions").orderBy("order").get();
+
+    var prevBody = "";
+
+    var promises = versions.docs.map(async (version) => {
+        var versionData = version.data();
+        versionData.version_id = version.id;
+
+        var user_id = versionData.user_id;
+
+        versionData.prevBody = prevBody;
+        prevBody = versionData.body;
+
+        try {
+            var user = await db.collection("users").doc(user_id).get();
+
+            var userData = user.data();
+            userData.user_id = user.id;
+
+            versionData.user = userData;
+        } catch (error) {
+            var userErrorData = {
+                    error: "No user found."
+                }
+            versionData.user = userErrorData;
+        }
+       
+        return versionData;
+    })
+    
+    return Promise.all(promises)
+})

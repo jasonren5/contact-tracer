@@ -1,5 +1,5 @@
 import React from 'react';
-import { publishContribution, addSection } from "../../utils/functions/articles"
+import { publishContribution, addSection, getSectionByID } from "../../utils/functions/articles"
 import { withFirebase } from '../../utils/firebase';
 
 import { withStyles } from "@material-ui/core/styles";
@@ -13,6 +13,10 @@ import { compose } from 'recompose';
 
 import ArticleSection from '../../classes/ArticleSection';
 import AddSectionField from './AddSectionField';
+
+import VersionHistory from '../Articles/EditArticles/VesionHistory'
+import HistoryIcon from '@material-ui/icons/History';
+
 
 import {
     TextField,
@@ -83,6 +87,7 @@ class EditSectionText extends React.Component {
             publishingDelete: false,
             removeModal: false,
             source: "",
+            showHistory: false,
         };
         this.handleChange = this.handleChange.bind(this);
         this.toggleEditing = this.toggleEditing.bind(this);
@@ -91,6 +96,9 @@ class EditSectionText extends React.Component {
         this.handleRemoveSection = this.handleRemoveSection.bind(this);
         this.handleCloseRemoveModal = this.handleCloseRemoveModal.bind(this);
         this.handleOpenRemoveModal = this.handleOpenRemoveModal.bind(this);
+        this.handleShowHistory = this.handleShowHistory.bind(this);
+        this.handleHideHistory = this.handleHideHistory.bind(this);
+        this.restoreVersion = this.restoreVersion.bind(this);
 
         this.hoverOn = this.hoverOn.bind(this);
         this.hoverOff = this.hoverOff.bind(this);
@@ -114,6 +122,18 @@ class EditSectionText extends React.Component {
             sectionHover: false,
             source: "",
         });
+    }
+
+    handleShowHistory() {
+        this.setState({
+            showHistory:true
+        })
+    }
+
+    handleHideHistory() {
+        this.setState({
+            showHistory:false
+        })
     }
 
     hoverOn() {
@@ -187,6 +207,13 @@ class EditSectionText extends React.Component {
         })
     }
 
+    restoreVersion(body) {
+        this.setState({
+            editValue: body,
+            showHistory: false
+        })
+    }
+
     addSectionBelow() {
         this.setState({ publishingNewSection: true });
         let section = new ArticleSection(this.state.section.article_id, null, null, "text", "This is a new section, edit it to add content.", (this.state.section.order + 1), []);
@@ -237,6 +264,9 @@ class EditSectionText extends React.Component {
                         )}
                     </CardContent>
                     <CardActions>
+                        <IconButton disabled={this.state.publishingChanges} onClick={this.handleShowHistory}>
+                            <HistoryIcon />
+                        </IconButton>
                         <Button
                             className={classes.submitButton}
                             aria-label="submit edit"
@@ -326,11 +356,19 @@ class EditSectionText extends React.Component {
                                 ? this.renderEditing()
                                 : this.renderNotEditing()
                         }
-                        < AddSectionField
+                        <AddSectionField
                             article_id={this.state.section.article_id}
                             refreshArticle={this.props.refreshArticle}
                             order={this.state.section.order}
                         />
+                        {!this.state.publishingChanges &&
+                            <VersionHistory 
+                                section={this.props.section} 
+                                open={this.state.showHistory} 
+                                close={this.handleHideHistory} 
+                                restoreVersion={this.restoreVersion}
+                            />
+                        }
                     </div>
                 }
             </div>
