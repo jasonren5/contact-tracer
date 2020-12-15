@@ -30,6 +30,7 @@ export default function ViewSourceModal(props) {
                     displayName: "Auto Generated",
                 }
                 setUser(autoGenUser);
+                setSectionBody("Title and Headline");
             }
             else {
                 getPublicProfileData(firebase, props.source.user).then((user) => {
@@ -54,11 +55,12 @@ export default function ViewSourceModal(props) {
         if (props.source) {
             getSectionByID(firebase, props.article_id, props.source.section).then((sectionVersions) => {
                 const latestVersion = sectionVersions.slice(-1).pop();
-                setSectionBody(latestVersion.body)
+                if (latestVersion) {
+                    setSectionBody(latestVersion.body);
+                }
             });
         }
     }, [props.source]);
-
 
     return (
         <div className="Source Dialog">
@@ -82,7 +84,7 @@ export default function ViewSourceModal(props) {
                         }
                         {date &&
                             <DialogContentText id="alert-dialog-description">
-                                Date Created: {date}
+                                Date Created: <Typography variant="span" color="primary">{date}</Typography>
                             </DialogContentText>
                         }
                         {sectionBody &&

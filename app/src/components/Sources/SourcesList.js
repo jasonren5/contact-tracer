@@ -29,9 +29,18 @@ export default function SourcesList(props) {
                 <List>
                     {props.sources.map((source) => {
                         return props.editing ?
-                            <EditSourceItem key={source.order} source={source} refreshArticle={props.refreshArticle} />
+                            <EditSourceItem
+                                article_id={props.article_id}
+                                key={source.order}
+                                source={source}
+                                refreshArticle={props.refreshArticle}
+                            />
                             :
-                            <SourceItem key={source.order} source={source} />
+                            <SourceItem
+                                key={source.order}
+                                article_id={props.article_id}
+                                source={source}
+                            />
                     }
                     )}
                 </List>
