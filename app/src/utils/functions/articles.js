@@ -19,7 +19,6 @@ async function getFullArticle(firebase, article_id) {
                 sources.push(s);
             }
         });
-        console.log(data);
         data.section_data.forEach((section, index) => {
             var s = new ArticleSection(data.article_data.article_id, section.section_id, section.current_version, section.type, section.body, index, [], section.sources);
             sections.push(s)

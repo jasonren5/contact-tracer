@@ -26,7 +26,7 @@ import {
     CardActions,
     CircularProgress
 } from '@material-ui/core';
-import SectionSources from '../Sources/SectionSources';
+import TextSectionSources from '../Sources/TextSectionSources';
 
 const styles = theme => ({
     body: {
@@ -302,8 +302,11 @@ class EditSectionText extends React.Component {
                 onMouseOver={this.hoverOn}
                 onMouseOut={this.hoverOff}
             >
-                <Typography variant="body1" className={classes.body} >{this.state.section.body}</Typography>
-                {this.state.section.sources.length > 0 && <SectionSources sources={this.state.section.sources} />}
+                <Typography variant="body1" className={classes.body} >
+                    {this.state.section.body}
+                    {this.state.section.sources.length > 0 && <TextSectionSources sources={this.state.section.sources} />}
+                </Typography>
+
                 <CSSTransition
                     in={this.state.sectionHover}
                     classNames="alert"
