@@ -6,6 +6,7 @@ const axios = require('axios');
 
 // Needed to interface with firebase firestore
 const admin = require('firebase-admin');
+const { user } = require('firebase-functions/lib/providers/auth');
 require('firebase-functions/lib/providers/auth');
 admin.initializeApp();
 
@@ -119,11 +120,20 @@ async function _getFullArticleByID(db, article_id) {
             sourcesData.push(sourceData);
         });
 
+        var contributors = {};
+
         let sections = await Promise.all(sectionData.docs.map(async (doc) => {
             const versions = await db.collection("articles").doc(article_id).collection("sections").doc(doc.id).collection("versions").orderBy('order', 'desc').get();
             var section = doc.data();
             let latestVersion = versions.docs[0];
             let latestVersionData = versions.docs[0].data();
+
+            versions.forEach((version) => {
+                const user_id = version.data().user_id;
+                if(user_id) {
+                    contributors[user_id] = (contributors[user_id] ? contributors[user_id] + 1 : 1 );
+                }
+            })
 
             section["section_id"] = doc.id;
             section["current_version"] = latestVersion.id;
@@ -132,10 +142,21 @@ async function _getFullArticleByID(db, article_id) {
             return section;
         }))
 
+        let users = await Promise.all(Object.entries(contributors).map(async ([user_id, numContributions]) => {
+            const user = await db.collection("users").doc(user_id).get();
+            var userData = user.data();
+
+            userData.user_id = user_id;
+            userData.numContributions = numContributions
+
+            return userData
+        }))
+
         let data = {
             article_data: articleData,
             section_data: sections,
             sources_data: sourcesData,
+            user_data: users
         }
 
         return data;
@@ -704,11 +725,14 @@ exports.publishArticleByID = functions.https.onRequest(async (req, res) => {
 async function _publishArticleByID(db, article_id) {
     const article = await _getFullArticleByID(db, article_id);
     const type = (article.article_data.type ? article.article_data.type : "general");
+    const contributors = (article.user_data ? article.user_data : []);
+    const contributors_json = JSON.stringify(contributors);
     const article_json = JSON.stringify(article);
     const time_now = admin.firestore.Timestamp.now();
 
     const data = {
         article_json: article_json,
+        contributors_json: contributors_json,
         type: type,
         liked_users: [],
         strikes: [],
@@ -774,6 +798,11 @@ async function _getPublishedArticleByID(db, article_id) {
     const articleJSONString = data.article_json;
     const articleJSON = JSON.parse(articleJSONString);
 
+    var contributors = [];
+    if(data.contributors_json) {
+        contributors = JSON.parse(data.contributors_json)
+    }
+
     var resData = articleJSON.article_data;
 
     resData.created = data.created;
@@ -782,6 +811,7 @@ async function _getPublishedArticleByID(db, article_id) {
     resData.type = data.type;
     resData.updated = data.updated;
     resData.sections = articleJSON.section_data;
+    resData.contributors = contributors;
 
     return resData;
 }
