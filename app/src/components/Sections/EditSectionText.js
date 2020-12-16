@@ -57,11 +57,6 @@ const styles = theme => ({
     editButtonWrapper: {
         position: "absolute",
         top: 0,
-        right: 80,
-    },
-    historyButtonWrapper: {
-        position: "absolute",
-        top: 0,
         right: 40,
     },
     removeButtonWrapper: {
@@ -270,6 +265,13 @@ class EditSectionText extends React.Component {
                         )}
                     </CardContent>
                     <CardActions>
+                        <IconButton
+                            disabled={this.state.publishingChanges}
+                            onClick={this.handleShowHistory}
+                            color="secondary"
+                        >
+                            <HistoryIcon />
+                        </IconButton>
                         <Button
                             className={classes.submitButton}
                             aria-label="submit edit"
@@ -323,23 +325,6 @@ class EditSectionText extends React.Component {
                             disabled={this.state.publishingDelete || this.state.publishingChanges}
                         >
                             <DeleteForeverIcon />
-                        </IconButton>
-                    </div>
-                </CSSTransition>
-
-                <CSSTransition
-                    in={this.state.sectionHover}
-                    classNames="alert"
-                    timeout={200}
-                    unmountOnExit
-                >
-                    <div className={classes.historyButtonWrapper}>
-                        <IconButton
-                            disabled={this.state.publishingChanges}
-                            onClick={this.handleShowHistory}
-                            color="secondary"
-                        >
-                            <HistoryIcon />
                         </IconButton>
                     </div>
                 </CSSTransition>
