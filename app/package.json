@@ -21,7 +21,8 @@
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.0",
     "react-transition-group": "^4.4.1",
-    "recompose": "^0.30.0"
+    "recompose": "^0.30.0",
+    "use-position": "0.0.8"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,5 +1,6 @@
 import React from 'react';
 import ArticleList from '../components/Homepage/ArticleList';
+import WeatherWidget from '../components/Homepage/WeatherWidget';
 import { useMediaQuery } from 'react-responsive';
 
 import { Container } from '@material-ui/core';
@@ -21,6 +22,7 @@ export default function HomePage() {
                 className={classes.body}
                 maxWidth={isTabletOrMobile ? 'xs' : "xl"}
             >
+                <WeatherWidget />
                 <ArticleList mediaQuery={isTabletOrMobile} />
             </Container>
         </div >
