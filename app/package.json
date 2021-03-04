@@ -9,6 +9,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.21.1",
     "diff": "^5.0.0",
     "firebase": "^7.23.0",
     "fontsource-roboto": "^3.0.3",
@@ -48,5 +49,6 @@
   "devDependencies": {
     "eslint": "^7.13.0",
     "eslint-plugin-react": "^7.21.5"
-  }
+  },
+  "proxy": "https://us-central1-cse437project.cloudfunctions.net/getWeatherRequest"
 }

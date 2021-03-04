@@ -2,7 +2,8 @@ import React, { useEffect, useContext } from 'react';
 import { usePosition } from 'use-position';
 
 import { FirebaseContext } from '../../utils/firebase';
-import { getWeather } from '../../utils/functions/widgets';
+// import { getWeather } from '../../utils/functions/widgets';
+import axios from 'axios';
 
 
 import { Button } from '@material-ui/core';
@@ -17,18 +18,31 @@ export default function WeatherWidget() {
 
     useEffect(() => {
         if (latitude && longitude && !error) {
-            getWeather(firebase, latitude, longitude).then((response) => {
-                console.log(response);
-            });
+            console.log(latitude, longitude);
+            axios.get('https://us-central1-cse437project.cloudfunctions.net/getWeatherRequest', {
+                params: {
+                    "retrieved": true,
+                    "latitude": latitude,
+                    "longitude": longitude
+                }
+            })
+                .then(res => {
+                    console.log(res.data);
+                });
         }
     }, [latitude]);
 
     useEffect(() => {
         if (error) {
             console.log(error);
-            getWeather(firebase, null, null).then((response) => {
-                console.log(response);
-            });
+            axios.get('https://us-central1-cse437project.cloudfunctions.net/getWeatherRequest', {
+                params: {
+                    "retrieved": false,
+                }
+            })
+                .then(res => {
+                    console.log(res.data);
+                });
         }
     }, [error]);
 

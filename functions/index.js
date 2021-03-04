@@ -1485,7 +1485,7 @@ exports.getWeather = functions.https.onCall(async (data) => {
     const longitude = data.longitude;
 
     // If we have the location, use it, if not default STL
-    const url = userLocationRetrieved ? `api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial` : `api.openweathermap.org/data/2.5/weather?zip=63105&appid=${apiKey}&units=imperial`;
+    const url = (userLocationRetrieved === "true") ? `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial` : `https://api.openweathermap.org/data/2.5/weather?zip=63105&appid=${apiKey}&units=imperial`;
 
     return axios.get(url)
         .then(function (response) {
@@ -1493,30 +1493,49 @@ exports.getWeather = functions.https.onCall(async (data) => {
 
             const returnData = {
                 "city": resData.name,
-                "icon": resData.weather.icon,
-                "description": resData.weather.description,
+                "icon": resData.weather[0].icon,
+                "description": resData.weather[0].description,
                 "temperature": resData.main.temp,
+                "feels_like": resData.main.feels_like,
+                "coords": resData.coord,
             }
 
             return returnData;
-            // if (data.status == "ok") {
-            //     let i;
-            //     let numCreated = 0;
-            //     for (i = 0; i < articlesToCreate; i++) {
-            //         if (data.articles[i] != null) {
-            //             _createArticleWithTitleAndImage(data.articles[i].title, data.articles[i].urlToImage, "general", data.articles[i].description, data.articles[i].url);
-            //             numCreated++;
-            //         }
-            //     }
-            //     return {
-            //         message: "Successfully created " + numCreated + " articles"
-            //     }
-            // } else {
-            //     return {
-            //         message: "Failed to add articles -- NewsAPI request failed",
-            //         data: data
-            //     }
-            // }
-
+        })
+        .catch(err => {
+            return ({
+                "error": err
+            })
         });
 })
+
+exports.getWeatherRequest = functions.https.onRequest((req, res) => {
+    // get API key from firebase config
+    res.set('Access-Control-Allow-Origin', '*');
+    const apiKey = functions.config().weather_api.key;
+    const userLocationRetrieved = req.query.retrieved;
+    const latitude = req.query.latitude;
+    const longitude = req.query.longitude;
+
+    // If we have the location, use it, if not default STL
+    const url = (userLocationRetrieved == "true") ? `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial` : `https://api.openweathermap.org/data/2.5/weather?zip=63105&appid=${apiKey}&units=imperial`;
+    axios.get(url)
+        .then(function (response) {
+            let resData = response.data;
+
+            const returnData = {
+                "city": resData.name,
+                "icon": resData.weather[0].icon,
+                "description": resData.weather[0].description,
+                "temperature": resData.main.temp,
+                "feels_like": resData.main.feels_like,
+                "coords": resData.coord,
+            }
+            res.status(200).send(returnData);
+        })
+        .catch(err => {
+            return res.status(500).json({
+                error: err
+            })
+        });
+});
