@@ -1476,39 +1476,6 @@ exports.getSectionByID = functions.https.onCall(async (data) => {
 })
 
 // Widget
-exports.getWeather = functions.https.onCall(async (data) => {
-    // get API key from firebase config
-    const apiKey = functions.config().weather_api.key;
-
-    const userLocationRetrieved = data.retrieved;
-    const latitude = data.latitude;
-    const longitude = data.longitude;
-
-    // If we have the location, use it, if not default STL
-    const url = (userLocationRetrieved === "true") ? `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial` : `https://api.openweathermap.org/data/2.5/weather?zip=63105&appid=${apiKey}&units=imperial`;
-
-    return axios.get(url)
-        .then(function (response) {
-            let resData = response.data;
-
-            const returnData = {
-                "city": resData.name,
-                "icon": resData.weather[0].icon,
-                "description": resData.weather[0].description,
-                "temperature": resData.main.temp,
-                "feels_like": resData.main.feels_like,
-                "coords": resData.coord,
-            }
-
-            return returnData;
-        })
-        .catch(err => {
-            return ({
-                "error": err
-            })
-        });
-})
-
 exports.getWeatherRequest = functions.https.onRequest((req, res) => {
     // get API key from firebase config
     res.set('Access-Control-Allow-Origin', '*');
