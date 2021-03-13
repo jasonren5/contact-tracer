@@ -3,7 +3,7 @@ import { usePosition } from 'use-position';
 
 import axios from 'axios';
 
-import { Paper, Grid } from '@material-ui/core';
+import { Paper, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
@@ -17,6 +17,10 @@ const useStyles = makeStyles((theme) => ({
         position: "relative",
         top: "50%",
         transform: "translateY(-50%)",
+    },
+    lowPadding: {
+        paddingTop: ".2em!important",
+        paddingBottom: ".2em!important",
     }
 }));
 
@@ -30,6 +34,10 @@ export default function WeatherWidget() {
 
     const [weather, setWeather] = useState();
     const classes = useStyles();
+
+    function jsUcfirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
     useEffect(() => {
         if (latitude && longitude && !error) {
@@ -65,16 +73,16 @@ export default function WeatherWidget() {
             {weather &&
                 <Paper className={classes.paper}>
                     <Grid container spacing={3}>
-                        <Grid item xs={3}>
+                        <Grid item xs={3} className={classes.lowPadding}>
                             <img
                                 className={classes.image}
                                 src={`http://openweathermap.org/img/w/${weather.icon}.png`}
                                 alt="Weather Icon">
                             </img>
                         </Grid>
-                        <Grid item xs={9}>
-                            <p>city: {weather.city}</p>
-                            <p>icon: {weather.icon}</p>
+                        <Grid item xs={9} className={classes.lowPadding}>
+                            <Typography variant="h6">{weather.city}</Typography>
+                            <Typography variant="h6">{weather.temperature}°</Typography>
                         </Grid>
                     </Grid>
                 </Paper>
