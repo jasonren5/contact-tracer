@@ -1,24 +1,38 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import { usePosition } from 'use-position';
 
-import { FirebaseContext } from '../../utils/firebase';
-// import { getWeather } from '../../utils/functions/widgets';
 import axios from 'axios';
 
+import { Paper, Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
-import { Button } from '@material-ui/core';
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        padding: theme.spacing(2),
+        textAlign: "center",
+        margin: "1.5em",
+        width: "15rem",
+    },
+    image: {
+        position: "relative",
+        top: "50%",
+        transform: "translateY(-50%)",
+    }
+}));
+
 
 export default function WeatherWidget() {
-    const firebase = useContext(FirebaseContext);
     const {
         latitude,
         longitude,
         error,
     } = usePosition();
 
+    const [weather, setWeather] = useState();
+    const classes = useStyles();
+
     useEffect(() => {
         if (latitude && longitude && !error) {
-            console.log(latitude, longitude);
             axios.get('https://us-central1-cse437project.cloudfunctions.net/getWeatherRequest', {
                 params: {
                     "retrieved": true,
@@ -27,7 +41,7 @@ export default function WeatherWidget() {
                 }
             })
                 .then(res => {
-                    console.log(res.data);
+                    setWeather(res.data)
                 });
         }
     }, [latitude]);
@@ -41,16 +55,30 @@ export default function WeatherWidget() {
                 }
             })
                 .then(res => {
-                    console.log(res.data);
+                    setWeather(res.data);
                 });
         }
     }, [error]);
 
     return (
-        <code>
-            latitude: {latitude}<br />
-            longitude: {longitude}<br />
-            error: {error}
-        </code>
+        <div className="weatherContainer">
+            {weather &&
+                <Paper className={classes.paper}>
+                    <Grid container spacing={3}>
+                        <Grid item xs={3}>
+                            <img
+                                className={classes.image}
+                                src={`http://openweathermap.org/img/w/${weather.icon}.png`}
+                                alt="Weather Icon">
+                            </img>
+                        </Grid>
+                        <Grid item xs={9}>
+                            <p>city: {weather.city}</p>
+                            <p>icon: {weather.icon}</p>
+                        </Grid>
+                    </Grid>
+                </Paper>
+            }
+        </div >
     );
 }
