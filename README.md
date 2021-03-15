@@ -1,4 +1,4 @@
-# contact-tracer
+# news-app
 
 ## Figma:
 https://www.figma.com/file/uLnmbMFh4c5dEyQBoDDSyT/Crowd-Sourced-News-Site?node-id=3%3A6535
