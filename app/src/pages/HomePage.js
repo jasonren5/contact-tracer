@@ -23,8 +23,14 @@ export default function HomePage() {
                 className={classes.body}
                 maxWidth={isTabletOrMobile ? 'xs' : "xl"}
             >
-                <WeatherWidget />
-                <UserCountWidget />
+                <Grid container spacing={3}>
+                    <Grid item>
+                        <WeatherWidget />
+                    </Grid>
+                    <Grid item>
+                        <UserCountWidget />
+                    </Grid>
+                </Grid>
                 <ArticleList mediaQuery={isTabletOrMobile} />
             </Container>
         </div >
