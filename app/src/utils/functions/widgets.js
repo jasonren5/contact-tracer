@@ -17,4 +17,20 @@ async function getWeather(firebase, latitude, longitude) {
     return null;
 }
 
-export { getWeather };
+async function getUsersCount(firebase) {
+    var userCount = firebase.functions.httpsCallable("getUserCount");
+    var response = await userCount();
+
+    console.log("response", response);
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+
+export { getWeather, getUsersCount };

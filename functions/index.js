@@ -1437,7 +1437,7 @@ async function _editSource(db, article_id, source_id, new_url) {
 }
 
 exports.getSectionByID = functions.https.onCall(async (data) => {
-    const db = admin.firestore()
+    const db = admin.firestore();
 
     const article_id = data.article_id;
     const section_id = data.section_id;
@@ -1505,4 +1505,15 @@ exports.getWeatherRequest = functions.https.onRequest((req, res) => {
                 error: err
             })
         });
+});
+
+exports.getUserCount = functions.https.onCall(async () => {
+    const db = admin.firestore();
+
+    return db.collection("users").get().then(function (querySnapshot) {
+        return ({
+            userCount: querySnapshot.size
+        });
+    });
+
 });

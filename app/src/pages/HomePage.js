@@ -1,9 +1,10 @@
 import React from 'react';
 import ArticleList from '../components/Homepage/ArticleList';
 import WeatherWidget from '../components/Homepage/WeatherWidget';
+import UserCountWidget from '../components/Homepage/UserCountWidget';
 import { useMediaQuery } from 'react-responsive';
 
-import { Container } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -23,6 +24,7 @@ export default function HomePage() {
                 maxWidth={isTabletOrMobile ? 'xs' : "xl"}
             >
                 <WeatherWidget />
+                <UserCountWidget />
                 <ArticleList mediaQuery={isTabletOrMobile} />
             </Container>
         </div >
