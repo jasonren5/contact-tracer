@@ -11,15 +11,6 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
         margin: "1.5em",
         width: "15rem",
-    },
-    image: {
-        position: "relative",
-        top: "50%",
-        transform: "translateY(-50%)",
-    },
-    lowPadding: {
-        paddingTop: ".2em!important",
-        paddingBottom: ".2em!important",
     }
 }));
 
