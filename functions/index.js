@@ -1517,3 +1517,83 @@ exports.getUserCount = functions.https.onCall(async () => {
     });
 
 });
+
+/*
+*   Failsafe in case the scheduled function fails and we need to 
+*/
+exports.insertStocksRequest = functions.https.onRequest((req, res) => {
+    const apiKey = functions.config().stock_api.key;
+    // Hard coded stocks we look at
+    const stockTickers = ['AAPL', 'GME', 'TSLA'];
+
+    // Start date one back due to weird JS stuff
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    const dateString = date.toISOString().substring(0, 10);
+
+    const url = `https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/${dateString}?unadjusted=true&apiKey=${apiKey}`;
+
+    axios.get(url)
+        .then(async function (response) {
+            let data = response.data;
+            if (data.queryCount === 0) {
+                return res.status(405).send({ error: "No stocks traded today" });
+            }
+            else {
+                const stockList = data.results;
+                var finalStockList = []
+                stockList.forEach(function (stock) {
+                    if (stockTickers.includes(stock.T)) {
+                        const finalJSON = {
+                            name: stock.T,
+                            opening_price: stock.o,
+                            closing_price: stock.c,
+                            highest_price: stock.h,
+                            logo: `https://s3.polygon.io/logos/${stock.T.toLowerCase()}/logo.png`
+                        }
+
+                        // finalStockList.push(JSON.stringify(finalJSON));
+                        finalStockList.push(finalJSON);
+                    }
+                });
+                await _createStockListing(finalStockList, date);
+                return res.status(200).send(finalStockList);
+            }
+        })
+        .catch(function (error) {
+            res.send(error);
+        });
+});
+
+// Function to create a stock object in firestore
+function _createStockListing(stockInfo, dateScraped) {
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    const created = admin.firestore.Timestamp.now();
+
+    const stockData = {
+        stock_info: stockInfo,
+        date_scraped: dateScraped,
+        created: created
+    };
+
+    const newStockRef = db.collection("stocks").doc();
+    batch.set(newStockRef, stockData);
+
+    return batch.commit()
+        .then(() => {
+            return {
+                status: 200,
+                message: "Successfully created article",
+                stock_id: newStockRef.id
+            }
+        })
+        .catch(error => {
+            return {
+                status: 500,
+                message: "Failed to create article",
+                error: error
+            }
+        })
+}
