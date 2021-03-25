@@ -13,6 +13,8 @@ const useStyles = makeStyles((theme) => ({
         textAlign: "center",
         margin: "1.5em",
         width: "20em",
+        marginTop: ".25em",
+        marginBottom: "1.5em",
     },
     stockTicker: {
         display: "inline",

@@ -23,8 +23,7 @@ export default function HomePage() {
                 className={classes.body}
                 maxWidth={isTabletOrMobile ? 'xs' : "xl"}
             >
-
-                <Grid container spacing={3}>
+                <Grid container justify="center">
                     <Grid item>
                         <WeatherWidget />
                     </Grid>
