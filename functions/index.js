@@ -1437,7 +1437,7 @@ async function _editSource(db, article_id, source_id, new_url) {
 }
 
 exports.getSectionByID = functions.https.onCall(async (data) => {
-    const db = admin.firestore()
+    const db = admin.firestore();
 
     const article_id = data.article_id;
     const section_id = data.section_id;
@@ -1473,4 +1473,227 @@ exports.getSectionByID = functions.https.onCall(async (data) => {
     })
 
     return Promise.all(promises)
+})
+
+// Widget
+exports.getWeatherRequest = functions.https.onRequest((req, res) => {
+    // get API key from firebase config
+    res.set('Access-Control-Allow-Origin', '*');
+    const apiKey = functions.config().weather_api.key;
+    const userLocationRetrieved = req.query.retrieved;
+    const latitude = req.query.latitude;
+    const longitude = req.query.longitude;
+
+    // If we have the location, use it, if not default STL
+    const url = (userLocationRetrieved == "true") ? `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=imperial` : `https://api.openweathermap.org/data/2.5/weather?zip=63105&appid=${apiKey}&units=imperial`;
+    axios.get(url)
+        .then(function (response) {
+            let resData = response.data;
+
+            const returnData = {
+                "city": resData.name,
+                "icon": resData.weather[0].icon,
+                "description": resData.weather[0].description,
+                "temperature": resData.main.temp,
+                "feels_like": resData.main.feels_like,
+                "coords": resData.coord,
+            }
+            res.status(200).send(returnData);
+        })
+        .catch(err => {
+            return res.status(500).json({
+                error: err
+            })
+        });
+});
+
+// Get count of how many users are signed up
+exports.getUserCount = functions.https.onCall(async () => {
+    const db = admin.firestore();
+
+    return db.collection("users").get().then(function (querySnapshot) {
+        return ({
+            userCount: querySnapshot.size
+        });
+    });
+
+});
+
+/*
+*   Failsafe in case the scheduled function fails and we need to 
+*/
+exports.insertStocksRequest = functions.https.onRequest((req, res) => {
+    const apiKey = functions.config().stock_api.key;
+    // Hard coded stocks we look at
+    const stockTickers = ['AAPL', 'GME', 'TSLA'];
+
+    // Start date one back due to weird JS stuff
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    const dateString = date.toISOString().substring(0, 10);
+
+    const url = `https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/${dateString}?unadjusted=true&apiKey=${apiKey}`;
+
+    axios.get(url)
+        .then(async function (response) {
+            let data = response.data;
+            if (data.queryCount === 0) {
+                return res.status(405).send({ error: "No stocks traded today" });
+            }
+            else {
+                const stockList = data.results;
+                var finalStockList = []
+                stockList.forEach(function (stock) {
+                    if (stockTickers.includes(stock.T)) {
+                        var changeInPrice = (stock.c + stock.o).toFixed(2);
+                        var color;
+                        if (changeInPrice === 0) {
+                            changeInPrice = "+" + changeInPrice;
+                            color = 'black';
+                        }
+                        else if (changeInPrice > 0) {
+                            changeInPrice = "+" + changeInPrice;
+                            color = 'green';
+                        }
+                        else {
+                            color = 'red';
+                        }
+
+                        const finalJSON = {
+                            name: stock.T,
+                            opening_price: stock.o,
+                            closing_price: stock.c,
+                            highest_price: stock.h,
+                            change_color: color,
+                            change_in_price: changeInPrice,
+                            logo: `https://s3.polygon.io/logos/${stock.T.toLowerCase()}/logo.png`
+                        }
+
+                        finalStockList.push(JSON.stringify(finalJSON));
+                        finalStockList.push(finalJSON);
+                    }
+                });
+                // await _createStockListing(finalStockList, date);
+                return res.status(200).send(finalStockList);
+            }
+        })
+        .catch(function (error) {
+            res.send(error);
+        });
+});
+
+// Function to create a stock object in firestore
+function _createStockListing(stockInfo, dateScraped) {
+    const db = admin.firestore();
+    const batch = db.batch();
+
+    const created = admin.firestore.Timestamp.now();
+
+    const stockData = {
+        stock_info: stockInfo,
+        date_scraped: dateScraped,
+        created: created
+    };
+
+    const newStockRef = db.collection("stocks").doc();
+    batch.set(newStockRef, stockData);
+
+    return batch.commit()
+        .then(() => {
+            return {
+                status: 200,
+                message: "Successfully created article",
+                stock_id: newStockRef.id
+            }
+        })
+        .catch(error => {
+            return {
+                status: 500,
+                message: "Failed to create article",
+                error: error
+            }
+        })
+}
+
+// Daily stock insert
+exports.insertStocks = functions.pubsub.schedule('every day 12:00').onRun(function () {
+    const apiKey = functions.config().stock_api.key;
+    // Hard coded stocks we look at.
+    // ** IF YOU CHANGE HOW MANY STOCKS WE ARE SCRAPING, THEN YOU MUST GO TO THE STOCK WIDGET FRONT END COMPONENT AND INCREASE THE WIDTH OF "stockTickerHolder" **
+    const stockTickers = ['AAPL', 'GME', 'TSLA'];
+
+    // Start date one back due to weird JS stuff
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    const dateString = date.toISOString().substring(0, 10);
+
+    const url = `https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/${dateString}?unadjusted=true&apiKey=${apiKey}`;
+
+    axios.get(url)
+        .then(async function (response) {
+            let data = response.data;
+            if (data.queryCount === 0) {
+                return { status: "error", error: "No stocks traded today" };
+            }
+            else {
+                const stockList = data.results;
+                var finalStockList = []
+                stockList.forEach(function (stock) {
+                    if (stockTickers.includes(stock.T)) {
+                        var changeInPrice = (stock.c - stock.o).toFixed(2);
+                        var color;
+                        if (changeInPrice === 0) {
+                            changeInPrice = "+" + changeInPrice;
+                            color = 'black';
+                        }
+                        else if (changeInPrice > 0) {
+                            changeInPrice = "+" + changeInPrice;
+                            color = 'green';
+                        }
+                        else {
+                            color = 'red';
+                        }
+
+                        const finalJSON = {
+                            name: stock.T,
+                            opening_price: stock.o,
+                            closing_price: stock.c,
+                            highest_price: stock.h,
+                            change_color: color,
+                            change_in_price: changeInPrice,
+                            logo: `https://s3.polygon.io/logos/${stock.T.toLowerCase()}/logo.png`
+                        }
+
+                        // finalStockList.push(JSON.stringify(finalJSON));
+                        finalStockList.push(finalJSON);
+                    }
+                });
+                await _createStockListing(finalStockList, date);
+                return {
+                    status: 'success',
+                    stock_array: finalStockList
+                }
+            }
+        })
+        .catch(function (error) {
+            return {
+                status: 'error',
+                error: error
+            }
+        });
+})
+
+// Get latest stock data
+exports.getLatestStocks = functions.https.onCall(async () => {
+    const db = admin.firestore();
+
+    const snapshot = await db.collection("stocks").orderBy("created", "desc").limit(1).get();
+
+    var finalData;
+    snapshot.forEach(doc => {
+        finalData = doc.data();
+        finalData.date_scraped = doc.data().date_scraped.toDate().toISOString();
+    });
+
+    return finalData;
 })

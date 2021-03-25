@@ -1,5 +1,13 @@
 {
   "news_api": {
     "key": "4c17a79b5c0548ee9137aa673db83e81"
+  },
+  "weather_api": {
+    "id": "weatherAPI",
+    "key": "e84ae132edbf96adb162a69f7dabb8ad"
+  },
+  "stock_api": {
+    "id": "Polygon",
+    "key": "WT_oMzf1ADuaKSi6cUv_vnXS8OUlbbZH"
   }
 }
