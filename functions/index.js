@@ -895,7 +895,12 @@ exports.requestSmartHeadlinesDirect = functions.https.onRequest(async (req, res)
     const url = functions.config().wenhop_api.url + '/getArticles';
 
     // make fetch request using axios package
-    return axios.get(url, { headers: { Authorization: apiKey } })
+    try {
+        await axios.get(url, { headers: { Authorization: apiKey } });
+        res.status(200).json({ok: true});
+    } catch (error) {
+        res.status(200).json({ok: false});
+    }
 })
 
 exports.recieveNewHeadlines = functions.https.onRequest(async (req, res) => {
@@ -908,12 +913,12 @@ exports.recieveNewHeadlines = functions.https.onRequest(async (req, res) => {
         res.status(400).json({error: "poorly formed request"})
     }
     try {
-        const articlePromises = articles.map((article) => _createArticleWithTitleAndImage(article.title, article.urlToImage, article.category, article.description, article.url))
+        const articlePromises = articles.map((article) => _createArticleWithTitleAndImage(article.title, article.urlToImage, article.category, (article.summary ? article.summary : article.description), article.url))
 
         const articleResults = await Promise.all(articlePromises)
 
         res.status(200).json({ok: true, results: articleResults})
-    } catch {
+    } catch (error) {
         res.status(400).json({error: "failed to add articles"})
     }
 })
