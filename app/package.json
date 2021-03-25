@@ -21,6 +21,7 @@
     "react-responsive": "^8.1.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^4.0.0",
+    "react-ticker": "^1.2.2",
     "react-transition-group": "^4.4.1",
     "recompose": "^0.30.0",
     "use-position": "0.0.8"

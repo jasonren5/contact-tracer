@@ -1,7 +1,6 @@
 import React from 'react';
 import ArticleList from '../components/Homepage/ArticleList';
-import WeatherWidget from '../components/Homepage/WeatherWidget';
-import UserCountWidget from '../components/Homepage/UserCountWidget';
+import { WeatherWidget, StocksWidget, UserCountWidget } from '../components/Widgets';
 import { useMediaQuery } from 'react-responsive';
 
 import { Container, Grid } from '@material-ui/core';
@@ -13,6 +12,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
+// TODO: Need to make sure that the homepage renders the widgets after articles are loaded.
 export default function HomePage() {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
     const classes = useStyles();
@@ -23,12 +23,16 @@ export default function HomePage() {
                 className={classes.body}
                 maxWidth={isTabletOrMobile ? 'xs' : "xl"}
             >
+
                 <Grid container spacing={3}>
                     <Grid item>
                         <WeatherWidget />
                     </Grid>
                     <Grid item>
                         <UserCountWidget />
+                    </Grid>
+                    <Grid item>
+                        <StocksWidget />
                     </Grid>
                 </Grid>
                 <ArticleList mediaQuery={isTabletOrMobile} />
