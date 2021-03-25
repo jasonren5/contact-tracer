@@ -1597,3 +1597,54 @@ function _createStockListing(stockInfo, dateScraped) {
             }
         })
 }
+
+// Daily stock insert
+exports.insertStocks = functions.pubsub.schedule('every day 12:00').onRun(function () {
+    const apiKey = functions.config().stock_api.key;
+    // Hard coded stocks we look at
+    const stockTickers = ['AAPL', 'GME', 'TSLA'];
+
+    // Start date one back due to weird JS stuff
+    var date = new Date();
+    date.setDate(date.getDate() - 1);
+    const dateString = date.toISOString().substring(0, 10);
+
+    const url = `https://api.polygon.io/v2/aggs/grouped/locale/us/market/stocks/${dateString}?unadjusted=true&apiKey=${apiKey}`;
+
+    axios.get(url)
+        .then(async function (response) {
+            let data = response.data;
+            if (data.queryCount === 0) {
+                return { status: "error", error: "No stocks traded today" };
+            }
+            else {
+                const stockList = data.results;
+                var finalStockList = []
+                stockList.forEach(function (stock) {
+                    if (stockTickers.includes(stock.T)) {
+                        const finalJSON = {
+                            name: stock.T,
+                            opening_price: stock.o,
+                            closing_price: stock.c,
+                            highest_price: stock.h,
+                            logo: `https://s3.polygon.io/logos/${stock.T.toLowerCase()}/logo.png`
+                        }
+
+                        // finalStockList.push(JSON.stringify(finalJSON));
+                        finalStockList.push(finalJSON);
+                    }
+                });
+                await _createStockListing(finalStockList, date);
+                return {
+                    status: 'success',
+                    stock_array: finalStockList
+                }
+            }
+        })
+        .catch(function (error) {
+            return {
+                status: 'error',
+                error: error
+            }
+        });
+})
