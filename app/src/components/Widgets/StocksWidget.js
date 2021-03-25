@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
         marginRight: ".5em",
     },
     stockTickerHolder: {
-        width: "35em",
+        width: "55em",
     },
 }));
 
@@ -55,7 +55,7 @@ export default function StocksWidget() {
                             <div className={classes.stockTickerHolder}>
                                 {stockData.map((stock) =>
                                     <Typography className={classes.stockTicker} variant="h6">
-                                        <b>{stock.name}:</b> ${stock.closing_price}
+                                        <b>{stock.name}:</b> ${stock.closing_price} <span style={{ color: stock.change_color }}>({stock.change_in_price})</span>
                                     </Typography>
                                 )}
                             </div >
