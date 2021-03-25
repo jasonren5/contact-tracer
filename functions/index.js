@@ -1545,17 +1545,20 @@ exports.insertStocksRequest = functions.https.onRequest((req, res) => {
                 var finalStockList = []
                 stockList.forEach(function (stock) {
                     if (stockTickers.includes(stock.T)) {
-                        const changeInPrice = stock.c - stock.o;
+                        var changeInPrice = (stock.c + stock.o).toFixed(2);
                         var color;
                         if (changeInPrice === 0) {
+                            changeInPrice = "+" + changeInPrice;
                             color = 'black';
                         }
                         else if (changeInPrice > 0) {
+                            changeInPrice = "+" + changeInPrice;
                             color = 'green';
                         }
                         else {
                             color = 'red';
                         }
+
                         const finalJSON = {
                             name: stock.T,
                             opening_price: stock.o,
@@ -1566,11 +1569,11 @@ exports.insertStocksRequest = functions.https.onRequest((req, res) => {
                             logo: `https://s3.polygon.io/logos/${stock.T.toLowerCase()}/logo.png`
                         }
 
-                        // finalStockList.push(JSON.stringify(finalJSON));
+                        finalStockList.push(JSON.stringify(finalJSON));
                         finalStockList.push(finalJSON);
                     }
                 });
-                await _createStockListing(finalStockList, date);
+                // await _createStockListing(finalStockList, date);
                 return res.status(200).send(finalStockList);
             }
         })
@@ -1637,17 +1640,20 @@ exports.insertStocks = functions.pubsub.schedule('every day 12:00').onRun(functi
                 var finalStockList = []
                 stockList.forEach(function (stock) {
                     if (stockTickers.includes(stock.T)) {
-                        const changeInPrice = stock.c - stock.o;
+                        var changeInPrice = (stock.c - stock.o).toFixed(2);
                         var color;
                         if (changeInPrice === 0) {
+                            changeInPrice = "+" + changeInPrice;
                             color = 'black';
                         }
                         else if (changeInPrice > 0) {
+                            changeInPrice = "+" + changeInPrice;
                             color = 'green';
                         }
                         else {
                             color = 'red';
                         }
+
                         const finalJSON = {
                             name: stock.T,
                             opening_price: stock.o,
