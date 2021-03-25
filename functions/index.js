@@ -1545,11 +1545,24 @@ exports.insertStocksRequest = functions.https.onRequest((req, res) => {
                 var finalStockList = []
                 stockList.forEach(function (stock) {
                     if (stockTickers.includes(stock.T)) {
+                        const changeInPrice = stock.c - stock.o;
+                        var color;
+                        if (changeInPrice === 0) {
+                            color = 'black';
+                        }
+                        else if (changeInPrice > 0) {
+                            color = 'green';
+                        }
+                        else {
+                            color = 'red';
+                        }
                         const finalJSON = {
                             name: stock.T,
                             opening_price: stock.o,
                             closing_price: stock.c,
                             highest_price: stock.h,
+                            change_color: color,
+                            change_in_price: changeInPrice,
                             logo: `https://s3.polygon.io/logos/${stock.T.toLowerCase()}/logo.png`
                         }
 
@@ -1624,11 +1637,24 @@ exports.insertStocks = functions.pubsub.schedule('every day 12:00').onRun(functi
                 var finalStockList = []
                 stockList.forEach(function (stock) {
                     if (stockTickers.includes(stock.T)) {
+                        const changeInPrice = stock.c - stock.o;
+                        var color;
+                        if (changeInPrice === 0) {
+                            color = 'black';
+                        }
+                        else if (changeInPrice > 0) {
+                            color = 'green';
+                        }
+                        else {
+                            color = 'red';
+                        }
                         const finalJSON = {
                             name: stock.T,
                             opening_price: stock.o,
                             closing_price: stock.c,
                             highest_price: stock.h,
+                            change_color: color,
+                            change_in_price: changeInPrice,
                             logo: `https://s3.polygon.io/logos/${stock.T.toLowerCase()}/logo.png`
                         }
 
