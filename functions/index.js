@@ -1507,6 +1507,7 @@ exports.getWeatherRequest = functions.https.onRequest((req, res) => {
         });
 });
 
+// Get count of how many users are signed up
 exports.getUserCount = functions.https.onCall(async () => {
     const db = admin.firestore();
 
@@ -1601,7 +1602,8 @@ function _createStockListing(stockInfo, dateScraped) {
 // Daily stock insert
 exports.insertStocks = functions.pubsub.schedule('every day 12:00').onRun(function () {
     const apiKey = functions.config().stock_api.key;
-    // Hard coded stocks we look at
+    // Hard coded stocks we look at.
+    // ** IF YOU CHANGE HOW MANY STOCKS WE ARE SCRAPING, THEN YOU MUST GO TO THE STOCK WIDGET FRONT END COMPONENT AND INCREASE THE WIDTH OF "stockTickerHolder" **
     const stockTickers = ['AAPL', 'GME', 'TSLA'];
 
     // Start date one back due to weird JS stuff
@@ -1655,7 +1657,11 @@ exports.getLatestStocks = functions.https.onCall(async () => {
 
     const snapshot = await db.collection("stocks").orderBy("created", "desc").limit(1).get();
 
+    var finalData;
     snapshot.forEach(doc => {
-        return (doc.data());
+        finalData = doc.data();
+        finalData.date_scraped = doc.data().date_scraped.toDate().toISOString();
     });
+
+    return finalData;
 })

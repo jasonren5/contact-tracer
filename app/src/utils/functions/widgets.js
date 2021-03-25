@@ -33,7 +33,6 @@ async function getUsersCount(firebase) {
 async function getStocks(firebase) {
     var stocks = firebase.functions.httpsCallable("getLatestStocks");
     var response = await stocks();
-
     if (response.data) {
         if (response.data.error) {
             return null;
