@@ -1648,3 +1648,14 @@ exports.insertStocks = functions.pubsub.schedule('every day 12:00').onRun(functi
             }
         });
 })
+
+// Get latest stock data
+exports.getLatestStocks = functions.https.onCall(async () => {
+    const db = admin.firestore();
+
+    const snapshot = await db.collection("stocks").orderBy("created", "desc").limit(1).get();
+
+    snapshot.forEach(doc => {
+        return (doc.data());
+    });
+})

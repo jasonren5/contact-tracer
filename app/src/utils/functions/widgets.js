@@ -21,7 +21,18 @@ async function getUsersCount(firebase) {
     var userCount = firebase.functions.httpsCallable("getUserCount");
     var response = await userCount();
 
-    console.log("response", response);
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+async function getStocks(firebase) {
+    var stocks = firebase.functions.httpsCallable("getLatestStocks");
+    var response = await stocks();
 
     if (response.data) {
         if (response.data.error) {
@@ -33,4 +44,4 @@ async function getUsersCount(firebase) {
 }
 
 
-export { getWeather, getUsersCount };
+export { getWeather, getUsersCount, getStocks };
