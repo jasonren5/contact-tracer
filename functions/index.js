@@ -880,6 +880,49 @@ exports.insertTopHeadlines = functions.pubsub.schedule('every day 00:00').onRun(
         });
 })
 
+exports.requestSmartHeadlines = functions.pubsub.schedule('every day 00:00').onRun(function () {
+    // get API key and url from firebase config
+    const apiKey = functions.config().wenhop_api.key;
+    const url = functions.config().wenhop_api.url + '/getArticles';
+
+    // make fetch request using axios package
+    return axios.get(url, { headers: { Authorization: apiKey } })
+})
+
+exports.requestSmartHeadlinesDirect = functions.https.onRequest(async (req, res) => {
+    // get API key and url from firebase config
+    const apiKey = functions.config().wenhop_api.key;
+    const url = functions.config().wenhop_api.url + '/getArticles';
+
+    // make fetch request using axios package
+    try {
+        await axios.get(url, { headers: { Authorization: apiKey } });
+        res.status(200).json({ok: true});
+    } catch (error) {
+        res.status(200).json({ok: false});
+    }
+})
+
+exports.recieveNewHeadlines = functions.https.onRequest(async (req, res) => {
+    const body = req.body
+    if(!body) {
+        res.status(400).json({error: "poorly formed request"})
+    }
+    const articles = body.articles
+    if(!articles) {
+        res.status(400).json({error: "poorly formed request"})
+    }
+    try {
+        const articlePromises = articles.map((article) => _createArticleWithTitleAndImage(article.title, article.urlToImage, article.category, (article.summary ? article.summary : article.description), article.url))
+
+        const articleResults = await Promise.all(articlePromises)
+
+        res.status(200).json({ok: true, results: articleResults})
+    } catch (error) {
+        res.status(400).json({error: "failed to add articles"})
+    }
+})
+
 /*
 *   Failsafe in case the scheduled function fails and we need to 
 */

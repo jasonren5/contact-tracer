@@ -1,4 +1,16 @@
 {
+  "wenhop_api": {
+    "key": "PFbU58bWBttmmBYwEtgi",
+    "url": "https://us-central1-wenhop-22f08.cloudfunctions.net"
+  },
+  "stock_api": {
+    "id": "Polygon",
+    "key": "WT_oMzf1ADuaKSi6cUv_vnXS8OUlbbZH"
+  },
+  "weather_api": {
+    "id": "weatherAPI",
+    "key": "e84ae132edbf96adb162a69f7dabb8ad"
+  },
   "news_api": {
     "key": "4c17a79b5c0548ee9137aa673db83e81"
   },

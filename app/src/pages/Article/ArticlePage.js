@@ -6,6 +6,7 @@ import PageLoading from '../../components/Loading/PageLoading';
 import { LikeButton } from '../../components/Articles/Buttons';
 import ArticleContributors from '../../components/Articles/Buttons/ArticleContributors';
 import ArticleContributions from '../../components/Articles/Buttons/ArticleContributions';
+import ArticleDate from '../../components/Articles/Buttons/ArticleDate';
 
 import { getPublishedArticleByID } from '../../utils/functions/articles';
 import { withFirebase } from '../../utils/firebase';
@@ -63,7 +64,10 @@ class ArticlePage extends React.Component {
                     <Grid item >
                         <LikeButton article_id={this.state.article.id} liked_users={this.state.article.liked_users} />
                     </Grid>
-                    {this.state.updated &&
+                    <Grid>
+                        <ArticleDate article={this.state.article}/>
+                    </Grid>
+                    {this.state.article.updated._seconds !== this.state.article.created._seconds &&
                         <Grid item>
                             <LastUpdated updated={this.state.updated} />
                         </Grid>
