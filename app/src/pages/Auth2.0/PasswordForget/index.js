@@ -21,6 +21,10 @@ const INITIAL_STATE = {
     success: null,
 };
 
+const CLEAR_FORM = {
+    email: ''
+};
+
 const PasswordForgetPage = () => (
     <AuthPage form={<PasswordForgetForm />} title={"Forgot Your Password?"} />
 );
@@ -50,7 +54,10 @@ function PasswordForgetForm() {
                 setState({ error });
             });
 
-        setState({ ...INITIAL_STATE });
+        setState(prevState => ({
+            ...prevState,
+            CLEAR_FORM
+        }));
     };
 
     const handleChange = event => {
