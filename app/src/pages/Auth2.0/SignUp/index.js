@@ -14,7 +14,7 @@ import { SignInLink } from '../SignIn';
 
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
 
-var filter = require('leo-profanity');
+import { filter } from '../../../utils/filter';
 
 const INITIAL_STATE = {
     firstName: "",

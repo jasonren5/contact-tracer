@@ -18,6 +18,8 @@ import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 import AddBoxIcon from '@material-ui/icons/AddBox';
 import { makeStyles } from '@material-ui/core/styles';
 
+import { filter } from '../../utils/filter';
+
 
 const useStyles = makeStyles(() => ({
     container: {
@@ -53,7 +55,9 @@ export default function AddSectionField(props) {
 
     const addTextSectionBelow = (bodyText, source) => {
         const finalSource = source === "" ? null : source;
-        let section = new ArticleSection(props.article_id, null, null, "text", bodyText, (props.order + 1), [], []);
+        const finalBody = filter.clean(bodyText);
+
+        let section = new ArticleSection(props.article_id, null, null, "text", finalBody, (props.order + 1), [], []);
 
         addSection(firebase, section, finalSource).then((data) => {
             console.log(data);

@@ -17,7 +17,6 @@ import AddSectionField from './AddSectionField';
 import VersionHistory from '../Articles/EditArticles/VesionHistory'
 import HistoryIcon from '@material-ui/icons/History';
 
-
 import {
     TextField,
     Button,
@@ -27,6 +26,8 @@ import {
     CircularProgress
 } from '@material-ui/core';
 import TextSectionSources from '../Sources/TextSectionSources';
+
+import { filter } from '../../utils/filter';
 
 const styles = theme => ({
     body: {
@@ -174,9 +175,12 @@ class EditSectionText extends React.Component {
     publishChanges() {
         this.setState({ publishingChanges: true });
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
+
+        const finalBody = filter.clean(newBody);
+
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
         const finalSource = this.state.source === "" ? null : this.state.source;
-        publishContribution(this.props.firebase, newSection, newBody, this.state.merging, finalSource).then((response) => {
+        publishContribution(this.props.firebase, newSection, finalBody, this.state.merging, finalSource).then((response) => {
             // handle merge conflict
             if (response.conflict) {
                 var localSection = this.state.section;
