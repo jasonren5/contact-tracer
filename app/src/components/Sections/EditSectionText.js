@@ -1,6 +1,7 @@
 import React from 'react';
 import { publishContribution, addSection, getSectionByID } from "../../utils/functions/articles"
 import { withFirebase } from '../../utils/firebase';
+import { withFilter } from '../../utils/filter';
 
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, IconButton } from '@material-ui/core';
@@ -26,8 +27,6 @@ import {
     CircularProgress
 } from '@material-ui/core';
 import TextSectionSources from '../Sources/TextSectionSources';
-
-import { filter } from '../../utils/filter';
 
 const styles = theme => ({
     body: {
@@ -176,7 +175,7 @@ class EditSectionText extends React.Component {
         this.setState({ publishingChanges: true });
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
 
-        const finalBody = filter.clean(newBody);
+        const finalBody = this.props.filter.clean(newBody);
 
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
         const finalSource = this.state.source === "" ? null : this.state.source;
@@ -391,4 +390,4 @@ class EditSectionText extends React.Component {
     }
 }
 
-export default compose(withFirebase, withStyles(styles, { withTheme: true }))(EditSectionText);
+export default compose(withFirebase, withFilter, withStyles(styles, { withTheme: true }))(EditSectionText);

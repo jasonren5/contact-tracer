@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext } from '../../../utils/firebase';
+import { FilterContext } from '../../../utils/filter';
 
 import {
     Button,
@@ -13,8 +14,6 @@ import ErrorAlert from '../../../components/Alerts/ErrorAlert';
 import { SignInLink } from '../SignIn';
 
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
-
-import { filter } from '../../../utils/filter';
 
 const INITIAL_STATE = {
     firstName: "",
@@ -36,6 +35,7 @@ function SignUpForm() {
     const classes = useAuthStyles();
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
+    const filter = useContext(FilterContext);
 
     useEffect(() => { console.log(state) }, [state])
 

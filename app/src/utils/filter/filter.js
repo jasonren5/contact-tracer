@@ -3,4 +3,4 @@ var filter = require('leo-profanity');
 
 filter.add(['b00b', 'fucks']);
 
-module.exports = { filter };
+export default filter;
