@@ -24,12 +24,6 @@ const INITIAL_STATE = {
     error: null
 };
 
-const CLEAR_FORM = {
-    email: "",
-    password: "",
-    remeberMe: ""
-};
-
 const SignInPage = () => (
     <AuthPage form={<SignInForm />} title={"Sign In"} />
 );
@@ -61,7 +55,9 @@ function SignInForm() {
 
         setState(prevState => ({
             ...prevState,
-            CLEAR_FORM
+            email: "",
+            password: "",
+            remeberMe: ""
         }));
     };
 

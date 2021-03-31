@@ -17,12 +17,6 @@ const INITIAL_STATE = {
     success: null,
 };
 
-const CLEAR_FORM = {
-    passwordOne: '',
-    passwordTwo: ''
-};
-
-
 function PasswordChangeForm() {
     const [state, setState] = useState({
         ...INITIAL_STATE
@@ -54,7 +48,8 @@ function PasswordChangeForm() {
         }
         setState(prevState => ({
             ...prevState,
-            CLEAR_FORM
+            passwordOne: '',
+            passwordTwo: ''
         }));
     };
 
