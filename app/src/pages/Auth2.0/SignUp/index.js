@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { FirebaseContext } from '../../../utils/firebase';
 
@@ -14,6 +14,8 @@ import { SignInLink } from '../SignIn';
 
 import AuthPage, { useAuthStyles } from '../../../components/Auth/AuthPage';
 
+var filter = require('leo-profanity');
+
 const INITIAL_STATE = {
     firstName: "",
     lastName: "",
@@ -21,7 +23,6 @@ const INITIAL_STATE = {
     password: "",
     error: null
 };
-
 
 const SignUpPage = () => (
     <AuthPage form={<SignUpForm />} title={"Sign Up"} />
@@ -36,6 +37,8 @@ function SignUpForm() {
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
 
+    useEffect(() => { console.log(state) }, [state])
+
     const handleSubmit = event => {
         event.preventDefault();
 
@@ -43,18 +46,35 @@ function SignUpForm() {
         const fullName = firstName + " " + lastName;
 
         if (/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email)) {
-            firebase.doCreateUserWithEmailAndPassword(email, password, fullName)
-                .then(() => {
-                    history.push('/');
-                })
-                .catch(error => {
-                    setState({ error });
-                });
+            const username = email.split('@')[0];
+            if (filter.check(username)) {
+                setState(prevState => ({
+                    ...prevState,
+                    error: {
+                        message: "Your email has a banned word. Please use a more appropriate address"
+                    }
+                }));
+            }
+            else {
+                firebase.doCreateUserWithEmailAndPassword(email, password, fullName)
+                    .then(() => {
+                        history.push('/');
+                    })
+                    .catch(error => {
+                        setState({ error });
+                    });
+            }
         }
         else {
             setState({ error: { message: "Please Submit an Actual Email" } });
         }
-        setState({ ...INITIAL_STATE });
+        setState(prevState => ({
+            ...prevState,
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: ""
+        }));
     };
 
     const handleChange = event => {
