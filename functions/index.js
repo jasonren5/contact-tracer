@@ -1753,3 +1753,22 @@ exports.getFilterSettings = functions.https.onRequest(async (req, res) => {
         res.status(200).send(doc.data());
     }
 })
+
+exports.addBannedWord = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+
+    const filterRef = db.collection('filter').doc('master');
+    const doc = await filterRef.get();
+
+    const pastData = doc.data();
+
+    var newData = { banned: pastData.banned.append(data.word), whitelisted: pastData.whitelisted };
+
+    newData.whitelisted = newData.whitelisted.filter(item => item !== data.word);
+
+    db.collection('filter').doc('master').set(newData).then((doc) => {
+        return doc;
+    }).catch((err) => {
+        return err;
+    });
+})

@@ -1,6 +1,6 @@
 import FilterContext, { withFilter } from './context';
-import filter from './filter';
+import filter, { updateWords } from './filter';
 
 export default filter;
 
-export { FilterContext, withFilter };
+export { FilterContext, withFilter, updateWords };
