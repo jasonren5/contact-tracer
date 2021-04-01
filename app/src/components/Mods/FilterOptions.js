@@ -58,6 +58,7 @@ export default function FilterOptions() {
         const filterList = filter.filter.list();
         setFilterWords(filterList.join(', '));
         setViewBanned(!viewBanned);
+        setSearchTerm("");
     }
 
     return (

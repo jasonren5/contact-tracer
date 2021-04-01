@@ -56,7 +56,7 @@ export default function AddSectionField(props) {
 
     const addTextSectionBelow = (bodyText, source) => {
         const finalSource = source === "" ? null : source;
-        const finalBody = filter.clean(bodyText);
+        const finalBody = filter.clean(bodyText, '*', 1);
 
         let section = new ArticleSection(props.article_id, null, null, "text", finalBody, (props.order + 1), [], []);
 
