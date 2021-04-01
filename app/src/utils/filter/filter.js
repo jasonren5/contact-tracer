@@ -10,17 +10,23 @@ class Filter {
         this.filter = require('leo-profanity');
         this.bannedList = [];
         this.whiteList = [];
-        this.updateWords();
+
+        axios.get('https://us-central1-cse437project.cloudfunctions.net/getFilterSettings').then(res => {
+            this.bannedList = res.data.banned;
+            this.whiteList = res.data.banned;
+            this.filter.add(res.data.banned);
+            this.filter.remove(res.data.whitelisted);
+            return ("Success");
+        });
     }
 
     updateWords = () => {
         axios.get('https://us-central1-cse437project.cloudfunctions.net/getFilterSettings').then(res => {
-            // bannedList = res.data.banned;
-            // whitelistedList = res.data.banned;
+            this.bannedList = res.data.banned;
+            this.whiteList = res.data.banned;
             this.filter.add(res.data.banned);
             this.filter.remove(res.data.whitelisted);
-            this.filter.add("12312mike");
-            this.filter.addWord("test2");
+            console.log("update filter called");
             return ("Success");
         });
     }

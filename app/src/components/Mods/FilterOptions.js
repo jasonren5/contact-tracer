@@ -46,17 +46,17 @@ const useStyles = makeStyles(() => ({
 export default function FilterOptions() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
-    const filter = useContext(FilterContext).filter;
+    const filter = useContext(FilterContext);
     const [filterWords, setFilterWords] = useState("");
     const [viewBanned, setViewBanned] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
-    useEffect(() => {
-        const filterList = filter.list();
-        setFilterWords(filterList.join(', '));
-    }, []);
-
     const handleToggleView = () => {
+        if (!viewBanned) {
+            filter.updateWords();
+        }
+        const filterList = filter.filter.list();
+        setFilterWords(filterList.join(', '));
         setViewBanned(!viewBanned);
     }
 
