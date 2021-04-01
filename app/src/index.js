@@ -12,7 +12,7 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <FirebaseContext.Provider value={new Firebase()}>
-        <FilterContext.Provider value={filter}>
+        <FilterContext.Provider value={new filter()}>
           <App />
         </FilterContext.Provider>
       </FirebaseContext.Provider>

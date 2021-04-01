@@ -175,7 +175,7 @@ class EditSectionText extends React.Component {
         this.setState({ publishingChanges: true });
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
 
-        const finalBody = this.props.filter.clean(newBody);
+        const finalBody = this.props.filter.filter.clean(newBody);
 
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
         const finalSource = this.state.source === "" ? null : this.state.source;

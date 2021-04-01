@@ -35,7 +35,7 @@ function SignUpForm() {
     const classes = useAuthStyles();
     const history = useHistory();
     const firebase = useContext(FirebaseContext);
-    const filter = useContext(FilterContext);
+    const filter = useContext(FilterContext).filter;
 
     useEffect(() => { console.log(state) }, [state])
 

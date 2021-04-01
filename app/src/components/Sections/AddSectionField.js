@@ -49,7 +49,7 @@ const useStyles = makeStyles(() => ({
 export default function AddSectionField(props) {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
-    const filter = useContext(FilterContext);
+    const filter = useContext(FilterContext).filter;
     const [publishingNewSection, setPublishingNewSection] = useState(false);
     const [addImage, setAddImage] = useState(false);
     const [addText, setAddText] = useState(false);

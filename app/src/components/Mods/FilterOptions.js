@@ -46,7 +46,7 @@ const useStyles = makeStyles(() => ({
 export default function FilterOptions() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
-    const filter = useContext(FilterContext);
+    const filter = useContext(FilterContext).filter;
     const [filterWords, setFilterWords] = useState("");
     const [viewBanned, setViewBanned] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
