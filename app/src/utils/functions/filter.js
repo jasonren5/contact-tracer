@@ -6,10 +6,12 @@ async function addBannedWord(firebase, data) {
     return response.data;
 }
 
-async function addWhitelistWord(firebase, data) {
+async function addWhitelistWord(firebase, newWord) {
     let addWhitelistWord = firebase.functions.httpsCallable("addWhitelistWord");
 
-    let response = await addWhitelistWord(data);
+    let response = await addWhitelistWord({
+        word: newWord
+    });
 
     return response.data;
 }
@@ -30,3 +32,4 @@ async function addWhitelistWord(firebase, data) {
 //     return response.data;
 // }
 
+export { addBannedWord, addWhitelistWord };

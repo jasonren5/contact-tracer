@@ -1762,7 +1762,10 @@ exports.addBannedWord = functions.https.onCall(async (data) => {
 
     const pastData = doc.data();
 
-    var newData = { banned: pastData.banned.append(data.word), whitelisted: pastData.whitelisted };
+    var newData = { banned: pastData.banned, whitelisted: pastData.whitelisted };
+
+    // Why does this cause the array to become a number?????????
+    newData.banned = newData.banned.push(data.word);
 
     newData.whitelisted = newData.whitelisted.filter(item => item !== data.word);
 

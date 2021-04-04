@@ -1,11 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import {
     Typography,
     Paper,
     Button,
     IconButton,
-    Grid
+    Grid,
+    TextField,
+    CircularProgress
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { HighlightOff } from '@material-ui/icons';
@@ -14,6 +16,7 @@ var Highlight = require('react-highlighter');
 
 import { FirebaseContext } from '../../utils/firebase';
 import { FilterContext } from '../../utils/filter';
+import { addBannedWord } from '../../utils/functions/filter';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -50,6 +53,8 @@ export default function FilterOptions() {
     const [filterWords, setFilterWords] = useState("");
     const [viewBanned, setViewBanned] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [addTerm, setAddTerm] = useState("test");
+    const [publishingChanges, setPublishingChanges] = useState(false);
 
     const handleToggleView = () => {
         if (!viewBanned) {
@@ -59,6 +64,24 @@ export default function FilterOptions() {
         setFilterWords(filterList.join(', '));
         setViewBanned(!viewBanned);
         setSearchTerm("");
+        setAddTerm("");
+    }
+
+    const handleAddChange = (event) => {
+        setAddTerm(event.target.value);
+    };
+
+    const handleSubmitAdd = () => {
+        console.log("submitted", addTerm);
+        setPublishingChanges(true);
+        addBannedWord(firebase, addTerm).then((response) => {
+            console.log(response);
+            setPublishingChanges(false);
+            filter.updateWords();
+            const filterList = filter.filter.list();
+            setFilterWords(filterList.join(', '));
+            setAddTerm("");
+        });
     }
 
     return (
@@ -88,8 +111,27 @@ export default function FilterOptions() {
                             {filterWords}
                         </Highlight>
                     </Typography>
+                    <TextField
+                        required
+                        label="Add Banned Term"
+                        id="add-banned-term"
+                        value={addTerm}
+                        onChange={handleAddChange}
+                    />
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        className={classes.addButton}
+                        onClick={handleSubmitAdd}
+                    >
+                        {publishingChanges
+                            ? <CircularProgress size={20} color="primary" />
+                            : 'Submit'
+                        }
+                    </Button>
                 </Paper>
             }
-        </div>
+        </div >
     );
 }
