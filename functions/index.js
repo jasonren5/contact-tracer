@@ -1760,9 +1760,9 @@ exports.addBannedWord = functions.https.onCall(async (data) => {
     const filterRef = db.collection('filter').doc('master');
     const doc = await filterRef.get();
 
-    const pastData = doc.data();
+    var newData = doc.data();
 
-    var newData = { banned: pastData.banned.append(data.word), whitelisted: pastData.whitelisted };
+    newData.banned.append(data.word);
 
     newData.whitelisted = newData.whitelisted.filter(item => item !== data.word);
 
