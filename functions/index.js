@@ -1760,15 +1760,59 @@ exports.addBannedWord = functions.https.onCall(async (data) => {
     const filterRef = db.collection('filter').doc('master');
     const doc = await filterRef.get();
 
+    const newWord = data.word;
+
     var newData = doc.data();
 
-    newData.banned.append(data.word);
+    newData.banned.push(newWord);
 
-    newData.whitelisted = newData.whitelisted.filter(item => item !== data.word);
+    newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
+
+    db.collection('filter').doc('master').set(newData).then(() => {
+        return ("success");
+    }).catch((err) => {
+        return err;
+    });
+})
+
+exports.addWhitelistWord = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+
+    const filterRef = db.collection('filter').doc('master');
+    const doc = await filterRef.get();
+
+    const newWord = data.word;
+    var newData = doc.data();
+
+    newData.whitelisted.push(newWord);
+
+    newData.banned = newData.banned.filter(item => item !== newWord);
 
     db.collection('filter').doc('master').set(newData).then((doc) => {
         return doc;
     }).catch((err) => {
         return err;
+    });
+})
+
+
+exports.addBannedWordRequest = functions.https.onRequest(async (req, res) => {
+    const db = admin.firestore();
+
+    const filterRef = db.collection('filter').doc('master');
+    const doc = await filterRef.get();
+
+    const newWord = req.query.word;
+
+    var newData = doc.data();
+
+    newData.banned.push(newWord);
+
+    newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
+
+    db.collection('filter').doc('master').set(newData).then((doc) => {
+        return res.send(doc);
+    }).catch((err) => {
+        return res.send(err);
     });
 })

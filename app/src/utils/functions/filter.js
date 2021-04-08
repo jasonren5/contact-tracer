@@ -16,20 +16,4 @@ async function addWhitelistWord(firebase, newWord) {
     return response.data;
 }
 
-// async function removeBannedWord(firebase, data) {
-//     let removeBannedWord = firebase.functions.httpsCallable("removeBannedWord");
-
-//     let response = await removeBannedWord(data);
-
-//     return response.data;
-// }
-
-// async function removeWhitelistWord(firebase, data) {
-//     let removeWhitelistWord = firebase.functions.httpsCallable("removeWhitelistWord");
-
-//     let response = await removeWhitelistWord(data);
-
-//     return response.data;
-// }
-
 export { addBannedWord, addWhitelistWord };
