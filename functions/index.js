@@ -1762,16 +1762,47 @@ exports.addBannedWord = functions.https.onCall(async (data) => {
 
     const newWord = data.word;
 
+    if (!newWord) {
+        functions.logger.log("No new word found");
+        return ("No word found in request");
+    }
+    functions.logger.log("New word", newWord);
+
     var newData = doc.data();
 
     newData.banned.push(newWord);
 
     newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
 
-    db.collection('filter').doc('master').set(newData).then(() => {
-        return ("success");
+    db.collection('filter').doc('master').set(newData).then((doc) => {
+        return (doc);
     }).catch((err) => {
         return err;
+    });
+})
+
+exports.addBannedWordRequest = functions.https.onRequest(async (req, res) => {
+    const db = admin.firestore();
+
+    const filterRef = db.collection('filter').doc('master');
+    const doc = await filterRef.get();
+
+    const newWord = req.query.word;
+
+    if (!newWord) {
+        return res.status(200).send("No word found in request");
+    }
+
+    var newData = doc.data();
+
+    newData.banned.push(newWord);
+
+    newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
+
+    db.collection('filter').doc('master').set(newData).then((doc) => {
+        return res.send(doc);
+    }).catch((err) => {
+        return res.send(err);
     });
 })
 
@@ -1792,27 +1823,5 @@ exports.addWhitelistWord = functions.https.onCall(async (data) => {
         return doc;
     }).catch((err) => {
         return err;
-    });
-})
-
-
-exports.addBannedWordRequest = functions.https.onRequest(async (req, res) => {
-    const db = admin.firestore();
-
-    const filterRef = db.collection('filter').doc('master');
-    const doc = await filterRef.get();
-
-    const newWord = req.query.word;
-
-    var newData = doc.data();
-
-    newData.banned.push(newWord);
-
-    newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
-
-    db.collection('filter').doc('master').set(newData).then((doc) => {
-        return res.send(doc);
-    }).catch((err) => {
-        return res.send(err);
     });
 })

@@ -26,8 +26,8 @@ class Filter {
             this.whiteList = res.data.banned;
             this.filter.add(res.data.banned);
             this.filter.remove(res.data.whitelisted);
-            console.log("update filter called");
-            return ("Success");
+            console.log("updated words done");
+            return (this.filter.list());
         });
     }
 }

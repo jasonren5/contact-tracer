@@ -1,7 +1,8 @@
-async function addBannedWord(firebase, data) {
+async function addBannedWord(firebase, newWord) {
     let addBannedWord = firebase.functions.httpsCallable("addBannedWord");
-
-    let response = await addBannedWord(data);
+    let response = await addBannedWord({
+        word: newWord
+    });
 
     return response.data;
 }
