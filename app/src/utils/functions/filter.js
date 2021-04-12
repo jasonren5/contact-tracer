@@ -1,4 +1,3 @@
-// TODO: Handle the updating of the words in this function
 async function addBannedWord(firebase, filter, newWord) {
     let addBannedWord = firebase.functions.httpsCallable("addBannedWord");
     let response = await addBannedWord({

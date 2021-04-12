@@ -16,7 +16,7 @@ var Highlight = require('react-highlighter');
 
 import { FirebaseContext } from '../../utils/firebase';
 import { FilterContext } from '../../utils/filter';
-import { addBannedWord } from '../../utils/functions/filter';
+import { addBannedWord, addWhitelistWord } from '../../utils/functions/filter';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -44,6 +44,9 @@ const useStyles = makeStyles(() => ({
         margin: '0 auto',
         maxWidth: 800
     },
+    addButton: {
+        marginBottom: "2em",
+    }
 }));
 
 export default function FilterOptions() {
@@ -53,8 +56,11 @@ export default function FilterOptions() {
     const [filterWords, setFilterWords] = useState("");
     const [viewBanned, setViewBanned] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [addTerm, setAddTerm] = useState("test");
-    const [publishingChanges, setPublishingChanges] = useState(false);
+    const [addTerm, setAddTerm] = useState("");
+    const [addPublishingChanges, setAddPublishingChanges] = useState(false);
+    const [removeTerm, setRemoveTerm] = useState("");
+    const [removePublishingChanges, setRemovePublishingChanges] = useState(false);
+
 
     const handleToggleView = () => {
         if (!viewBanned) {
@@ -71,12 +77,25 @@ export default function FilterOptions() {
         setAddTerm(event.target.value);
     };
 
+    const handleRemoveChange = (event) => {
+        setRemoveTerm(event.target.value);
+    };
+
     const handleSubmitAdd = () => {
-        setPublishingChanges(true);
+        setAddPublishingChanges(true);
         addBannedWord(firebase, filter, addTerm).then((list) => {
-            setPublishingChanges(false);
+            setAddPublishingChanges(false);
             setFilterWords(list.join(', '));
             setAddTerm("");
+        })
+    }
+
+    const handleSubmitRemove = () => {
+        setRemovePublishingChanges(true);
+        addWhitelistWord(firebase, filter, removeTerm).then((list) => {
+            setRemovePublishingChanges(false);
+            setFilterWords(list.join(', '));
+            setRemoveTerm("");
         })
     }
 
@@ -107,25 +126,54 @@ export default function FilterOptions() {
                             {filterWords}
                         </Highlight>
                     </Typography>
-                    <TextField
-                        required
-                        label="Add Banned Term"
-                        id="add-banned-term"
-                        value={addTerm}
-                        onChange={handleAddChange}
-                    />
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        size="large"
-                        className={classes.addButton}
-                        onClick={handleSubmitAdd}
+                    <Grid
+                        container
+                        direction="row" justify="space-evenly"
+                        alignItems="center"
                     >
-                        {publishingChanges
-                            ? <CircularProgress size={20} color="primary" />
-                            : 'Submit'
-                        }
-                    </Button>
+                        <Grid item className="AddTermButton">
+                            <TextField
+                                required
+                                label="Add Banned Term"
+                                id="add-banned-term"
+                                value={addTerm}
+                                onChange={handleAddChange}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                className={classes.addButton}
+                                onClick={handleSubmitAdd}
+                            >
+                                {addPublishingChanges
+                                    ? <CircularProgress size={20} color="secondary" />
+                                    : 'Submit'
+                                }
+                            </Button>
+                        </Grid>
+                        <Grid item className="RemoveTermButton">
+                            <TextField
+                                required
+                                label="Remove Banned Term"
+                                id="remove-banned-term"
+                                value={removeTerm}
+                                onChange={handleRemoveChange}
+                            />
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                                className={classes.addButton}
+                                onClick={handleSubmitRemove}
+                            >
+                                {removePublishingChanges
+                                    ? <CircularProgress size={20} color="secondary" />
+                                    : 'Submit'
+                                }
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </Paper>
             }
         </div >
