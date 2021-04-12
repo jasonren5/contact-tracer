@@ -17,7 +17,6 @@ const INITIAL_STATE = {
     success: null,
 };
 
-
 function PasswordChangeForm() {
     const [state, setState] = useState({
         ...INITIAL_STATE
@@ -47,7 +46,11 @@ function PasswordChangeForm() {
         else {
             setState({ error: { message: "Passwords were not equal!" } });
         }
-        setState({ ...INITIAL_STATE });
+        setState(prevState => ({
+            ...prevState,
+            passwordOne: '',
+            passwordTwo: ''
+        }));
     };
 
     const handleChange = event => {

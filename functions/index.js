@@ -897,29 +897,29 @@ exports.requestSmartHeadlinesDirect = functions.https.onRequest(async (req, res)
     // make fetch request using axios package
     try {
         await axios.get(url, { headers: { Authorization: apiKey } });
-        res.status(200).json({ok: true});
+        res.status(200).json({ ok: true });
     } catch (error) {
-        res.status(200).json({ok: false});
+        res.status(200).json({ ok: false });
     }
 })
 
 exports.recieveNewHeadlines = functions.https.onRequest(async (req, res) => {
     const body = req.body
-    if(!body) {
-        res.status(400).json({error: "poorly formed request"})
+    if (!body) {
+        res.status(400).json({ error: "poorly formed request" })
     }
     const articles = body.articles
-    if(!articles) {
-        res.status(400).json({error: "poorly formed request"})
+    if (!articles) {
+        res.status(400).json({ error: "poorly formed request" })
     }
     try {
         const articlePromises = articles.map((article) => _createArticleWithTitleAndImage(article.title, article.urlToImage, article.category, (article.summary ? article.summary : article.description), article.url))
 
         const articleResults = await Promise.all(articlePromises)
 
-        res.status(200).json({ok: true, results: articleResults})
+        res.status(200).json({ ok: true, results: articleResults })
     } catch (error) {
-        res.status(400).json({error: "failed to add articles"})
+        res.status(400).json({ error: "failed to add articles" })
     }
 })
 
@@ -1739,4 +1739,106 @@ exports.getLatestStocks = functions.https.onCall(async () => {
     });
 
     return finalData;
+})
+
+exports.getFilterSettings = functions.https.onRequest(async (req, res) => {
+    res.set('Access-Control-Allow-Origin', '*');
+    const db = admin.firestore();
+
+    const filterRef = db.collection('filter').doc('master');
+    const doc = await filterRef.get();
+    if (!doc.exists) {
+        res.status(404).send("Document not found!");
+    } else {
+        res.status(200).send(doc.data());
+    }
+})
+
+exports.addBannedWord = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+
+    const filterRef = db.collection('filter').doc('master');
+    const doc = await filterRef.get();
+
+    const newWord = data.word;
+
+    if (!newWord) {
+        functions.logger.log("No new word found");
+        return ("No word found in request");
+    }
+
+    var newData = doc.data();
+
+    if (newData.banned.includes(newWord)) {
+        return newData;
+    }
+
+    newData.banned.push(newWord);
+
+    newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
+
+    return db.collection('filter').doc('master').set(newData).then(() => {
+        return newData;
+    }).catch((err) => {
+        return err;
+    });
+})
+
+exports.addBannedWordRequest = functions.https.onRequest(async (req, res) => {
+    const db = admin.firestore();
+
+    const filterRef = db.collection('filter').doc('master');
+    const doc = await filterRef.get();
+
+    const newWord = req.query.word;
+
+    if (!newWord) {
+        return res.status(200).send("No word found in request");
+    }
+
+    var newData = doc.data();
+
+    if (newData.banned.includes(newWord)) {
+        return res.send(newData);
+    }
+
+    newData.banned.push(newWord);
+
+    newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
+
+    db.collection('filter').doc('master').set(newData).then(() => {
+        return res.send(newData);
+    }).catch((err) => {
+        return res.send(err);
+    });
+})
+
+exports.addWhitelistWord = functions.https.onCall(async (data) => {
+    const db = admin.firestore();
+
+    const filterRef = db.collection('filter').doc('master');
+    const doc = await filterRef.get();
+
+    const newWord = data.word;
+
+    if (!newWord) {
+        functions.logger.log("No new word found");
+        return ("No word found in request");
+    }
+
+    var newData = doc.data();
+
+    if (newData.whitelisted.includes(newWord)) {
+        return newData;
+    }
+
+    newData.whitelisted.push(newWord);
+
+    newData.banned = newData.banned.filter(item => item !== newWord);
+
+    return db.collection('filter').doc('master').set(newData).then(() => {
+        return newData;
+    }).catch((err) => {
+        return err;
+    });
 })

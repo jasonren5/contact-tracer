@@ -1,6 +1,7 @@
 import React from 'react';
 import { publishContribution, addSection, getSectionByID } from "../../utils/functions/articles"
 import { withFirebase } from '../../utils/firebase';
+import { withFilter } from '../../utils/filter';
 
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, IconButton } from '@material-ui/core';
@@ -16,7 +17,6 @@ import AddSectionField from './AddSectionField';
 
 import VersionHistory from '../Articles/EditArticles/VesionHistory'
 import HistoryIcon from '@material-ui/icons/History';
-
 
 import {
     TextField,
@@ -174,9 +174,12 @@ class EditSectionText extends React.Component {
     publishChanges() {
         this.setState({ publishingChanges: true });
         const newBody = (this.state.merging ? this.state.mergeValue : this.state.editValue);
+
+        const finalBody = this.props.filter.filter.clean(newBody, '*', 1);
+
         const newSection = (this.state.merging ? this.state.mergeSection : this.state.section);
         const finalSource = this.state.source === "" ? null : this.state.source;
-        publishContribution(this.props.firebase, newSection, newBody, this.state.merging, finalSource).then((response) => {
+        publishContribution(this.props.firebase, newSection, finalBody, this.state.merging, finalSource).then((response) => {
             // handle merge conflict
             if (response.conflict) {
                 var localSection = this.state.section;
@@ -387,4 +390,4 @@ class EditSectionText extends React.Component {
     }
 }
 
-export default compose(withFirebase, withStyles(styles, { withTheme: true }))(EditSectionText);
+export default compose(withFirebase, withFilter, withStyles(styles, { withTheme: true }))(EditSectionText);

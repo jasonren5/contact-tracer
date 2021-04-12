@@ -20,6 +20,7 @@ import PublicProfile from './pages/Profile/PublicProfile';
 import PrivateProfile from './pages/Profile/PrivateProfile';
 import Navbar from './components/Navbar/Navbar';
 import AdminPortal from './pages/Admin/AdminPortal';
+import ModPortal from './pages/Mods/ModPortal';
 import ApplicationReview from './pages/Admin/ApplicationReview';
 
 import { withAuthentication } from './utils/session';
@@ -43,6 +44,7 @@ const App = () => (
         <Route path={'/profile'} component={PrivateProfile} />
         <Route path={'/admin/review/:appId'} component={ApplicationReview} />
         <Route exact path={'/admin'} component={AdminPortal} />
+        <Route exact path={'/mod'} component={ModPortal} />
         <Route component={PageNotFound} />
       </Switch>
     </Router>

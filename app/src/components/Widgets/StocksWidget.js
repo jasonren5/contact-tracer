@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
 
-import { Paper, Typography, Grid } from '@material-ui/core';
+import { Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../utils/firebase';
 import { getStocks } from '../../utils/functions/widgets';

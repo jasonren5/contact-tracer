@@ -28,7 +28,7 @@ class Firebase {
         }
 
         return createUser(data).then((res) => {
-            if(res.data.error) {
+            if (res.data.error) {
                 return Promise.reject(new Error("Error signing up, please try again."));
             }
             return this.doSignInWithEmailAndPassword(email, password);
@@ -45,12 +45,12 @@ class Firebase {
 
     doReauthenticateWithCredential = credential => this.auth.currentUser.reauthenticateWithCredential(credential);
 
-    doGetCurrentUser = () => {return this.auth.currentUser;};
+    doGetCurrentUser = () => { return this.auth.currentUser; };
 
     doGetCurrentName = () => {
         const user = this.auth.currentUser
 
-        if(user === null) {
+        if (user === null) {
             return null;
         }
 

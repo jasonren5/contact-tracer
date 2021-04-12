@@ -1,5 +1,6 @@
 import React from 'react';
 import Firebase, { FirebaseContext } from './utils/firebase';
+import filter, { FilterContext } from './utils/filter';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
@@ -11,7 +12,9 @@ ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <FirebaseContext.Provider value={new Firebase()}>
-        <App />
+        <FilterContext.Provider value={new filter()}>
+          <App />
+        </FilterContext.Provider>
       </FirebaseContext.Provider>
     </ThemeProvider>
   </React.StrictMode>,

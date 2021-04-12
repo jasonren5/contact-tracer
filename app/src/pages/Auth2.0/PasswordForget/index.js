@@ -50,7 +50,10 @@ function PasswordForgetForm() {
                 setState({ error });
             });
 
-        setState({ ...INITIAL_STATE });
+        setState(prevState => ({
+            ...prevState,
+            email: ''
+        }));
     };
 
     const handleChange = event => {

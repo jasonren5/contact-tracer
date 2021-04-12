@@ -17,25 +17,23 @@ export default function HomePage() {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
     const classes = useStyles();
     return (
-        <div className="home-page">
-            <Container
-                component="main"
-                className={classes.body}
-                maxWidth={isTabletOrMobile ? 'xs' : "xl"}
-            >
-                <Grid container justify="center">
-                    <Grid item>
-                        <WeatherWidget />
-                    </Grid>
-                    <Grid item>
-                        <UserCountWidget />
-                    </Grid>
-                    <Grid item>
-                        <StocksWidget />
-                    </Grid>
+        <Container
+            component="main"
+            className={classes.body}
+            maxWidth={isTabletOrMobile ? 'xs' : "xl"}
+        >
+            <Grid container justify="center">
+                <Grid item>
+                    <WeatherWidget />
                 </Grid>
-                <ArticleList mediaQuery={isTabletOrMobile} />
-            </Container>
-        </div >
+                <Grid item>
+                    <UserCountWidget />
+                </Grid>
+                <Grid item>
+                    <StocksWidget />
+                </Grid>
+            </Grid>
+            <ArticleList mediaQuery={isTabletOrMobile} />
+        </Container>
     );
 }

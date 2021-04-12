@@ -53,7 +53,12 @@ function SignInForm() {
                 setState({ error });
             });
 
-        setState({ ...INITIAL_STATE });
+        setState(prevState => ({
+            ...prevState,
+            email: "",
+            password: "",
+            remeberMe: ""
+        }));
     };
 
     const handleChange = event => {
