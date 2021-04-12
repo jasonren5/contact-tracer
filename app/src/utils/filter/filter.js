@@ -20,16 +20,18 @@ class Filter {
         });
     }
 
-    updateWords = () => {
+
+    updateWords() {
         axios.get('https://us-central1-cse437project.cloudfunctions.net/getFilterSettings').then(res => {
             this.bannedList = res.data.banned;
             this.whiteList = res.data.banned;
             this.filter.add(res.data.banned);
             this.filter.remove(res.data.whitelisted);
-            console.log("updated words done");
+            console.log("function value", this.filter.list());
             return (this.filter.list());
         });
     }
+
 }
 
 export default Filter;

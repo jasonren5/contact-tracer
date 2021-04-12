@@ -1766,16 +1766,19 @@ exports.addBannedWord = functions.https.onCall(async (data) => {
         functions.logger.log("No new word found");
         return ("No word found in request");
     }
-    functions.logger.log("New word", newWord);
 
     var newData = doc.data();
+
+    if (newData.banned.includes(newWord)) {
+        return newData;
+    }
 
     newData.banned.push(newWord);
 
     newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
 
-    db.collection('filter').doc('master').set(newData).then((doc) => {
-        return (doc);
+    return db.collection('filter').doc('master').set(newData).then(() => {
+        return newData;
     }).catch((err) => {
         return err;
     });
@@ -1795,12 +1798,16 @@ exports.addBannedWordRequest = functions.https.onRequest(async (req, res) => {
 
     var newData = doc.data();
 
+    if (newData.banned.includes(newWord)) {
+        return res.send(newData);
+    }
+
     newData.banned.push(newWord);
 
     newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
 
-    db.collection('filter').doc('master').set(newData).then((doc) => {
-        return res.send(doc);
+    db.collection('filter').doc('master').set(newData).then(() => {
+        return res.send(newData);
     }).catch((err) => {
         return res.send(err);
     });

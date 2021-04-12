@@ -71,17 +71,13 @@ export default function FilterOptions() {
         setAddTerm(event.target.value);
     };
 
-    const handleSubmitAdd = async () => {
-        console.log("submitted", addTerm);
+    const handleSubmitAdd = () => {
         setPublishingChanges(true);
-        addBannedWord(firebase, addTerm).then(async () => {
+        addBannedWord(firebase, filter, addTerm).then((list) => {
             setPublishingChanges(false);
-            filter.updateWords().then((newList) => {
-                console.log("newList", newList);
-                setFilterWords(newList.join(', '));
-            });
+            setFilterWords(list.join(', '));
             setAddTerm("");
-        });
+        })
     }
 
     return (
