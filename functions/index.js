@@ -1820,14 +1820,24 @@ exports.addWhitelistWord = functions.https.onCall(async (data) => {
     const doc = await filterRef.get();
 
     const newWord = data.word;
+
+    if (!newWord) {
+        functions.logger.log("No new word found");
+        return ("No word found in request");
+    }
+
     var newData = doc.data();
+
+    if (newData.whitelisted.includes(newWord)) {
+        return newData;
+    }
 
     newData.whitelisted.push(newWord);
 
     newData.banned = newData.banned.filter(item => item !== newWord);
 
-    db.collection('filter').doc('master').set(newData).then((doc) => {
-        return doc;
+    return db.collection('filter').doc('master').set(newData).then(() => {
+        return newData;
     }).catch((err) => {
         return err;
     });

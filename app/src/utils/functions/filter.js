@@ -13,14 +13,19 @@ async function addBannedWord(firebase, filter, newWord) {
     return filter.filter.list();
 }
 
-async function addWhitelistWord(firebase, newWord) {
+async function addWhitelistWord(firebase, filter, newWord) {
     let addWhitelistWord = firebase.functions.httpsCallable("addWhitelistWord");
 
     let response = await addWhitelistWord({
         word: newWord
     });
 
-    return response.data;
+    const newFilter = response.data;
+
+    filter.filter.add(newFilter.banned);
+    filter.filter.remove(newFilter.whitelisted);
+
+    return filter.filter.list();
 }
 
 export { addBannedWord, addWhitelistWord };
