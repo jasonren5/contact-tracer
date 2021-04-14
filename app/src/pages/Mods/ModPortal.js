@@ -4,7 +4,7 @@ import { useMediaQuery } from 'react-responsive';
 import { Container, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
-import FilterOptions from '../../components/Mods/FilterOptions';
+// import FilterOptions from '../../components/Mods/FilterOptions';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -26,7 +26,7 @@ export default function ModPortal() {
             maxWidth={isTabletOrMobile ? 'xs' : "xl"}
         >
             <Typography variant="h2" className={classes.title}>Mod Portal</Typography>
-            <FilterOptions />
+            {/* <FilterOptions /> */}
         </Container>
     );
 }

@@ -4,6 +4,8 @@ import { Container, Grid, Typography } from '@material-ui/core';
 import { verifyAdmin } from '../../utils/functions/applications';
 import { withFirebase } from '../../utils/firebase';
 
+import FilterOptions from '../../components/Mods/FilterOptions';
+
 class AdminPortal extends React.Component {
 
     componentDidMount() {
@@ -19,11 +21,10 @@ class AdminPortal extends React.Component {
 
     render() {
         return (
-            <Container component="main">
+            <Container component="main" maxWidth="xl">
                 <Typography variant="h2">Admin Portal</Typography>
-                <Grid container justify="center">
-                    <ApplicationList />
-                </Grid>
+                <FilterOptions />
+                <ApplicationList />
             </Container>
         )
     }
