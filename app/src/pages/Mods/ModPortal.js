@@ -11,6 +11,9 @@ const useStyles = makeStyles(() => ({
         marginTop: '1%',
         textAlign: 'center'
     },
+    title: {
+        marginBottom: ".5em",
+    }
 }));
 
 export default function ModPortal() {
@@ -22,6 +25,7 @@ export default function ModPortal() {
             className={classes.body}
             maxWidth={isTabletOrMobile ? 'xs' : "xl"}
         >
+            <Typography variant="h2" className={classes.title}>Mod Options</Typography>
             <FilterOptions />
         </Container>
     );
