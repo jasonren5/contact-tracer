@@ -17,7 +17,8 @@ import {
     Home,
     LockOpen,
     Create,
-    Search
+    Search,
+    VerifiedUser
 } from '@material-ui/icons';
 
 import MenuIcon from '@material-ui/icons/Menu';
@@ -84,6 +85,11 @@ export default function ProfileButton(props) {
         history.push('/browse/contribute');
     }
 
+    const handleViewAdmin = () => {
+        handleClose();
+        history.push('/admin');
+    }
+
     const SignedInMobile = () => (
         <div className="signed-in-mobile">
             <MenuItem disabled>
@@ -110,6 +116,14 @@ export default function ProfileButton(props) {
                 </ListItemIcon>
                 <ListItemText primary="Contribute" />
             </MenuItem>
+            {props.isAdmin &&
+                <MenuItem onClick={handleViewAdmin}>
+                    <ListItemIcon>
+                        <VerifiedUser />
+                    </ListItemIcon>
+                    <ListItemText primary="Admin Portal" />
+                </MenuItem>
+            }
             <MenuItem onClick={handleViewProfile}>
                 <ListItemIcon>
                     <Visibility fontSize="small" />

@@ -125,6 +125,7 @@ export default function Navbar() {
                             username={username}
                             currentUser={currentUser}
                             openNewArticleModal={openNewArticleModal}
+                            isAdmin={isAdmin}
                         />
                     }
                 </Toolbar>
