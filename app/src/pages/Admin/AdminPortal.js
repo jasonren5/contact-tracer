@@ -20,7 +20,7 @@ class AdminPortal extends React.Component {
     render() {
         return (
             <Container component="main">
-                <Typography variant="h2">Admin Options</Typography>
+                <Typography variant="h2">Admin Portal</Typography>
                 <Grid container justify="center">
                     <ApplicationList />
                 </Grid>

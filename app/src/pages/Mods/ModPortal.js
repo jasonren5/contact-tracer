@@ -25,7 +25,7 @@ export default function ModPortal() {
             className={classes.body}
             maxWidth={isTabletOrMobile ? 'xs' : "xl"}
         >
-            <Typography variant="h2" className={classes.title}>Mod Options</Typography>
+            <Typography variant="h2" className={classes.title}>Mod Portal</Typography>
             <FilterOptions />
         </Container>
     );
