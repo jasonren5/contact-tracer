@@ -18,7 +18,7 @@ import SignInMenu from './SignInMenu';
 import MobileMenu from './MobileMenu';
 import { useMediaQuery } from 'react-responsive';
 
-import { verifyAdmin } from '../../utils/functions/applications';
+import { verifyAdmin, verifyMod } from '../../utils/functions/applications';
 
 const useStyles = makeStyles(() => ({
     title: {
@@ -45,6 +45,7 @@ const useStyles = makeStyles(() => ({
 export default function Navbar() {
     const [newArticleIsOpen, setNewArticleIsOpen] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isMod, setIsMod] = useState(false);
     const [username, setUsername] = useState();
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
@@ -73,6 +74,21 @@ export default function Navbar() {
         })
     }, []);
 
+    useEffect(() => {
+        verifyMod(firebase).then((data) => {
+            if (data.mod) {
+                setIsMod(true);
+            }
+            else {
+                setIsMod(false);
+            }
+        }).catch((err) => {
+            setIsMod(false);
+            console.log(err);
+        })
+    }, []);
+
+
     const openNewArticleModal = () => {
         setNewArticleIsOpen(true);
     };
@@ -88,7 +104,11 @@ export default function Navbar() {
             <IconButton color="inherit" href="/search">
                 <Search style={{ color: "#fff" }} fontSize="large" />
             </IconButton>
-            <ProfileButton username={username} isAdmin={isAdmin} />
+            <ProfileButton
+                username={username}
+                isAdmin={isAdmin}
+                isMod={isMod}
+            />
         </div >
     );
 
@@ -126,6 +146,7 @@ export default function Navbar() {
                             currentUser={currentUser}
                             openNewArticleModal={openNewArticleModal}
                             isAdmin={isAdmin}
+                            isMod={isMod}
                         />
                     }
                 </Toolbar>

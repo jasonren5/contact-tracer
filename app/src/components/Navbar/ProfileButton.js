@@ -14,7 +14,8 @@ import {
     ExitToApp,
     Visibility,
     Person,
-    VerifiedUser
+    VerifiedUser,
+    Gavel
 } from '@material-ui/icons';
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -56,6 +57,12 @@ export default function ProfileButton(props) {
         history.push('/admin');
     }
 
+    const handleViewMod = () => {
+        handleClose();
+        history.push('/mod');
+    }
+
+
     return (
         <div className={classes.root}>
             <IconButton
@@ -94,6 +101,14 @@ export default function ProfileButton(props) {
                             <VerifiedUser />
                         </ListItemIcon>
                         <ListItemText primary="Admin Portal" />
+                    </MenuItem>
+                }
+                {props.isMod &&
+                    <MenuItem onClick={handleViewMod}>
+                        <ListItemIcon>
+                            <Gavel />
+                        </ListItemIcon>
+                        <ListItemText primary="Mod Portal" />
                     </MenuItem>
                 }
                 <MenuItem onClick={handleViewProfile}>
