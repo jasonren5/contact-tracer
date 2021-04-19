@@ -1,33 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import ApplicationList from '../../components/Admin/ApplicationList';
-import { Container, Grid, Typography } from '@material-ui/core';
+import { Container, Typography } from '@material-ui/core';
 import { verifyAdmin } from '../../utils/functions/applications';
-import { withFirebase } from '../../utils/firebase';
+import { FirebaseContext } from '../../utils/firebase';
 
 import FilterOptions from '../../components/Mods/FilterOptions';
 
-class AdminPortal extends React.Component {
+export default function AdminPortal() {
+    const [isAdmin, setIsAdmin] = useState(false);
+    const firebase = useContext(FirebaseContext);
 
-    componentDidMount() {
-        verifyAdmin(this.props.firebase).then((data) => {
+    useEffect(() => {
+        verifyAdmin(firebase).then((data) => {
             if (!data.admin) {
-                window.location.href = "/page-not-found";
+                window.location.href = "/";
+            }
+            else {
+                setIsAdmin(true);
             }
         }).catch((err) => {
             console.log(err);
-            window.location.href = "/page-not-found";
+            window.location.href = "/";
         })
-    }
+    }, []);
 
-    render() {
-        return (
-            <Container component="main" maxWidth="xl">
-                <Typography variant="h2">Admin Portal</Typography>
-                <FilterOptions />
-                <ApplicationList />
-            </Container>
-        )
-    }
+    return (
+        <Container component="main" maxWidth="xl">
+            {isAdmin &&
+                <div>
+                    <Typography variant="h2">Admin Portal</Typography>
+                    <FilterOptions />
+                </div>
+            }
+            <ApplicationList />
+        </Container>
+    );
 }
-
-export default withFirebase(AdminPortal);
