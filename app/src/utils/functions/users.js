@@ -75,4 +75,18 @@ async function getUsersCount(firebase) {
     return null;
 }
 
-export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount };
+async function getAllUsers(firebase) {
+    var getAllUsers = firebase.functions.httpsCallable("getAllUsers");
+
+    var response = await getAllUsers();
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount, getAllUsers };

@@ -1596,6 +1596,20 @@ exports.getUserCount = functions.https.onCall(async () => {
 
 });
 
+// Get list of all users
+exports.getUserCount = functions.https.onCall(async () => {
+    const db = admin.firestore();
+
+
+    // Adjust this to actually return the userlist.
+    return db.collection("users").get().then(function (querySnapshot) {
+        return ({
+            userCount: querySnapshot.size
+        });
+    });
+
+});
+
 /*
 *   Failsafe in case the scheduled function fails and we need to 
 */
