@@ -18,6 +18,8 @@ import SignInMenu from './SignInMenu';
 import MobileMenu from './MobileMenu';
 import { useMediaQuery } from 'react-responsive';
 
+import { verifyAdmin, verifyMod } from '../../utils/functions/applications';
+
 const useStyles = makeStyles(() => ({
     title: {
         flexGrow: 1,
@@ -42,6 +44,8 @@ const useStyles = makeStyles(() => ({
 // low-pri: Center Title - not easy to do while also staying mobile friendly
 export default function Navbar() {
     const [newArticleIsOpen, setNewArticleIsOpen] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isMod, setIsMod] = useState(false);
     const [username, setUsername] = useState();
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
@@ -54,6 +58,36 @@ export default function Navbar() {
             setUsername(currentUser.email.substring(0, currentUser.email.indexOf("@")));
         }
     }, [currentUser]);
+
+    useEffect(() => {
+        verifyAdmin(firebase).then((data) => {
+            if (data.admin) {
+                setIsAdmin(true);
+            }
+            else {
+                setIsAdmin(false);
+            }
+        }).catch((err) => {
+            setIsAdmin(false);
+            console.log(err);
+
+        })
+    }, []);
+
+    useEffect(() => {
+        verifyMod(firebase).then((data) => {
+            if (data.mod) {
+                setIsMod(true);
+            }
+            else {
+                setIsMod(false);
+            }
+        }).catch((err) => {
+            setIsMod(false);
+            console.log(err);
+        })
+    }, []);
+
 
     const openNewArticleModal = () => {
         setNewArticleIsOpen(true);
@@ -70,7 +104,11 @@ export default function Navbar() {
             <IconButton color="inherit" href="/search">
                 <Search style={{ color: "#fff" }} fontSize="large" />
             </IconButton>
-            <ProfileButton username={username} />
+            <ProfileButton
+                username={username}
+                isAdmin={isAdmin}
+                isMod={isMod}
+            />
         </div >
     );
 
@@ -107,6 +145,8 @@ export default function Navbar() {
                             username={username}
                             currentUser={currentUser}
                             openNewArticleModal={openNewArticleModal}
+                            isAdmin={isAdmin}
+                            isMod={isMod}
                         />
                     }
                 </Toolbar>

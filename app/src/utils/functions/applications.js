@@ -13,7 +13,7 @@ async function submitApplication(firebase, type, body) {
         var response = await submitApplication(data);
         return response
     }
-    catch{
+    catch {
         return {
             error: "Error submitting application."
         }
@@ -27,7 +27,7 @@ async function getUserApplications(firebase) {
         var response = await getApplications();
         return response.data
     }
-    catch{
+    catch {
         return {
             error: "Error getting applications."
         }
@@ -42,7 +42,7 @@ async function getPendingApplications(firebase) {
         console.log(response);
         return response.data
     }
-    catch{
+    catch {
         return {
             error: "Error getting applications."
         }
@@ -60,7 +60,7 @@ async function getApplication(firebase, application_id) {
         var response = await getApplication(data);
         return response.data
     }
-    catch{
+    catch {
         return {
             error: "Error getting applications."
         }
@@ -78,7 +78,7 @@ async function approveApplication(firebase, application_id) {
         var response = await approveApplication(data);
         return response.data
     }
-    catch{
+    catch {
         return {
             error: "Error approving application."
         }
@@ -96,7 +96,7 @@ async function rejectApplication(firebase, application_id) {
         var response = await rejectApplication(data);
         return response.data
     }
-    catch{
+    catch {
         return {
             error: "Error rejecting application."
         }
@@ -110,9 +110,23 @@ async function verifyAdmin(firebase) {
         var response = await verifyAdmin();
         return response.data
     }
-    catch{
+    catch {
         return {
             admin: false
+        }
+    }
+}
+
+async function verifyMod(firebase) {
+    var verifyMod = firebase.functions.httpsCallable("verifyMod");
+
+    try {
+        var response = await verifyMod();
+        return response.data
+    }
+    catch {
+        return {
+            mod: false
         }
     }
 }
@@ -124,5 +138,6 @@ export {
     getApplication,
     approveApplication,
     rejectApplication,
-    verifyAdmin
+    verifyAdmin,
+    verifyMod
 }
