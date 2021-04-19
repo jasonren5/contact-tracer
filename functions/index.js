@@ -1310,6 +1310,40 @@ async function _verifyAdmin(db, user_id) {
     }
 }
 
+exports.verifyMod = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    const user_id = context.auth.uid;
+
+    return _verifyMod(db, user_id);
+})
+
+async function _verifyMod(db, user_id) {
+
+    const response = await db.collection("users").doc(user_id).get();
+
+    const userData = response.data()
+
+    const expertise = userData.expertises;
+
+    var isMod = true;
+
+    if (expertise === undefined || expertise.length == 0) {
+        isMod = false;
+    }
+
+    return {
+        mod: isMod
+    }
+}
+
 exports.addSourceToArticle = functions.https.onCall((data, context) => {
     const db = admin.firestore();
     const article_id = data.article_id;
