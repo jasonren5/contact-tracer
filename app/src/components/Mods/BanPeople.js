@@ -19,13 +19,12 @@ const useStyles = makeStyles(() => ({
         marginBottom: "2rem",
         margin: "20rem"
     },
-    // bodyText: {
-    //     paddingBottom: "2rem",
-    //     textAlign: "left",
-    //     paddingTop: ".5em",
-    //     paddingLeft: "5em",
-    //     paddingRight: "5em",
-    // },
+    bodyText: {
+        paddingBottom: "2rem",
+        paddingTop: ".5em",
+        paddingLeft: "5em",
+        paddingRight: "5em",
+    },
     title: {
         fontWeight: "bold"
     },

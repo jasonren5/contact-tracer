@@ -62,4 +62,17 @@ async function updateUserField(firebase, field, value) {
     return updateUser(data)
 }
 
-export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField };
+async function getUsersCount(firebase) {
+    var userCount = firebase.functions.httpsCallable("getUserCount");
+    var response = await userCount();
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount };
