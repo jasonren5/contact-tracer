@@ -6,7 +6,7 @@ import { Container, Typography } from '@material-ui/core';
 import { verifyAdmin } from '../../utils/functions/applications';
 import { FirebaseContext } from '../../utils/firebase';
 
-import FilterOptions from '../../components/Mods/FilterOptions';
+// import FilterOptions from '../../components/Mods/FilterOptions';
 import PageLoading from '../../components/Loading/PageLoading';
 
 export default function AdminPortal() {
@@ -34,12 +34,12 @@ export default function AdminPortal() {
             {isAdmin ?
                 <div>
                     <Typography variant="h2">Admin Portal</Typography>
-                    <FilterOptions />
+                    {/* <FilterOptions /> */}
+                    <ApplicationList />
                 </div>
                 :
                 <PageLoading />
             }
-            <ApplicationList />
         </Container>
     );
 }

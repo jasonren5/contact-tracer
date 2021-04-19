@@ -8,7 +8,8 @@ import { verifyMod } from '../../utils/functions/applications';
 import { FirebaseContext } from '../../utils/firebase';
 import PageLoading from '../../components/Loading/PageLoading';
 
-// import FilterOptions from '../../components/Mods/FilterOptions';
+import FilterOptions from '../../components/Mods/FilterOptions';
+import ForceSignInModal from '../../components/Modals/ForceSignInModal';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -25,15 +26,21 @@ export default function ModPortal() {
     const classes = useStyles();
 
     const [isMod, setIsMod] = useState(false);
+    const [permissionRender, setPermissionRender] = useState(false);
     const firebase = useContext(FirebaseContext);
+
+    const handleCloseModal = () => {
+        setIsMod(true);
+    }
 
     useEffect(() => {
         verifyMod(firebase).then((data) => {
-            if (!data.mod) {
-                window.location.href = "/";
+            setPermissionRender(true);
+            if (data.mod) {
+                setIsMod(true);
             }
             else {
-                setIsMod(true);
+                // window.location.href = "/";
             }
         }).catch((err) => {
             console.log(err);
@@ -49,10 +56,22 @@ export default function ModPortal() {
             className={classes.body}
             maxWidth={isTabletOrMobile ? 'xs' : "xl"}
         >
-            {isMod ?
-                <div>
-                    <Typography variant="h2" className={classes.title}>Mod Portal</Typography>
-                    {/* <FilterOptions /> */}
+            {permissionRender ?
+                <div className="Base Container">
+                    {isMod ?
+                        <div className="Permissions Loaded">
+                            <Typography variant="h2" className={classes.title}>Mod Portal</Typography>
+                            <FilterOptions />
+                        </div>
+                        :
+                        <ForceSignInModal
+                            isOpen={!isMod}
+                            closeModal={handleCloseModal}
+                            accessPage
+                            accessLevel="Moderator"
+
+                        />
+                    }
                 </div>
                 :
                 <PageLoading />

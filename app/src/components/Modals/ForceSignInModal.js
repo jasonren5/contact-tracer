@@ -35,10 +35,10 @@ export default function ForceSignInModal(props) {
             aria-labelledby="alert-dialog-title"
             aria-describedby="alert-dialog-description"
         >
-            <DialogTitle id="alert-dialog-title">Sign In Required</DialogTitle>
+            <DialogTitle id="alert-dialog-title">Sign In {props.accessLevel && `as a ${props.accessLevel}`} Required</DialogTitle>
             <DialogContent>
                 <DialogContentText id="alert-dialog-description">
-                    You must be logged in to access {props.accessing ? props.accessing : "this functionality"}. Please log in {props.accessPage ? "or go back to another page" : "or go back to the page"}.
+                    You must be logged in {props.accessLevel && `as a ${props.accessLevel}`} to access {props.accessing ? props.accessing : "this functionality"}. Please log in {props.accessPage ? "or go back to another page" : "or go back to the page"}.
           </DialogContentText>
             </DialogContent>
             <DialogActions>
