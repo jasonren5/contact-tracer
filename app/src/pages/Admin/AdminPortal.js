@@ -8,19 +8,23 @@ import { FirebaseContext } from '../../utils/firebase';
 
 // import FilterOptions from '../../components/Mods/FilterOptions';
 import PageLoading from '../../components/Loading/PageLoading';
+import ForceSignInModal from '../../components/Modals/ForceSignInModal';
 
 export default function AdminPortal() {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     const [isAdmin, setIsAdmin] = useState(false);
+    const [permissionRender, setPermissionRender] = useState(false);
     const firebase = useContext(FirebaseContext);
+
+    const handleCloseModal = () => {
+        setIsAdmin(true);
+    }
 
     useEffect(() => {
         verifyAdmin(firebase).then((data) => {
-            if (!data.admin) {
-                window.location.href = "/";
-            }
-            else {
+            setPermissionRender(true);
+            if (data.admin) {
                 setIsAdmin(true);
             }
         }).catch((err) => {
@@ -31,11 +35,22 @@ export default function AdminPortal() {
 
     return (
         <Container component="main" maxWidth={isTabletOrMobile ? 'xs' : "xl"}>
-            {isAdmin ?
-                <div>
-                    <Typography variant="h2">Admin Portal</Typography>
-                    {/* <FilterOptions /> */}
-                    <ApplicationList />
+            {permissionRender ?
+                <div className="Base Container">
+                    {isAdmin ?
+                        <div>
+                            <Typography variant="h2">Admin Portal</Typography>
+                            {/* <FilterOptions /> */}
+                            <ApplicationList />
+                        </div>
+                        :
+                        <ForceSignInModal
+                            isOpen={!isAdmin}
+                            closeModal={handleCloseModal}
+                            accessPage
+                            accessLevel="Admin"
+                        />
+                    }
                 </div>
                 :
                 <PageLoading />

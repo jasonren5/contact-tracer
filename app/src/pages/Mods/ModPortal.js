@@ -39,9 +39,6 @@ export default function ModPortal() {
             if (data.mod) {
                 setIsMod(true);
             }
-            else {
-                // window.location.href = "/";
-            }
         }).catch((err) => {
             console.log(err);
             window.location.href = "/";
@@ -69,7 +66,6 @@ export default function ModPortal() {
                             closeModal={handleCloseModal}
                             accessPage
                             accessLevel="Moderator"
-
                         />
                     }
                 </div>
