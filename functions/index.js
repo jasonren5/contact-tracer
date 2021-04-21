@@ -1073,7 +1073,8 @@ exports.createUser = functions.https.onCall((data) => {
             expertises: [],
             liked_articles: [],
             viewed_articles: [],
-            admin: false
+            admin: false,
+            banned: user.disabled,
         };
         return admin.firestore().collection('users').doc(user.uid).set(userData).then(() => { return user; }).catch(async (err) => {
             await admin.auth().deleteUser(user.uid);
@@ -1597,16 +1598,23 @@ exports.getUserCount = functions.https.onCall(async () => {
 });
 
 // Get list of all users
-exports.getUserCount = functions.https.onCall(async () => {
+exports.getUserList = functions.https.onCall(async () => {
     const db = admin.firestore();
 
+    const snapshot = await db.collection("users").get();
 
-    // Adjust this to actually return the userlist.
-    return db.collection("users").get().then(function (querySnapshot) {
-        return ({
-            userCount: querySnapshot.size
-        });
+    if (snapshot.empty) {
+        return "No users found";
+    }
+
+    var resData = [];
+    // this needs to return uid as well
+    snapshot.forEach((user) => {
+        var userData = user.data();
+        userData.id = user.id;
+        resData.push(userData);
     });
+    return resData;
 
 });
 
