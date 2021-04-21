@@ -37,8 +37,6 @@ function SignUpForm() {
     const firebase = useContext(FirebaseContext);
     const filter = useContext(FilterContext).filter;
 
-    useEffect(() => { console.log(state) }, [state])
-
     const handleSubmit = event => {
         event.preventDefault();
 
