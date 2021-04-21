@@ -974,6 +974,8 @@ exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(asy
 *
 */
 exports.editArticleTitle = functions.https.onCall(async (data) => {
+    // TODO: check for logged in
+
     const db = admin.firestore();
     let article_id = data.article_id;
     let newTitle = data.title;
@@ -1015,6 +1017,7 @@ exports.editArticleTitle = functions.https.onCall(async (data) => {
 });
 
 exports.editArticleHeaderImage = functions.https.onCall(async (data) => {
+    // TODO: check for logged in
     const db = admin.firestore();
     let article_id = data.article_id;
     let newImage = data.image_url;
@@ -1414,6 +1417,7 @@ async function _getAllSources(db, article_id) {
 }
 
 exports.deleteSource = functions.https.onCall(async (data) => {
+    // TODO: make sure logged in
     const db = admin.firestore();
     let article_id = data.article_id;
     let source_id = data.source_id;
@@ -1464,7 +1468,9 @@ async function _deleteSource(db, article_id, source_id) {
 }
 
 exports.editSource = functions.https.onCall(async (data) => {
+    // TODO: Check to make sure logged in
     const db = admin.firestore();
+
     let article_id = data.article_id;
     let source_id = data.source_id;
     let new_url = data.new_url;
@@ -1608,7 +1614,6 @@ exports.getUserList = functions.https.onCall(async () => {
     }
 
     var resData = [];
-    // this needs to return uid as well
     snapshot.forEach((user) => {
         var userData = user.data();
         userData.id = user.id;
@@ -1616,6 +1621,48 @@ exports.getUserList = functions.https.onCall(async () => {
     });
     return resData;
 
+});
+
+// Ban a User
+exports.banUser = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    const user_id = context.auth.uid;
+
+    const requestingModData = await _verifyMod(db, user_id);
+
+    if (!requestingModData.mod) {
+        // not admin, return error
+        return {
+            error: 401
+        };
+    }
+
+    // First, check if the user we are trying to ban is an admin
+    const requestedAdminData = await _verifyAdmin(db, data.user_id);
+
+    if (requestedAdminData.admin) {
+        // if we are trying to ban an admin, return error
+        return {
+            error: 401
+        };
+    }
+
+    // Then, set the user to disabled through firebase
+
+    // Then, update the firebase document to set banned = true
+    const userRef = db.collection('users').doc(data.user_id);
+    const res = await userRef.update({ banned: true });
+
+    // then return success
+    return res;
 });
 
 /*
@@ -1811,6 +1858,7 @@ exports.getFilterSettings = functions.https.onRequest(async (req, res) => {
 })
 
 exports.addBannedWord = functions.https.onCall(async (data) => {
+    // TODO: Check for Mod
     const db = admin.firestore();
 
     const filterRef = db.collection('filter').doc('master');
@@ -1840,36 +1888,8 @@ exports.addBannedWord = functions.https.onCall(async (data) => {
     });
 })
 
-exports.addBannedWordRequest = functions.https.onRequest(async (req, res) => {
-    const db = admin.firestore();
-
-    const filterRef = db.collection('filter').doc('master');
-    const doc = await filterRef.get();
-
-    const newWord = req.query.word;
-
-    if (!newWord) {
-        return res.status(200).send("No word found in request");
-    }
-
-    var newData = doc.data();
-
-    if (newData.banned.includes(newWord)) {
-        return res.send(newData);
-    }
-
-    newData.banned.push(newWord);
-
-    newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
-
-    db.collection('filter').doc('master').set(newData).then(() => {
-        return res.send(newData);
-    }).catch((err) => {
-        return res.send(err);
-    });
-})
-
 exports.addWhitelistWord = functions.https.onCall(async (data) => {
+    // TODO: Check for Mod
     const db = admin.firestore();
 
     const filterRef = db.collection('filter').doc('master');

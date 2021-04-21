@@ -12,7 +12,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../utils/firebase';
-import { getUserList } from '../../utils/functions/users';
+import { banUser, getUserList } from '../../utils/functions/users';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -35,14 +35,28 @@ export default function FilterOptions() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
 
+    const [userList, setUserList] = useState([]);
+
 
     useEffect(() => {
         getUserList(firebase).then((users) => {
             console.log(users);
+            setUserList(users);
         }).catch((err) => {
             console.log(err);
         })
     }, []);
+
+    const handleBan = () => {
+        const banID = "1ZboUb8DwfPIedjVwbFEqncswki1";
+
+        console.log("ban", banID);
+        banUser(firebase, banID).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
 
     return (
         <div className="banned-words-view">
@@ -51,6 +65,12 @@ export default function FilterOptions() {
                 <Typography className={classes.bodyText}>
                     Test
                 </Typography>
+                {userList.map((user) =>
+                    <Typography key={user.id} className={classes.bodyText}>{user.displayName}, banned: {user.banned.toString()}</Typography>
+                )}
+                <Button variant="contained" color="secondary" onClick={handleBan}>
+                    Ban
+                </Button>
             </Paper>
         </div >
     );

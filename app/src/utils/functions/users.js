@@ -89,4 +89,32 @@ async function getUserList(firebase) {
     return null;
 }
 
-export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount, getUserList };
+async function banUser(firebase, user_id) {
+    var banUser = firebase.functions.httpsCallable("banUser");
+
+    var response = await banUser({ user_id: user_id });
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+async function unbanUser(firebase, user_id) {
+    var unbanUser = firebase.functions.httpsCallable("unbanUser");
+
+    var response = await unbanUser({ user_id: user_id });
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount, getUserList, banUser, unbanUser };
