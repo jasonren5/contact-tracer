@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 
 import {
     Typography,
@@ -12,6 +12,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../utils/firebase';
+import { getUserList } from '../../utils/functions/users';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -33,6 +34,15 @@ const useStyles = makeStyles(() => ({
 export default function FilterOptions() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
+
+
+    useEffect(() => {
+        getUserList(firebase).then((users) => {
+            console.log(users);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }, []);
 
     return (
         <div className="banned-words-view">

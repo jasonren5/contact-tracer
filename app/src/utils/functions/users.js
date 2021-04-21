@@ -75,10 +75,10 @@ async function getUsersCount(firebase) {
     return null;
 }
 
-async function getAllUsers(firebase) {
-    var getAllUsers = firebase.functions.httpsCallable("getAllUsers");
+async function getUserList(firebase) {
+    var getUserList = firebase.functions.httpsCallable("getUserList");
 
-    var response = await getAllUsers();
+    var response = await getUserList();
 
     if (response.data) {
         if (response.data.error) {
@@ -89,4 +89,4 @@ async function getAllUsers(firebase) {
     return null;
 }
 
-export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount, getAllUsers };
+export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount, getUserList };
