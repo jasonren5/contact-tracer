@@ -57,6 +57,7 @@ export default function ArticleContainer(props) {
     // Note: edit links are temporary, just need a way for the profs to access it in the mvp
     const articleURL = "/article/" + props.article.id;
     const editArticleURL = "/contribute/" + props.article.id;
+    const breakingArticleURL = '/breaking/' + props.article.id;
     const classes = useStyles();
 
     const highlightTerm = props.article.searchTerm ? props.article.searchTerm : "";
@@ -72,7 +73,7 @@ export default function ArticleContainer(props) {
                     title={props.article.title}
                 />
                 <CardContent className={classes.contentHolder}>
-                    <Link href={props.contribute ? editArticleURL : articleURL} color={"primary"}>
+                    <Link href={props.contribute ? editArticleURL : (props.breaking ? breakingArticleURL : articleURL)} color={"primary"}>
                         <Typography component="h5" variant="h5" gutterBottom>
                             <Highlight search={highlightTerm}>
                                 {props.article.title}
