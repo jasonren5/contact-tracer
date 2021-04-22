@@ -10,6 +10,7 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
+    "site": "cse437project",
     "public": "./app/build",
     "rewrites": [
       {
