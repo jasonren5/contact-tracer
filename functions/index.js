@@ -191,8 +191,19 @@ async function _getFullArticleByID(db, article_id) {
     });
 }
 
-exports.addVersionToSection = functions.https.onCall((data, context) => {
+exports.addVersionToSection = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
+
+    if (!context.auth) {
+        return null;
+    }
+    const user_id = context.auth.uid;
+    const checkBan = await _verifyBanned(db, user_id);
+    if (checkBan.banned) {
+        //user is banned
+        return null;
+    }
+
     const article_id = data.article_id;
     const section_id = data.section_id;
     const previous_version_id = data.previous_version_id;
@@ -259,14 +270,22 @@ function incrementContributions(userID) {
 * section: the section object that should be added
 * 
 */
-exports.addSectionAtIndex = functions.https.onCall((data, context) => {
+exports.addSectionAtIndex = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
+    if (!context.auth) {
+        return null;
+    }
+    const user_id = context.auth.uid;
+    const checkBan = await _verifyBanned(db, user_id);
+    if (checkBan.banned) {
+        //user is banned
+        return null;
+    }
+
     const index = data.section.order;
     const article_id = data.section.article_id;
 
     const increment = admin.firestore.FieldValue.increment(1);
-
-    const user_id = (context.auth ? context.auth.uid : null);
 
     // if there is a signed in user, increment thier contribution count
     if (user_id) {
@@ -973,10 +992,18 @@ exports.publishArticles = functions.pubsub.schedule('every day 23:00').onRun(asy
 *   Basic functionality for editing a title of an article in the articles collection by article ID
 *
 */
-exports.editArticleTitle = functions.https.onCall(async (data) => {
-    // TODO: check for logged in
-
+exports.editArticleTitle = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
+
+    if (!context.auth) {
+        return null;
+    }
+    const user_id = context.auth.uid;
+    const checkBan = await _verifyBanned(db, user_id);
+    if (checkBan.banned) {
+        //user is banned
+        return null;
+    }
     let article_id = data.article_id;
     let newTitle = data.title;
 
@@ -1016,9 +1043,18 @@ exports.editArticleTitle = functions.https.onCall(async (data) => {
     }
 });
 
-exports.editArticleHeaderImage = functions.https.onCall(async (data) => {
-    // TODO: check for logged in
+exports.editArticleHeaderImage = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
+    if (!context.auth) {
+        return null;
+    }
+    const user_id = context.auth.uid;
+    const checkBan = await _verifyBanned(db, user_id);
+    if (checkBan.banned) {
+        //user is banned
+        return null;
+    }
+
     let article_id = data.article_id;
     let newImage = data.image_url;
 
@@ -1307,7 +1343,7 @@ async function _verifyAdmin(db, user_id) {
 
     const response = await db.collection("users").doc(user_id).get();
 
-    const userData = response.data()
+    const userData = response.data();
 
     return {
         admin: userData.admin
@@ -1333,7 +1369,7 @@ async function _verifyMod(db, user_id) {
 
     const response = await db.collection("users").doc(user_id).get();
 
-    const userData = response.data()
+    const userData = response.data();
 
     const expertise = userData.expertises;
 
@@ -1345,6 +1381,17 @@ async function _verifyMod(db, user_id) {
 
     return {
         mod: isMod
+    }
+}
+
+async function _verifyBanned(db, user_id) {
+
+    const response = await db.collection("users").doc(user_id).get();
+
+    const userData = response.data();
+
+    return {
+        banned: userData.banned
     }
 }
 
@@ -1416,9 +1463,18 @@ async function _getAllSources(db, article_id) {
     return resData;
 }
 
-exports.deleteSource = functions.https.onCall(async (data) => {
-    // TODO: make sure logged in
+exports.deleteSource = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
+    if (!context.auth) {
+        return null;
+    }
+    const user_id = context.auth.uid;
+    const checkBan = await _verifyBanned(db, user_id);
+    if (checkBan.banned) {
+        //user is banned
+        return null;
+    }
+
     let article_id = data.article_id;
     let source_id = data.source_id;
 
@@ -1467,9 +1523,17 @@ async function _deleteSource(db, article_id, source_id) {
     }
 }
 
-exports.editSource = functions.https.onCall(async (data) => {
-    // TODO: Check to make sure logged in
+exports.editSource = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
+    if (!context.auth) {
+        return null;
+    }
+    const user_id = context.auth.uid;
+    const checkBan = await _verifyBanned(db, user_id);
+    if (checkBan.banned) {
+        //user is banned
+        return null;
+    }
 
     let article_id = data.article_id;
     let source_id = data.source_id;
@@ -1871,9 +1935,26 @@ exports.getFilterSettings = functions.https.onRequest(async (req, res) => {
     }
 })
 
-exports.addBannedWord = functions.https.onCall(async (data) => {
-    // TODO: Check for Mod
+exports.addBannedWord = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return {
+            error: 401
+        };
+    }
+
+    const user_id = context.auth.uid;
+
+    const modData = await _verifyMod(db, user_id)
+
+    if (!modData.mod) {
+        // not admin, return error
+        return {
+            error: 401
+        };
+    }
 
     const filterRef = db.collection('filter').doc('master');
     const doc = await filterRef.get();
@@ -1902,9 +1983,22 @@ exports.addBannedWord = functions.https.onCall(async (data) => {
     });
 })
 
-exports.addWhitelistWord = functions.https.onCall(async (data) => {
-    // TODO: Check for Mod
+exports.addWhitelistWord = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
+
+    if (!context.auth) {
+        // not authorized, return error
+        return null;
+    }
+
+    const user_id = context.auth.uid;
+
+    const requestingModData = await _verifyMod(db, user_id);
+
+    if (!requestingModData.mod) {
+        // not admin, return error
+        return null;
+    }
 
     const filterRef = db.collection('filter').doc('master');
     const doc = await filterRef.get();

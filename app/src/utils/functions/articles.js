@@ -57,6 +57,11 @@ async function publishContribution(firebase, section, newBody, merging, source) 
     };
 
     var response = await addVersionToSection(requestData);
+
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
+
     var data = response.data.current_version;
     const conflict = response.data.conflict;
 
@@ -99,6 +104,10 @@ async function addSection(firebase, section, source) {
     }
 
     var response = await addSectionAtIndex(requestData);
+
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
 
     var newSection = section;
     newSection.id = response.data.section_id;
