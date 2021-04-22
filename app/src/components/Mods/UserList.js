@@ -15,7 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../utils/firebase';
 import { getUserList, banUser, unbanUser } from '../../utils/functions/users';
 import PersonListing from './UserListing';
-import { Block, FilterList, Gavel, LockOpen, VerifiedUser } from '@material-ui/icons';
+import { Block, FilterList, Gavel, LockOpen, Person, VerifiedUser } from '@material-ui/icons';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -43,6 +43,8 @@ export default function UserList() {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const [userList, setUserList] = useState([]);
+    const [filterUserList, setFilterUserList] = useState([]);
+    const [filterValue, setFilterValue] = useState("all");
 
     // TODO: Filter by admin, banned, unbanned, and mod. Maybe sort by contributions
 
@@ -53,14 +55,43 @@ export default function UserList() {
             users.forEach((user) => {
                 user.processing_changes = false;
             });
-            // const finalList = users.filter(user => user.admin === false);
-            // console.log(finalList);
             console.log(users);
             setUserList(users);
         }).catch((err) => {
             console.log(err);
         })
     }, []);
+
+    useEffect(() => {
+        setFilterUserList(userList);
+        adjustFilterList();
+    }, [userList]);
+
+    useEffect(() => {
+        adjustFilterList();
+    }, [filterValue]);
+
+    const adjustFilterList = () => {
+        if (filterValue === "admin") {
+            const finalList = userList.filter(user => user.admin === true);
+            setFilterUserList(finalList);
+        }
+        else if (filterValue === "mod") {
+            const finalList = userList.filter(user => user.expertises.length > 0);
+            setFilterUserList(finalList);
+        }
+        else if (filterValue === "banned") {
+            const finalList = userList.filter(user => user.banned === true);
+            setFilterUserList(finalList);
+        }
+        else if (filterValue === "unbanned") {
+            const finalList = userList.filter(user => user.banned === false);
+            setFilterUserList(finalList);
+        }
+        else if (filterValue === "all") {
+            setFilterUserList(userList);
+        }
+    }
 
     const handleBan = (uid) => {
         console.log("ban", uid);
@@ -110,6 +141,12 @@ export default function UserList() {
         setAnchorEl(null);
     };
 
+    // Filter should persisteeu
+    const handleChangeFilter = (filterType) => {
+        setFilterValue(filterType);
+        handleCloseMenu();
+    }
+
     return (
         <div className={classes.wrapper}>
             <Paper className={classes.body}>
@@ -130,25 +167,31 @@ export default function UserList() {
                         onClose={handleCloseMenu}
                     >
                         <MenuItem disabled >Filter Users By:</MenuItem>
-                        <MenuItem onClick={handleCloseMenu}>
+                        <MenuItem onClick={() => handleChangeFilter("all")}>
+                            <ListItemIcon>
+                                <Person fontSize="small" />
+                            </ListItemIcon>
+                            <ListItemText primary="All" />
+                        </MenuItem>
+                        <MenuItem onClick={() => handleChangeFilter("banned")}>
                             <ListItemIcon>
                                 <Block fontSize="small" />
                             </ListItemIcon>
                             <ListItemText primary="Banned" />
                         </MenuItem>
-                        <MenuItem onClick={handleCloseMenu}>
+                        <MenuItem onClick={() => handleChangeFilter("unbanned")}>
                             <ListItemIcon>
                                 <LockOpen fontSize="small" />
                             </ListItemIcon>
                             <ListItemText primary="Unbanned" />
                         </MenuItem>
-                        <MenuItem onClick={handleCloseMenu}>
+                        <MenuItem onClick={() => handleChangeFilter("admin")}>
                             <ListItemIcon>
                                 <VerifiedUser fontSize="small" />
                             </ListItemIcon>
                             <ListItemText primary="Admins" />
                         </MenuItem>
-                        <MenuItem onClick={handleCloseMenu}>
+                        <MenuItem onClick={() => handleChangeFilter("mod")}>
                             <ListItemIcon>
                                 <Gavel fontSize="small" />
                             </ListItemIcon>
@@ -157,7 +200,7 @@ export default function UserList() {
                     </Menu>
                 </div>
                 <List>
-                    {userList.map((user) =>
+                    {filterUserList.map((user) =>
                         <PersonListing
                             user={user}
                             key={user.id}
