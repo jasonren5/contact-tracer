@@ -17,18 +17,7 @@ async function getWeather(firebase, latitude, longitude) {
     return null;
 }
 
-async function getUsersCount(firebase) {
-    var userCount = firebase.functions.httpsCallable("getUserCount");
-    var response = await userCount();
 
-    if (response.data) {
-        if (response.data.error) {
-            return null;
-        }
-        return response.data;
-    }
-    return null;
-}
 
 async function getStocks(firebase) {
     var stocks = firebase.functions.httpsCallable("getLatestStocks");
@@ -43,4 +32,4 @@ async function getStocks(firebase) {
 }
 
 
-export { getWeather, getUsersCount, getStocks };
+export { getWeather, getStocks };

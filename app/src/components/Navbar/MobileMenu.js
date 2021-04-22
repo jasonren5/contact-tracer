@@ -52,6 +52,7 @@ export default function ProfileButton(props) {
     const handleSignOut = () => {
         handleClose();
         firebase.doSignOut();
+        history.push('');
     }
 
     const handleViewProfile = () => {

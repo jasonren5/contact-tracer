@@ -57,6 +57,11 @@ async function publishContribution(firebase, section, newBody, merging, source) 
     };
 
     var response = await addVersionToSection(requestData);
+
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
+
     var data = response.data.current_version;
     const conflict = response.data.conflict;
 
@@ -99,6 +104,10 @@ async function addSection(firebase, section, source) {
     }
 
     var response = await addSectionAtIndex(requestData);
+
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
 
     var newSection = section;
     newSection.id = response.data.section_id;
@@ -155,6 +164,10 @@ async function editArticleTitle(firebase, article_id, title) {
         title: title
     });
 
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
+
     return response;
 }
 
@@ -165,6 +178,10 @@ async function editArticleImage(firebase, article_id, image_url) {
         article_id: article_id,
         image_url: image_url
     });
+
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
 
     return response;
 }
@@ -179,6 +196,11 @@ async function addSourceToArticle(firebase, section, source) {
     };
 
     var response = await addSourceToArticle(requestData);
+
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
+
     var newSource = response.data;
 
     return newSource;
@@ -199,6 +221,10 @@ async function removeSource(firebase, article_id, source_id) {
         source_id: source_id,
     });
 
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
+
     return response;
 }
 
@@ -210,6 +236,10 @@ async function editSource(firebase, article_id, source_id, new_url) {
         source_id: source_id,
         new_url: new_url,
     });
+
+    if (response.data === null) {
+        throw "Error publishing contribution!";
+    }
 
     return response;
 }

@@ -3,7 +3,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { Paper, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../utils/firebase';
-import { getUsersCount } from '../../utils/functions/widgets';
+import { getUsersCount } from '../../utils/functions/users';
 
 const useStyles = makeStyles((theme) => ({
     paper: {

@@ -53,7 +53,6 @@ export default function Navbar() {
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
 
     useEffect(() => {
-        // TODO: Once we have an actual user database, grab that instead of this jank username
         if (currentUser) {
             setUsername(currentUser.email.substring(0, currentUser.email.indexOf("@")));
         }

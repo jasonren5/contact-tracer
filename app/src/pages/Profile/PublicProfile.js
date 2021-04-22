@@ -3,6 +3,7 @@ import Grid from "@material-ui/core/Grid";
 import ProfileCard from "../../components/Profiles/ProfileCard";
 import ProfileSections from "../../components/Profiles/ProfileSections";
 import { withFirebase } from '../../utils/firebase';
+import { canViewProfile } from '../../utils/functions/users';
 
 class PublicProfile extends React.Component {
     constructor(props) {
@@ -17,6 +18,12 @@ class PublicProfile extends React.Component {
                 window.location.href = ('/profile');
             }
         }
+        canViewProfile(this.props.firebase, user_id).then((allowed) => {
+            if (!allowed) {
+                window.location.href = ('/');
+            }
+        })
+
     }
 
     render() {

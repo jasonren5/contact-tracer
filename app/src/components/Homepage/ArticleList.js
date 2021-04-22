@@ -80,7 +80,6 @@ export default function ArticleList(props) {
         setDisplayArticles(passedArticles);
     }
 
-    // TODO: Remove search bar when we move it to browse
     return (
         <div className={classes.root}>
             <CssBaseline />

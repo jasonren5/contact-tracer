@@ -62,4 +62,68 @@ async function updateUserField(firebase, field, value) {
     return updateUser(data)
 }
 
-export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField };
+async function getUsersCount(firebase) {
+    var userCount = firebase.functions.httpsCallable("getUserCount");
+    var response = await userCount();
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+async function getUserList(firebase) {
+    var getUserList = firebase.functions.httpsCallable("getUserList");
+
+    var response = await getUserList();
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+async function banUser(firebase, user_id) {
+    var banUser = firebase.functions.httpsCallable("toggleBanUser");
+
+    var response = await banUser({ user_id: user_id, action: "ban" });
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+async function unbanUser(firebase, user_id) {
+    var unbanUser = firebase.functions.httpsCallable("toggleBanUser");
+
+    var response = await unbanUser({ user_id: user_id, action: "unban" });
+
+    if (response.data) {
+        if (response.data.error) {
+            return null;
+        }
+        return response.data;
+    }
+    return null;
+}
+
+async function canViewProfile(firebase, user_id) {
+    var canViewProfile = firebase.functions.httpsCallable("canViewProfile");
+
+    var response = await canViewProfile({ user_id: user_id });
+    if (response.data) return response.data;
+
+    return false;
+}
+
+export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount, getUserList, banUser, unbanUser, canViewProfile };

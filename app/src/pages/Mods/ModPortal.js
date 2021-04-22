@@ -9,6 +9,7 @@ import { FirebaseContext } from '../../utils/firebase';
 import PageLoading from '../../components/Loading/PageLoading';
 
 import FilterOptions from '../../components/Mods/FilterOptions';
+import BanPeople from '../../components/Mods/UserList';
 import ForceSignInModal from '../../components/Modals/ForceSignInModal';
 
 const useStyles = makeStyles(() => ({
@@ -22,6 +23,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function ModPortal() {
+    // TODO: Filter Options
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
     const classes = useStyles();
 
@@ -51,7 +53,7 @@ export default function ModPortal() {
         <Container
             component="main"
             className={classes.body}
-            maxWidth={isTabletOrMobile ? 'xs' : "xl"}
+            maxWidth={isTabletOrMobile ? 'xs' : "lg"}
         >
             {permissionRender ?
                 <div className="Base Container">
@@ -59,6 +61,7 @@ export default function ModPortal() {
                         <div className="Permissions Loaded">
                             <Typography variant="h2" className={classes.title}>Mod Portal</Typography>
                             <FilterOptions />
+                            <BanPeople />
                         </div>
                         :
                         <ForceSignInModal
