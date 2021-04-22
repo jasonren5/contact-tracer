@@ -3,6 +3,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import {
     Typography,
     Paper,
+    List,
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -15,7 +16,6 @@ const useStyles = makeStyles(() => ({
         marginTop: "1em",
         marginBottom: "1em",
         paddingBottom: "1em",
-        // margin: "20em",
     },
 
     title: {
@@ -34,6 +34,8 @@ export default function BanPeople() {
             users.forEach((user) => {
                 user.processing_changes = false;
             });
+            // const finalList = users.filter(user => user.admin === false);
+            // console.log(finalList);
             console.log(users);
             setUserList(users);
         }).catch((err) => {
@@ -84,15 +86,17 @@ export default function BanPeople() {
     return (
         <div className="banned-people-view">
             <Paper className={classes.body}>
-                <Typography variant="h4" className={classes.title}>Ban Users</Typography>
-                {userList.map((user) =>
-                    <PersonListing
-                        user={user}
-                        key={user.id}
-                        handleBan={handleBan}
-                        handleUnban={handleUnban}
-                    />
-                )}
+                <Typography variant="h4" className={classes.title}>User List</Typography>
+                <List>
+                    {userList.map((user) =>
+                        <PersonListing
+                            user={user}
+                            key={user.id}
+                            handleBan={handleBan}
+                            handleUnban={handleUnban}
+                        />
+                    )}
+                </List>
             </Paper>
         </div >
     );

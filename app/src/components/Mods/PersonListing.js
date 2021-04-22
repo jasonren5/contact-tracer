@@ -1,15 +1,17 @@
 import React from 'react';
 
 import {
-    Typography,
     Button,
     CircularProgress,
-    Link,
-    Grid,
-    Paper
+    Paper,
+    ListItem,
+    ListItemIcon,
+    ListItemText,
+    ListItemSecondaryAction
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
+import { Person } from '@material-ui/icons';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -25,45 +27,48 @@ const useStyles = makeStyles(() => ({
 export default function PersonListing(props) {
     const classes = useStyles();
 
+    function ListItemLink(props) {
+        return <ListItem button component="a" {...props} />;
+    }
+
     return (
         <Paper className={classes.body}>
-            <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                spacing={3}
-            >
-                <Grid item>
-                    <Typography>
-                        <Link href={`/user/${props.user.id}`} variant="inherit">
-                            {props.user.displayName}
-                        </Link>
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    <Typography>
-                        Banned Status: {props.user.banned ? "Banned" : "Not Banned"}
-                    </Typography>
-                </Grid>
-                <Grid item>
-                    {props.user.banned ?
-                        <Button variant="contained" color="secondary" onClick={() => props.handleUnban(props.user.id)}>
-                            {props.user.processing
-                                ? <CircularProgress size={20} color="primary" /> :
-                                "Unban User"
+            <ListItemLink href={`/user/${props.user.id}`}>
+                <ListItemIcon>
+                    <Person />
+                </ListItemIcon>
+                <ListItemText
+                    primary={props.user.name}
+                    secondary={props.user.admin ? "Admin" : `Banned Status: ${props.user.banned ? "Banned" : "Not Banned"}`}
+                />
+                {props.user.expertises.length > 0 &&
+                    <ListItemText
+                        secondary="Moderator"
+                    />
+                }
+                <ListItemSecondaryAction>
+                    {!props.user.admin &&
+                        <div className="Ban Button">
+                            {
+                                props.user.banned ?
+                                    <Button variant="contained" color="secondary" onClick={() => props.handleUnban(props.user.id)}>
+                                        {props.user.processing
+                                            ? <CircularProgress size={20} color="primary" /> :
+                                            "Unban User"
+                                        }
+                                    </Button>
+                                    :
+                                    <Button variant="contained" color="secondary" onClick={() => props.handleBan(props.user.id)}>
+                                        {props.user.processing
+                                            ? <CircularProgress size={20} color="primary" /> :
+                                            "Ban User"
+                                        }
+                                    </Button>
                             }
-                        </Button>
-                        :
-                        <Button variant="contained" color="secondary" onClick={() => props.handleBan(props.user.id)}>
-                            {props.user.processing
-                                ? <CircularProgress size={20} color="primary" /> :
-                                "Ban User"
-                            }
-                        </Button>
+                        </div>
                     }
-                </Grid>
-            </Grid>
+                </ListItemSecondaryAction>
+            </ListItemLink>
         </Paper>
     );
 }
