@@ -34,7 +34,10 @@ const useStyles = makeStyles(() => ({
     },
     wrapper: {
         position: "relative",
-    }
+    },
+    subtitle: {
+        marginTop: ".5em"
+    },
 }));
 
 export default function UserList() {
@@ -147,6 +150,10 @@ export default function UserList() {
         handleCloseMenu();
     }
 
+    function jsUcfirst(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     return (
         <div className={classes.wrapper}>
             <Paper className={classes.body}>
@@ -199,6 +206,11 @@ export default function UserList() {
                         </MenuItem>
                     </Menu>
                 </div>
+                {filterUserList.length > 0 ?
+                    <Typography className={classes.subtitle}>Filter Criteria: <i>{jsUcfirst(filterValue)}</i>, Users Count: {filterUserList.length}</Typography>
+                    :
+                    <Typography className={classes.subtitle}>Filter Criteria: <i>{jsUcfirst(filterValue)}</i>, No users found!</Typography>
+                }
                 <List>
                     {filterUserList.map((user) =>
                         <PersonListing
