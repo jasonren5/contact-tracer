@@ -116,7 +116,7 @@ export default function ProfileButton(props) {
                 </ListItemIcon>
                 <ListItemText primary="Search" />
             </MenuItem>
-            <MenuItem onClick={handleBrowseContribute}>
+            <MenuItem href={"https://csncontribute.web.app"}>
                 <ListItemIcon>
                     <Create fontSize="small" />
                 </ListItemIcon>
