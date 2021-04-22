@@ -21,12 +21,21 @@ export default function PersonListing(props) {
     return (
         <div>
             <Typography className={classes.bodyText}>{props.user.displayName}, banned: {props.user.banned.toString()}</Typography>
-            <Button variant="contained" color="secondary" onClick={() => props.handleBan(props.user.id)}>
-                Ban
+            {props.user.banned ?
+                <Button variant="contained" color="secondary" onClick={() => props.handleUnban(props.user.id)}>
+                    {props.user.processing
+                        ? <CircularProgress size={20} color="primary" /> :
+                        "Unban User"
+                    }
                 </Button>
-            <Button variant="contained" color="secondary" onClick={() => props.handleUnban(props.user.id)}>
-                Unban
-            </Button>
+                :
+                <Button variant="contained" color="secondary" onClick={() => props.handleBan(props.user.id)}>
+                    {props.user.processing
+                        ? <CircularProgress size={20} color="primary" /> :
+                        "Ban User"
+                    }
+                </Button>
+            }
         </div>
     );
 }

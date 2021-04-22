@@ -35,6 +35,9 @@ export default function BanPeople() {
 
     useEffect(() => {
         getUserList(firebase).then((users) => {
+            users.forEach((user) => {
+                user.processing_changes = false;
+            });
             console.log(users);
             setUserList(users);
         }).catch((err) => {
@@ -44,10 +47,18 @@ export default function BanPeople() {
 
     const handleBan = (uid) => {
         console.log("ban", uid);
-        banUser(firebase, uid).then((res) => {
-            console.log(res);
+        let tempList = [...userList];
+        tempList.forEach(function (user, i) { if (user.id == uid) tempList[i].processing = true; });
+        setUserList(tempList);
+
+        banUser(firebase, uid).then(() => {
             let tempList = [...userList];
-            tempList.forEach(function (user, i) { if (user.id == uid) tempList[i].banned = true; });
+            tempList.forEach(function (user, i) {
+                if (user.id == uid) {
+                    tempList[i].banned = true;
+                    tempList[i].processing = false
+                }
+            });
             setUserList(tempList);
         }).catch((err) => {
             console.log(err);
@@ -56,10 +67,18 @@ export default function BanPeople() {
 
     const handleUnban = (uid) => {
         console.log("unban", uid);
-        unbanUser(firebase, uid).then((res) => {
-            console.log(res);
+        let tempList = [...userList];
+        tempList.forEach(function (user, i) { if (user.id == uid) tempList[i].processing = true; });
+        setUserList(tempList);
+
+        unbanUser(firebase, uid).then(() => {
             let tempList = [...userList];
-            tempList.forEach(function (user, i) { if (user.id == uid) tempList[i].banned = false; });
+            tempList.forEach(function (user, i) {
+                if (user.id == uid) {
+                    tempList[i].banned = false;
+                    tempList[i].processing = false
+                }
+            });
             setUserList(tempList);
         }).catch((err) => {
             console.log(err);
