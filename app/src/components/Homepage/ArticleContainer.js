@@ -2,6 +2,7 @@ import React from 'react';
 
 import { ReadMoreButton } from '../Articles/Buttons';
 import { ContributeButton } from '../Articles/Buttons';
+import { BreakingReadMoreButton } from '../Articles/Buttons'
 
 import {
     Card,
@@ -84,13 +85,22 @@ export default function ArticleContainer(props) {
                         </Highlight>
                     </Typography>
                 </CardContent>
-                <CardActions className={classes.cardActions}>
-                    {props.contribute ?
-                        <ContributeButton articleID={props.article.id} />
-                        :
-                        <ReadMoreButton articleID={props.article.id} />
-                    }
-                </CardActions>
+                {props.breaking
+                    ? (
+                        <CardActions className={classes.cardActions}>
+                            <BreakingReadMoreButton articleID={props.article.id}/>
+                        </CardActions>
+                    )
+                    : (
+                        <CardActions className={classes.cardActions}>
+                            {props.contribute ?
+                                <ContributeButton articleID={props.article.id} />
+                                :
+                                <ReadMoreButton articleID={props.article.id} />
+                            }
+                        </CardActions>
+                    )
+                }
             </Card>
         </Grid>
     );
