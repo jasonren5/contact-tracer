@@ -3,16 +3,12 @@ import React, { useContext, useState, useEffect } from 'react';
 import {
     Typography,
     Paper,
-    Button,
-    IconButton,
-    Grid,
-    TextField,
-    CircularProgress
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../utils/firebase';
-import { banUser, getUserList, unbanUser } from '../../utils/functions/users';
+import { getUserList, banUser, unbanUser } from '../../utils/functions/users';
+import PersonListing from './PersonListing';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -31,12 +27,11 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export default function FilterOptions() {
+export default function BanPeople() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
 
     const [userList, setUserList] = useState([]);
-
 
     useEffect(() => {
         getUserList(firebase).then((users) => {
@@ -47,23 +42,25 @@ export default function FilterOptions() {
         })
     }, []);
 
-    const handleBan = () => {
-        const banID = "1ZboUb8DwfPIedjVwbFEqncswki1";
-
-        console.log("ban", banID);
-        banUser(firebase, banID).then((res) => {
+    const handleBan = (uid) => {
+        console.log("ban", uid);
+        banUser(firebase, uid).then((res) => {
             console.log(res);
+            let tempList = [...userList];
+            tempList.forEach(function (user, i) { if (user.id == uid) tempList[i].banned = true; });
+            setUserList(tempList);
         }).catch((err) => {
             console.log(err);
         })
     }
 
-    const handleUnban = () => {
-        const banID = "1ZboUb8DwfPIedjVwbFEqncswki1";
-
-        console.log("unban", banID);
-        unbanUser(firebase, banID).then((res) => {
+    const handleUnban = (uid) => {
+        console.log("unban", uid);
+        unbanUser(firebase, uid).then((res) => {
             console.log(res);
+            let tempList = [...userList];
+            tempList.forEach(function (user, i) { if (user.id == uid) tempList[i].banned = false; });
+            setUserList(tempList);
         }).catch((err) => {
             console.log(err);
         })
@@ -77,14 +74,13 @@ export default function FilterOptions() {
                     Test
                 </Typography>
                 {userList.map((user) =>
-                    <Typography key={user.id} className={classes.bodyText}>{user.displayName}, banned: {user.banned.toString()}</Typography>
+                    <PersonListing
+                        user={user}
+                        key={user.id}
+                        handleBan={handleBan}
+                        handleUnban={handleUnban}
+                    />
                 )}
-                <Button variant="contained" color="secondary" onClick={handleBan}>
-                    Ban
-                </Button>
-                <Button variant="contained" color="secondary" onClick={handleUnban}>
-                    Unban
-                </Button>
             </Paper>
         </div >
     );
