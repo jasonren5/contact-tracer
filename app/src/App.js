@@ -15,6 +15,7 @@ import ContributeBrowse from './pages/Browse/ContributeBrowse'
 import SearchArticles from './pages/Browse/SearchArticles'
 import PageNotFound from './pages/PageNotFound.js';
 import ArticlePage from './pages/Article/ArticlePage';
+import BreakingArticlePage from './pages/Article/BreakingArticlePage'
 import EditArticlePage from './pages/Article/EditArticlePage';
 import PublicProfile from './pages/Profile/PublicProfile';
 import PrivateProfile from './pages/Profile/PrivateProfile';
@@ -39,6 +40,7 @@ const App = () => (
         <Route path={'/browse/contribute'} component={ContributeBrowse} />
         <Route path={'/search'} component={SearchArticles} />
         <Route path={'/article/:articleId'} component={ArticlePage} />
+        <Route path={'/breaking/:articleId'} component={BreakingArticlePage} />
         <Route path={'/contribute/:articleId'} component={EditArticlePage} />
         <Route path={'/user/:userId'} component={PublicProfile} />
         <Route path={'/profile'} component={PrivateProfile} />

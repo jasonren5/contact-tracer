@@ -32,6 +32,7 @@ export default function ArticleList(props) {
     const firebase = useContext(FirebaseContext);
 
     const [allArticles, setAllArticles] = useState([]);
+    const [breakingArticles, setBreakingArticles] = useState([]);
     const [displayArticles, setDisplayArticles] = useState([]);
 
     useEffect(() => {
@@ -42,6 +43,18 @@ export default function ArticleList(props) {
             console.log(err);
         })
     }, []);
+
+    useEffect(() => {
+        firebase.db.collection('breaking_articles').limit(4).get().then((res) => {
+            const breaking = res.docs.map((doc) => {
+                const docData = doc.data()
+                docData.id = doc.id
+                console.log("DOC DATA", docData)
+                return docData
+            })
+            setBreakingArticles(breaking)
+        })
+    }, [props.searchTerm]);
 
     useEffect(() => {
         handleUpdateDisplayedArticles();
@@ -78,9 +91,12 @@ export default function ArticleList(props) {
                 alignItems="center"
                 spacing={4}
             >
+                {breakingArticles.length > 0 && 
+                    breakingArticles.map((article) => <ArticleContainer key={article.id} article={article} maxWidth={props.maxWidth} mediaQuery={props.mediaQuery} breaking={true}/> )
+                }
                 {allArticles.length > 0 ?
                     displayArticles.map(article => {
-                        return <ArticleContainer key={article.id} article={article} maxWidth={props.maxWidth} mediaQuery={props.mediaQuery} />;
+                        return <ArticleContainer key={article.id} article={article} maxWidth={props.maxWidth} mediaQuery={props.mediaQuery} breaking={false}/>;
                     })
                     :
                     <PageLoading />

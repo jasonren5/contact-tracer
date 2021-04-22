@@ -100,7 +100,7 @@ export default function Navbar() {
     const LoggedInButtons = () => (
         <div className="loggedInButtons">
             <Button color="inherit" href="/" className={classes.navButton}>Home</Button>
-            <Button color="inherit" href="/browse/contribute" className={classes.navButton}>Contribute</Button>
+            <Button color="inherit" href="https://csncontribute.web.app" className={classes.navButton}>Contribute</Button>
             <IconButton color="inherit" href="/search">
                 <Search style={{ color: "#fff" }} fontSize="large" />
             </IconButton>
