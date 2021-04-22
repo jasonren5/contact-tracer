@@ -24,7 +24,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 
-export default function PersonListing(props) {
+export default function UserListing(props) {
     const classes = useStyles();
 
     function ListItemLink(props) {
@@ -42,10 +42,9 @@ export default function PersonListing(props) {
                     secondary={props.user.admin ? "Admin" : `Banned Status: ${props.user.banned ? "Banned" : "Not Banned"}`}
                 />
                 {props.user.expertises.length > 0 &&
-                    <ListItemText
-                        secondary="Moderator"
-                    />
+                    <ListItemText secondary="Moderator" />
                 }
+                <ListItemText secondary={`# Contributions: ${props.user.number_of_contributions}`} />
                 <ListItemSecondaryAction>
                     {!props.user.admin &&
                         <div className="Ban Button">

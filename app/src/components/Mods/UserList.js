@@ -9,7 +9,7 @@ import {
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../utils/firebase';
 import { getUserList, banUser, unbanUser } from '../../utils/functions/users';
-import PersonListing from './PersonListing';
+import PersonListing from './UserListing';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export default function BanPeople() {
+export default function UserList() {
     const classes = useStyles();
     const firebase = useContext(FirebaseContext);
 

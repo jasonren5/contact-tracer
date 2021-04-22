@@ -9,7 +9,7 @@ import { FirebaseContext } from '../../utils/firebase';
 import PageLoading from '../../components/Loading/PageLoading';
 
 import FilterOptions from '../../components/Mods/FilterOptions';
-import BanPeople from '../../components/Mods/BanPeople';
+import BanPeople from '../../components/Mods/UserList';
 import ForceSignInModal from '../../components/Modals/ForceSignInModal';
 
 const useStyles = makeStyles(() => ({
