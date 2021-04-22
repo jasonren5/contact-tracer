@@ -4,6 +4,7 @@ import ProfileCard from "../../components/Profiles/ProfileCard";
 import ProfileSections from "../../components/Profiles/ProfileSections";
 import { withFirebase } from '../../utils/firebase';
 
+// TODO: If this person is banned, then don't render them (unless viewed by a mod or admin)
 class PublicProfile extends React.Component {
     constructor(props) {
         super(props);

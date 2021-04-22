@@ -22,7 +22,6 @@ const useStyles = makeStyles(() => ({
     body: {
         marginTop: "2rem",
         marginBottom: "2rem",
-        margin: "20rem"
     },
     bodyText: {
         paddingBottom: "2rem",

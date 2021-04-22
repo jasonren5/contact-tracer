@@ -52,7 +52,7 @@ export default function ModPortal() {
         <Container
             component="main"
             className={classes.body}
-            maxWidth={isTabletOrMobile ? 'xs' : "xl"}
+            maxWidth={isTabletOrMobile ? 'xs' : "lg"}
         >
             {permissionRender ?
                 <div className="Base Container">

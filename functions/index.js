@@ -1366,7 +1366,6 @@ exports.verifyMod = functions.https.onCall(async (data, context) => {
 })
 
 async function _verifyMod(db, user_id) {
-
     const response = await db.collection("users").doc(user_id).get();
 
     const userData = response.data();
@@ -1375,7 +1374,7 @@ async function _verifyMod(db, user_id) {
 
     var isMod = true;
 
-    if (expertise === undefined || expertise.length == 0) {
+    if ((expertise === undefined || expertise.length == 0) && !userData.admin) {
         isMod = false;
     }
 

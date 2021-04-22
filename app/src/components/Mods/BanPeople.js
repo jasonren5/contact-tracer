@@ -12,16 +12,12 @@ import PersonListing from './PersonListing';
 
 const useStyles = makeStyles(() => ({
     body: {
-        marginTop: "2rem",
-        marginBottom: "2rem",
-        margin: "20rem"
+        marginTop: "1em",
+        marginBottom: "1em",
+        paddingBottom: "1em",
+        // margin: "20em",
     },
-    bodyText: {
-        paddingBottom: "2rem",
-        paddingTop: ".5em",
-        paddingLeft: "5em",
-        paddingRight: "5em",
-    },
+
     title: {
         fontWeight: "bold"
     },
@@ -86,12 +82,9 @@ export default function BanPeople() {
     }
 
     return (
-        <div className="banned-words-view">
+        <div className="banned-people-view">
             <Paper className={classes.body}>
                 <Typography variant="h4" className={classes.title}>Ban Users</Typography>
-                <Typography className={classes.bodyText}>
-                    Test
-                </Typography>
                 {userList.map((user) =>
                     <PersonListing
                         user={user}

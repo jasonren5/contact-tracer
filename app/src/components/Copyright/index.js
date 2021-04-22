@@ -8,7 +8,8 @@ export default function Copyright() {
             {'Copyright © '}
             <Link color="inherit" href="https://github.com/jasonren5/contact-tracer">
                 Crowd Sourced News
-      </Link>{' '}
+            </Link>
+            {' '}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
