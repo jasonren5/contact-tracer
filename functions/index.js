@@ -1624,7 +1624,7 @@ exports.getUserList = functions.https.onCall(async () => {
 });
 
 // Ban a User
-exports.banUser = functions.https.onCall(async (data, context) => {
+exports.toggleBanUser = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
 
     if (!context.auth) {
@@ -1655,15 +1655,29 @@ exports.banUser = functions.https.onCall(async (data, context) => {
         };
     }
 
+    const actionType = (data.action === "ban") ? true : false;
+
     // Then, set the user to disabled through firebase
+    admin
+        .auth()
+        .updateUser(data.user_id, {
+            disabled: actionType
+        })
+        .then((userRecord) => {
+            // See the UserRecord reference doc for the contents of userRecord.
+            functions.logger.log(userRecord.toJSON());
+        })
+        .catch((error) => {
+            functions.logger.log(error);
+        });
 
     // Then, update the firebase document to set banned = true
     const userRef = db.collection('users').doc(data.user_id);
-    const res = await userRef.update({ banned: true });
+    const res = await userRef.update({ banned: actionType });
 
-    // then return success
     return res;
 });
+
 
 /*
 *   Failsafe in case the scheduled function fails and we need to 

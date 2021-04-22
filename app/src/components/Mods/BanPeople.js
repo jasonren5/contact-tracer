@@ -12,7 +12,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import { FirebaseContext } from '../../utils/firebase';
-import { banUser, getUserList } from '../../utils/functions/users';
+import { banUser, getUserList, unbanUser } from '../../utils/functions/users';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -58,6 +58,17 @@ export default function FilterOptions() {
         })
     }
 
+    const handleUnban = () => {
+        const banID = "1ZboUb8DwfPIedjVwbFEqncswki1";
+
+        console.log("unban", banID);
+        unbanUser(firebase, banID).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        })
+    }
+
     return (
         <div className="banned-words-view">
             <Paper className={classes.body}>
@@ -70,6 +81,9 @@ export default function FilterOptions() {
                 )}
                 <Button variant="contained" color="secondary" onClick={handleBan}>
                     Ban
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleUnban}>
+                    Unban
                 </Button>
             </Paper>
         </div >

@@ -90,9 +90,9 @@ async function getUserList(firebase) {
 }
 
 async function banUser(firebase, user_id) {
-    var banUser = firebase.functions.httpsCallable("banUser");
+    var banUser = firebase.functions.httpsCallable("toggleBanUser");
 
-    var response = await banUser({ user_id: user_id });
+    var response = await banUser({ user_id: user_id, action: "ban" });
 
     if (response.data) {
         if (response.data.error) {
@@ -104,9 +104,9 @@ async function banUser(firebase, user_id) {
 }
 
 async function unbanUser(firebase, user_id) {
-    var unbanUser = firebase.functions.httpsCallable("unbanUser");
+    var unbanUser = firebase.functions.httpsCallable("toggleBanUser");
 
-    var response = await unbanUser({ user_id: user_id });
+    var response = await unbanUser({ user_id: user_id, action: "unban" });
 
     if (response.data) {
         if (response.data.error) {
