@@ -2024,4 +2024,23 @@ exports.addWhitelistWord = functions.https.onCall(async (data, context) => {
     }).catch((err) => {
         return err;
     });
+});
+
+exports.canViewProfile = functions.https.onCall(async (data, context) => {
+    const db = admin.firestore();
+
+    const targetID = data.user_id;
+
+    const checkBan = await _verifyBanned(db, targetID);
+    if (!checkBan.banned) {
+        return true;
+    }
+
+    if (!context.auth) {
+        return false;
+    }
+
+    const access_id = context.auth.uid;
+
+    return _verifyMod(db, access_id);
 })

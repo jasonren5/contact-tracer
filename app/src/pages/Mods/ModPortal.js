@@ -23,6 +23,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function ModPortal() {
+    // TODO: Filter Options
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1224px)' });
     const classes = useStyles();
 

@@ -117,4 +117,13 @@ async function unbanUser(firebase, user_id) {
     return null;
 }
 
-export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount, getUserList, banUser, unbanUser };
+async function canViewProfile(firebase, user_id) {
+    var canViewProfile = firebase.functions.httpsCallable("canViewProfile");
+
+    var response = await canViewProfile({ user_id: user_id });
+    if (response.data) return response.data;
+
+    return false;
+}
+
+export { getPublicProfileData, getPrivateProfileData, getUserContributionHistory, updateUserField, getUsersCount, getUserList, banUser, unbanUser, canViewProfile };
