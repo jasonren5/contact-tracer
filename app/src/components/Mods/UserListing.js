@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 
 import { makeStyles } from '@material-ui/core/styles';
-import { Person } from '@material-ui/icons';
+import { Person, Block, LockOpen } from '@material-ui/icons';
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -50,14 +50,24 @@ export default function UserListing(props) {
                         <div className="Ban Button">
                             {
                                 props.user.banned ?
-                                    <Button variant="contained" color="secondary" onClick={() => props.handleUnban(props.user.id)}>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        startIcon={<LockOpen />}
+                                        onClick={() => props.handleUnban(props.user.id)}
+                                    >
                                         {props.user.processing
                                             ? <CircularProgress size={20} color="primary" /> :
                                             "Unban User"
                                         }
                                     </Button>
                                     :
-                                    <Button variant="contained" color="secondary" onClick={() => props.handleBan(props.user.id)}>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        startIcon={<Block />}
+                                        onClick={() => props.handleBan(props.user.id)}
+                                    >
                                         {props.user.processing
                                             ? <CircularProgress size={20} color="primary" /> :
                                             "Ban User"
