@@ -12,6 +12,7 @@ import {
 
 import { makeStyles } from '@material-ui/core/styles';
 import { Person, Block, LockOpen } from '@material-ui/icons';
+var Highlight = require('react-highlighter');
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -27,6 +28,8 @@ const useStyles = makeStyles(() => ({
 export default function UserListing(props) {
     const classes = useStyles();
 
+    const highlightTerm = props.searchTerm ? props.searchTerm : "";
+
     function ListItemLink(props) {
         return <ListItem button component="a" {...props} />;
     }
@@ -38,9 +41,12 @@ export default function UserListing(props) {
                     <Person />
                 </ListItemIcon>
                 <ListItemText
-                    primary={props.user.name}
                     secondary={props.user.admin ? "Admin" : `Banned Status: ${props.user.banned ? "Banned" : "Not Banned"}`}
-                />
+                >
+                    <Highlight search={highlightTerm}>
+                        {props.user.name}
+                    </Highlight>
+                </ListItemText>
                 {props.user.expertises.length > 0 &&
                     <ListItemText secondary="Moderator" />
                 }

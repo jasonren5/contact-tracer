@@ -10,12 +10,22 @@ import {
     ListItemIcon,
     ListItemText
 } from '@material-ui/core';
+import {
+    Block,
+    FilterList,
+    Gavel,
+    LockOpen,
+    Person,
+    VerifiedUser
+} from '@material-ui/icons';
 
+import SearchBar from "material-ui-search-bar";
 import { makeStyles } from '@material-ui/core/styles';
+
 import { FirebaseContext } from '../../utils/firebase';
 import { getUserList, banUser, unbanUser } from '../../utils/functions/users';
 import PersonListing from './UserListing';
-import { Block, FilterList, Gavel, LockOpen, Person, VerifiedUser } from '@material-ui/icons';
+
 
 const useStyles = makeStyles(() => ({
     body: {
@@ -38,6 +48,10 @@ const useStyles = makeStyles(() => ({
     subtitle: {
         marginTop: ".5em"
     },
+    searchBar: {
+        margin: '0 auto',
+        maxWidth: 800
+    },
 }));
 
 export default function UserList() {
@@ -48,6 +62,7 @@ export default function UserList() {
     const [userList, setUserList] = useState([]);
     const [filterUserList, setFilterUserList] = useState([]);
     const [filterValue, setFilterValue] = useState("all");
+    const [searchTerm, setSearchTerm] = useState("");
 
     // TODO: Filter by admin, banned, unbanned, and mod. Maybe sort by contributions
 
@@ -74,25 +89,31 @@ export default function UserList() {
         adjustFilterList();
     }, [filterValue]);
 
+    useEffect(() => {
+        adjustFilterList();
+    }, [searchTerm]);
+
     const adjustFilterList = () => {
+        const tempList = userList.filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
         if (filterValue === "admin") {
-            const finalList = userList.filter(user => user.admin === true);
+            const finalList = tempList.filter(user => user.admin === true);
             setFilterUserList(finalList);
         }
         else if (filterValue === "mod") {
-            const finalList = userList.filter(user => user.expertises.length > 0);
+            const finalList = tempList.filter(user => user.expertises.length > 0);
             setFilterUserList(finalList);
         }
         else if (filterValue === "banned") {
-            const finalList = userList.filter(user => user.banned === true);
+            const finalList = tempList.filter(user => user.banned === true);
             setFilterUserList(finalList);
         }
         else if (filterValue === "unbanned") {
-            const finalList = userList.filter(user => user.banned === false);
+            const finalList = tempList.filter(user => user.banned === false);
             setFilterUserList(finalList);
         }
         else if (filterValue === "all") {
-            setFilterUserList(userList);
+            setFilterUserList(tempList);
         }
     }
 
@@ -211,6 +232,14 @@ export default function UserList() {
                     :
                     <Typography className={classes.subtitle}>Filter Criteria: <i>{jsUcfirst(filterValue)}</i>, No users found!</Typography>
                 }
+                <SearchBar
+                    value={searchTerm}
+                    onChange={(newValue) => setSearchTerm(newValue)}
+                    onCancelSearch={() => setSearchTerm("")}
+                    className={classes.searchBar}
+                    placeholder={"Search for User"}
+                    cancelOnEscape
+                />
                 <List>
                     {filterUserList.map((user) =>
                         <PersonListing
@@ -218,6 +247,7 @@ export default function UserList() {
                             key={user.id}
                             handleBan={handleBan}
                             handleUnban={handleUnban}
+                            searchTerm={searchTerm}
                         />
                     )}
                 </List>
