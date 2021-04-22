@@ -46,7 +46,7 @@ const useStyles = makeStyles(() => ({
         position: "relative",
     },
     subtitle: {
-        marginTop: ".5em"
+        margin: ".5em",
     },
     searchBar: {
         margin: '0 auto',
@@ -227,11 +227,7 @@ export default function UserList() {
                         </MenuItem>
                     </Menu>
                 </div>
-                {filterUserList.length > 0 ?
-                    <Typography className={classes.subtitle}>Filter Criteria: <i>{jsUcfirst(filterValue)}</i>, Users Count: {filterUserList.length}</Typography>
-                    :
-                    <Typography className={classes.subtitle}>Filter Criteria: <i>{jsUcfirst(filterValue)}</i>, No users found!</Typography>
-                }
+                <Typography variant="h6" className={classes.subtitle}>Filter Criteria: <i>{jsUcfirst(filterValue)}</i>, Users Count: {filterUserList.length}</Typography>
                 <SearchBar
                     value={searchTerm}
                     onChange={(newValue) => setSearchTerm(newValue)}
@@ -251,6 +247,9 @@ export default function UserList() {
                         />
                     )}
                 </List>
+                {filterUserList.length <= 0 &&
+                    <Typography className={classes.subtitle} variant="h5">No users found!</Typography>
+                }
             </Paper>
         </div >
     );
