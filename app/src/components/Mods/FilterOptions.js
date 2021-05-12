@@ -18,6 +18,8 @@ import { FirebaseContext } from '../../utils/firebase';
 import { FilterContext } from '../../utils/filter';
 import { addBannedWord, addWhitelistWord } from '../../utils/functions/filter';
 
+import ConfirmModal from '../Modals/ConfirmModal';
+
 const useStyles = makeStyles(() => ({
     body: {
         marginTop: "2rem",
@@ -59,6 +61,7 @@ export default function FilterOptions() {
     const [addPublishingChanges, setAddPublishingChanges] = useState(false);
     const [removeTerm, setRemoveTerm] = useState("");
     const [removePublishingChanges, setRemovePublishingChanges] = useState(false);
+    const [confirmBan, setConfirmBan] = useState(false);
 
 
     const handleToggleView = () => {
@@ -86,6 +89,7 @@ export default function FilterOptions() {
             setAddPublishingChanges(false);
             setFilterWords(list.join(', '));
             setAddTerm("");
+            closeConfirmModal();
         })
     }
 
@@ -96,6 +100,14 @@ export default function FilterOptions() {
             setFilterWords(list.join(', '));
             setRemoveTerm("");
         })
+    }
+
+    const openConfirmModal = () => {
+        setConfirmBan(true);
+    }
+
+    const closeConfirmModal = () => {
+        setConfirmBan(false);
     }
 
     return (
@@ -143,7 +155,7 @@ export default function FilterOptions() {
                                 color="primary"
                                 size="large"
                                 className={classes.addButton}
-                                onClick={handleSubmitAdd}
+                                onClick={openConfirmModal}
                             >
                                 {addPublishingChanges
                                     ? <CircularProgress size={20} color="secondary" />
@@ -175,6 +187,14 @@ export default function FilterOptions() {
                     </Grid>
                 </Paper>
             }
+            <ConfirmModal
+                open={confirmBan}
+                closeModal={closeConfirmModal}
+                handleConfirm={handleSubmitAdd}
+                confirmAction={"Add Banned Word"}
+                secondaryText={"This will affect any previously published article as well!"}
+                publishingConfirm={addPublishingChanges}
+            />
         </div >
     );
 }

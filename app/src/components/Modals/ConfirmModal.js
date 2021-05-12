@@ -41,6 +41,9 @@ export default function AlertDialog(props) {
                     <DialogContentText id="alert-dialog-description">
                         Are you sure you want to {props.confirmAction.toLowerCase()}? This action is irreversible, so please take care before confirming.
                      </DialogContentText>
+                    <DialogContentText id="alert-dialog-description2">
+                        {props.secondaryText}
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button
