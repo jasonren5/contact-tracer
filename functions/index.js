@@ -1975,12 +1975,48 @@ exports.addBannedWord = functions.https.onCall(async (data, context) => {
 
     newData.whitelisted = newData.whitelisted.filter(item => item !== newWord);
 
+    // Ban words in previous articles?
+    const previousArticlesBan = await _banWordFromPrevArticles(newWord);
+    functions.logger.log(previousArticlesBan);
+
     return db.collection('filter').doc('master').set(newData).then(() => {
         return newData;
     }).catch((err) => {
         return err;
     });
 })
+
+async function _banWordFromPrevArticles(word) {
+    const db = admin.firestore();
+    var re = new RegExp(word, "ig");
+
+    const articlesRef = db.collection('published_articles');
+    const snapshot = await articlesRef.get();
+    snapshot.forEach(async article => {
+        var changeMade = false;
+        const articleData = article.data();
+        const articleJSON = JSON.parse(articleData.article_json);
+
+        articleJSON.section_data.forEach(section => {
+            var bodyText = section.body;
+
+            if (bodyText.search(re) > -1) {
+                section.body = bodyText.replace(re, word.substring(0, 1) + "*".repeat(word.length - 1));
+                changeMade = true;
+            }
+        });
+
+        if (changeMade) {
+
+            const finalVersion = JSON.stringify(articleJSON);
+            const articleRef = db.collection('published_articles').doc(article.id)
+            const updateArticle = await articleRef.update({ article_json: finalVersion });
+            functions.logger.log("Banned word found", article.id, updateArticle);
+        }
+
+    });
+    return word;
+}
 
 exports.addWhitelistWord = functions.https.onCall(async (data, context) => {
     const db = admin.firestore();
